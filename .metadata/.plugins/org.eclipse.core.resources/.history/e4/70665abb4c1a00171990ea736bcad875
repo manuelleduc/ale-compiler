@@ -1,0 +1,43 @@
+package ale.compiler
+
+import ale.xtext.ale.NewClass
+import ale.xtext.ale.OpenClass
+import ale.xtext.ale.Root
+import fr.inria.diverse.objectalgebragenerator.GenerateAlgebra
+import java.io.FileWriter
+import java.io.IOException
+import org.eclipse.core.resources.IProject
+import org.eclipse.emf.ecore.EClass
+
+class GenerateOperation {
+//	
+//	private def static dispatch EOperation getOperation(Implementation implementation) {
+//		implementation.operationRef
+//	}
+//	private def static dispatch EOperation getOperation(Method method) {
+//		method.operationDef
+//	}
+//	def dispatch generate(EClass clazz, IProject project, NewClass openClass) {
+//	}
+
+	def generate(EClass clazz, IProject project, OpenClass openClass) {
+
+		val behavior = openClass.eContainer as Root
+		val fileContent = new GenerateAlgebra().generateOperation(clazz, openClass)
+
+		val directoryAlgebra = project.getLocation().append("src").append(behavior.name).append("algebra").append(
+			"operation");
+		directoryAlgebra.toFile().mkdirs();
+		val fileJavaAlgebra = directoryAlgebra.append(clazz.name).addFileExtension("java");
+
+		try {
+			val FileWriter fileWriter = new FileWriter(fileJavaAlgebra.toFile());
+			fileWriter.write(fileContent);
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+}

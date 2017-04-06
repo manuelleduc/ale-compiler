@@ -1,0 +1,100 @@
+import ale.xtext.ale.AlePackage
+import ale.xtext.ale.Class
+import ale.xtext.ale.NewClass
+import ale.xtext.ale.OpenClass
+import ale.xtext.ale.Root
+import java.util.List
+
+system ale.xtext.AleType
+//
+//judgments {
+//	classType |- ale.xtext.ale.Class clazz: output String
+//}
+
+auxiliary {
+	superOpenClasses(OpenClass openClass):List<OpenClass>
+	superNewClasses(NewClass openClass):List<NewClass>
+}
+
+
+auxiliary superOpenClasses(OpenClass openClass) {
+	val ret = newArrayList()
+	if(openClass.superClass != null) {
+		for(c: openClass.superClass) {
+			if(!ret.contains(c)) {
+				ret.add(c)
+				for(cp: superOpenClasses(c)) {
+					if(!ret.contains(cp)) {
+						ret.add(cp)
+					}
+				}
+			}
+		}
+	}
+	ret
+}
+
+auxiliary superNewClasses(NewClass newClass) {
+	val ret = newArrayList()
+	if(newClass.superClass != null) {
+		for(c: newClass.superClass) {
+			if(!ret.contains(c)) {
+				ret.add(c)
+				for(cp: superNewClasses(c)) {
+					if(!ret.contains(cp)) {
+						ret.add(cp)
+					}
+				}
+			}
+		}
+	}
+	ret
+}
+
+
+checkrule NoCyclicOpenClassHierarchy for
+	OpenClass clazz
+from {
+	if(superOpenClasses(clazz).contains(clazz)) {
+		fail
+			error "Cyclic dependency"
+			source clazz
+			feature AlePackage::eINSTANCE.openClass_SuperClass
+		
+	}
+}
+
+checkrule NoCyclicNewClassHierarchy for
+	NewClass clazz
+from {
+	if(superNewClasses(clazz).contains(clazz)) {
+		fail
+			error "Cyclic dependency"
+			source clazz
+			feature AlePackage::eINSTANCE.newClass_SuperClass
+	}
+}
+
+checkrule CheckClassNames for
+	Root root
+from {
+	for(x: root.classes.groupBy[name].filter[p1, p2| p2.length > 1].values.flatten) {
+		fail
+			error "Duplicated name"
+			source x
+			feature AlePackage::eINSTANCE.class_Name
+	}
+}
+
+
+// TODO: take in account imported classes once available
+checkrule CheckFieldName for
+	Class clazz
+from {
+	for(x: clazz.fields.groupBy[name].filter[p1, p2|p2.length>1].values.flatten) {
+		fail
+			error "Duplicated name"
+			source x
+			feature AlePackage::eINSTANCE.field_Name
+	}
+}

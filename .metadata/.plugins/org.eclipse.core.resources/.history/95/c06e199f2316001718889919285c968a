@@ -1,0 +1,12 @@
+package ale.xtext;
+
+@SuppressWarnings("all")
+public class AleTypeValidator implements it.xsemantics.runtime.XsemanticsRuntimeSystem {
+  public AleTypeValidator() {
+    init();
+  }
+  
+  public void init() {
+    
+  }
+}

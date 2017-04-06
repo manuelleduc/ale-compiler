@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="ale.java.compiler.DSLCompiler"/>
+<fullyQualifiedTypeName name="ale.java.compiler.AleCompiler"/>
+<fullyQualifiedTypeName name="ale.java.compile.AleCompiler"/>
+<fullyQualifiedTypeName name="ale.java.compile.Test"/>
+<fullyQualifiedTypeName name="ale.objectalgebra.compiler.AleCompiler"/>
+<fullyQualifiedTypeName name="ale.objectalgebra.compiler.DSLCompiler"/>
+<fullyQualifiedTypeName name="fr.mleduc.mt.compiler.DSLCompiler"/>
+<fullyQualifiedTypeName name="ale.xtext.ale.Root"/>
+<fullyQualifiedTypeName name="ale.xtext.ale.Field"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="ale.xtext.ale.Class"/>
+</qualifiedTypeNameHistroy>

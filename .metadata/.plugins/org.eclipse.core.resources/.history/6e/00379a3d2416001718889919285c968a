@@ -1,0 +1,75 @@
+package ale.xtext;
+
+import ale.xtext.ale.Root;
+import it.xsemantics.runtime.ErrorInformation;
+import it.xsemantics.runtime.Result;
+import it.xsemantics.runtime.RuleApplicationTrace;
+import it.xsemantics.runtime.RuleEnvironment;
+import it.xsemantics.runtime.RuleFailedException;
+import it.xsemantics.runtime.XsemanticsRuntimeSystem;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.util.PolymorphicDispatcher;
+
+@SuppressWarnings("all")
+public class AleTypeValidator extends XsemanticsRuntimeSystem {
+  private PolymorphicDispatcher<Result<String>> classTypeDispatcher;
+  
+  public AleTypeValidator() {
+    init();
+  }
+  
+  public void init() {
+    classTypeDispatcher = buildPolymorphicDispatcher1(
+    	"classTypeImpl", 3, "|-", ":");
+  }
+  
+  public Result<String> classType(final ale.xtext.ale.Class clazz) {
+    return classType(new RuleEnvironment(), null, clazz);
+  }
+  
+  public Result<String> classType(final RuleEnvironment _environment_, final ale.xtext.ale.Class clazz) {
+    return classType(_environment_, null, clazz);
+  }
+  
+  public Result<String> classType(final RuleEnvironment _environment_, final RuleApplicationTrace _trace_, final ale.xtext.ale.Class clazz) {
+    try {
+    	return classTypeInternal(_environment_, _trace_, clazz);
+    } catch (Exception _e_classType) {
+    	return resultForFailure(_e_classType);
+    }
+  }
+  
+  public Result<Boolean> checkClassNames(final Root root) {
+    return checkClassNames(null, root);
+  }
+  
+  public Result<Boolean> checkClassNames(final RuleApplicationTrace _trace_, final Root root) {
+    try {
+    	return checkClassNamesInternal(_trace_, root);
+    } catch (Exception _e_CheckClassNames) {
+    	return resultForFailure(_e_CheckClassNames);
+    }
+  }
+  
+  protected Result<Boolean> checkClassNamesInternal(final RuleApplicationTrace _trace_, final Root root) throws RuleFailedException {
+    /* fail error "Duplicate names" source root */
+    String error = "Duplicate names";
+    EObject source = root;
+    throwForExplicitFail(error, new ErrorInformation(source, null));
+    return new Result<Boolean>(true);
+  }
+  
+  protected Result<String> classTypeInternal(final RuleEnvironment _environment_, final RuleApplicationTrace _trace_, final ale.xtext.ale.Class clazz) {
+    try {
+    	checkParamsNotNull(clazz);
+    	return classTypeDispatcher.invoke(_environment_, _trace_, clazz);
+    } catch (Exception _e_classType) {
+    	sneakyThrowRuleFailedException(_e_classType);
+    	return null;
+    }
+  }
+  
+  protected void classTypeThrowException(final String _error, final String _issue, final Exception _ex, final ale.xtext.ale.Class clazz, final ErrorInformation[] _errorInformations) throws RuleFailedException {
+    throwRuleFailedException(_error, _issue, _ex, _errorInformations);
+  }
+}

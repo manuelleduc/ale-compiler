@@ -1,0 +1,18 @@
+grammar dsl.xtext.Dsl with org.eclipse.xtext.common.Terminals
+
+generate dsl "http://www.xtext.dsl/Dsl"
+
+import "http://www.xtext.ale/Ale" as ale
+
+DSL: 
+	'syntax' '=' syntaxes+=Syntax (',' syntaxes+=Syntax)*
+	'behavior' '=' behaviours+=Behavior (',' behaviours+=Behavior)*
+;
+
+Syntax:
+	value=STRING
+;
+
+Behavior:
+	value=[ale::Root]
+;

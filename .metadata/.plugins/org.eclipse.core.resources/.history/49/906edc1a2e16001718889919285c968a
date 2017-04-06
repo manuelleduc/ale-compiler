@@ -1,0 +1,249 @@
+package ale.xtext;
+
+import ale.xtext.ale.AlePackage;
+import ale.xtext.ale.Field;
+import ale.xtext.ale.NewClass;
+import ale.xtext.ale.OpenClass;
+import ale.xtext.ale.Root;
+import com.google.common.collect.Iterables;
+import com.google.inject.Provider;
+import it.xsemantics.runtime.ErrorInformation;
+import it.xsemantics.runtime.Result;
+import it.xsemantics.runtime.RuleApplicationTrace;
+import it.xsemantics.runtime.RuleFailedException;
+import it.xsemantics.runtime.XsemanticsRuntimeSystem;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.xtext.util.PolymorphicDispatcher;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.Functions.Function2;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.MapExtensions;
+
+@SuppressWarnings("all")
+public class AleType extends XsemanticsRuntimeSystem {
+  public final static String SUPEROPENCLASSES = "ale.xtext.SuperOpenClasses";
+  
+  public final static String SUPERNEWCLASSES = "ale.xtext.SuperNewClasses";
+  
+  private PolymorphicDispatcher<List<OpenClass>> superOpenClassesDispatcher;
+  
+  private PolymorphicDispatcher<List<NewClass>> superNewClassesDispatcher;
+  
+  public AleType() {
+    init();
+  }
+  
+  public void init() {
+    superOpenClassesDispatcher = buildPolymorphicDispatcher(
+    	"superOpenClassesImpl", 2);
+    superNewClassesDispatcher = buildPolymorphicDispatcher(
+    	"superNewClassesImpl", 2);
+  }
+  
+  public List<OpenClass> superOpenClasses(final OpenClass openClass) throws RuleFailedException {
+    return superOpenClasses(null, openClass);
+  }
+  
+  public List<OpenClass> superOpenClasses(final RuleApplicationTrace _trace_, final OpenClass openClass) throws RuleFailedException {
+    try {
+    	return superOpenClassesInternal(_trace_, openClass);
+    } catch (Exception _e_superOpenClasses) {
+    	throw extractRuleFailedException(_e_superOpenClasses);
+    }
+  }
+  
+  public List<NewClass> superNewClasses(final NewClass openClass) throws RuleFailedException {
+    return superNewClasses(null, openClass);
+  }
+  
+  public List<NewClass> superNewClasses(final RuleApplicationTrace _trace_, final NewClass openClass) throws RuleFailedException {
+    try {
+    	return superNewClassesInternal(_trace_, openClass);
+    } catch (Exception _e_superNewClasses) {
+    	throw extractRuleFailedException(_e_superNewClasses);
+    }
+  }
+  
+  public Result<Boolean> checkClassNames(final Root root) {
+    return checkClassNames(null, root);
+  }
+  
+  public Result<Boolean> checkClassNames(final RuleApplicationTrace _trace_, final Root root) {
+    try {
+    	return checkClassNamesInternal(_trace_, root);
+    } catch (Exception _e_CheckClassNames) {
+    	return resultForFailure(_e_CheckClassNames);
+    }
+  }
+  
+  protected Result<Boolean> checkClassNamesInternal(final RuleApplicationTrace _trace_, final Root root) throws RuleFailedException {
+    EList<ale.xtext.ale.Class> _classes = root.getClasses();
+    final Function1<ale.xtext.ale.Class, String> _function = (ale.xtext.ale.Class it) -> {
+      return it.getName();
+    };
+    Map<String, List<ale.xtext.ale.Class>> _groupBy = IterableExtensions.<String, ale.xtext.ale.Class>groupBy(_classes, _function);
+    final Function2<String, List<ale.xtext.ale.Class>, Boolean> _function_1 = (String p1, List<ale.xtext.ale.Class> p2) -> {
+      int _length = ((Object[])Conversions.unwrapArray(p2, Object.class)).length;
+      return Boolean.valueOf((_length > 1));
+    };
+    Map<String, List<ale.xtext.ale.Class>> _filter = MapExtensions.<String, List<ale.xtext.ale.Class>>filter(_groupBy, _function_1);
+    Collection<List<ale.xtext.ale.Class>> _values = _filter.values();
+    Iterable<ale.xtext.ale.Class> _flatten = Iterables.<ale.xtext.ale.Class>concat(_values);
+    for (final ale.xtext.ale.Class x : _flatten) {
+      /* fail error "Duplicated name" source x feature AlePackage::eINSTANCE.class_Name */
+      String error = "Duplicated name";
+      EObject source = x;
+      EAttribute _class_Name = AlePackage.eINSTANCE.getClass_Name();
+      EStructuralFeature feature = _class_Name;
+      throwForExplicitFail(error, new ErrorInformation(source, feature));
+    }
+    return new Result<Boolean>(true);
+  }
+  
+  public Result<Boolean> checkFieldName(final ale.xtext.ale.Class clazz) {
+    return checkFieldName(null, clazz);
+  }
+  
+  public Result<Boolean> checkFieldName(final RuleApplicationTrace _trace_, final ale.xtext.ale.Class clazz) {
+    try {
+    	return checkFieldNameInternal(_trace_, clazz);
+    } catch (Exception _e_CheckFieldName) {
+    	return resultForFailure(_e_CheckFieldName);
+    }
+  }
+  
+  protected Result<Boolean> checkFieldNameInternal(final RuleApplicationTrace _trace_, final ale.xtext.ale.Class clazz) throws RuleFailedException {
+    EList<Field> _fields = clazz.getFields();
+    final Function1<Field, String> _function = (Field it) -> {
+      return it.getName();
+    };
+    Map<String, List<Field>> _groupBy = IterableExtensions.<String, Field>groupBy(_fields, _function);
+    final Function2<String, List<Field>, Boolean> _function_1 = (String p1, List<Field> p2) -> {
+      int _length = ((Object[])Conversions.unwrapArray(p2, Object.class)).length;
+      return Boolean.valueOf((_length > 1));
+    };
+    Map<String, List<Field>> _filter = MapExtensions.<String, List<Field>>filter(_groupBy, _function_1);
+    Collection<List<Field>> _values = _filter.values();
+    Iterable<Field> _flatten = Iterables.<Field>concat(_values);
+    for (final Field x : _flatten) {
+      /* fail error "Duplicated name" source x feature AlePackage::eINSTANCE.field_Name */
+      String error = "Duplicated name";
+      EObject source = x;
+      EAttribute _field_Name = AlePackage.eINSTANCE.getField_Name();
+      EStructuralFeature feature = _field_Name;
+      throwForExplicitFail(error, new ErrorInformation(source, feature));
+    }
+    return new Result<Boolean>(true);
+  }
+  
+  protected List<OpenClass> superOpenClassesInternal(final RuleApplicationTrace _trace_, final OpenClass openClass) {
+    try {
+    	checkParamsNotNull(openClass);
+    	return superOpenClassesDispatcher.invoke(_trace_, openClass);
+    } catch (Exception _e_superOpenClasses) {
+    	sneakyThrowRuleFailedException(_e_superOpenClasses);
+    	return null;
+    }
+  }
+  
+  protected void superOpenClassesThrowException(final String _error, final String _issue, final Exception _ex, final OpenClass openClass, final ErrorInformation[] _errorInformations) throws RuleFailedException {
+    throwRuleFailedException(_error, _issue, _ex, _errorInformations);
+  }
+  
+  protected List<NewClass> superNewClassesInternal(final RuleApplicationTrace _trace_, final NewClass openClass) {
+    try {
+    	checkParamsNotNull(openClass);
+    	return superNewClassesDispatcher.invoke(_trace_, openClass);
+    } catch (Exception _e_superNewClasses) {
+    	sneakyThrowRuleFailedException(_e_superNewClasses);
+    	return null;
+    }
+  }
+  
+  protected void superNewClassesThrowException(final String _error, final String _issue, final Exception _ex, final NewClass openClass, final ErrorInformation[] _errorInformations) throws RuleFailedException {
+    throwRuleFailedException(_error, _issue, _ex, _errorInformations);
+  }
+  
+  protected List<OpenClass> superOpenClassesImpl(final RuleApplicationTrace _trace_, final OpenClass openClass) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final List<OpenClass> _result_ = applyAuxFunSuperOpenClasses(_subtrace_, openClass);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return auxFunName("superOpenClasses") + "(" + stringRep(openClass)+ ")" + " = " + stringRep(_result_);
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyAuxFunSuperOpenClasses) {
+    	superOpenClassesThrowException(auxFunName("superOpenClasses") + "(" + stringRep(openClass)+ ")",
+    		SUPEROPENCLASSES,
+    		e_applyAuxFunSuperOpenClasses, openClass, new ErrorInformation[] {new ErrorInformation(openClass)});
+    	return null;
+    }
+  }
+  
+  protected List<OpenClass> applyAuxFunSuperOpenClasses(final RuleApplicationTrace _trace_, final OpenClass openClass) throws RuleFailedException {
+    ArrayList<OpenClass> _xblockexpression = null;
+    {
+      final ArrayList<OpenClass> ret = CollectionLiterals.<OpenClass>newArrayList();
+      EList<OpenClass> _superClass = openClass.getSuperClass();
+      for (final OpenClass c : _superClass) {
+        boolean _contains = ret.contains(c);
+        boolean _not = (!_contains);
+        if (_not) {
+          boolean _add = ret.add(c);
+          /* ret.add(c) */
+          if (!_add) {
+            sneakyThrowRuleFailedException("ret.add(c)");
+          }
+          List<OpenClass> _superOpenClasses = this.superOpenClassesInternal(_trace_, c);
+          for (final OpenClass cp : _superOpenClasses) {
+            boolean _contains_1 = ret.contains(cp);
+            boolean _not_1 = (!_contains_1);
+            if (_not_1) {
+              /* ret.add(cp) */
+              if (!ret.add(cp)) {
+                sneakyThrowRuleFailedException("ret.add(cp)");
+              }
+            }
+          }
+        }
+      }
+      _xblockexpression = (ret);
+    }
+    return _xblockexpression;
+  }
+  
+  protected List<NewClass> superNewClassesImpl(final RuleApplicationTrace _trace_, final NewClass openClass) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final List<NewClass> _result_ = applyAuxFunSuperNewClasses(_subtrace_, openClass);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return auxFunName("superNewClasses") + "(" + stringRep(openClass)+ ")" + " = " + stringRep(_result_);
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyAuxFunSuperNewClasses) {
+    	superNewClassesThrowException(auxFunName("superNewClasses") + "(" + stringRep(openClass)+ ")",
+    		SUPERNEWCLASSES,
+    		e_applyAuxFunSuperNewClasses, openClass, new ErrorInformation[] {new ErrorInformation(openClass)});
+    	return null;
+    }
+  }
+  
+  protected List<NewClass> applyAuxFunSuperNewClasses(final RuleApplicationTrace _trace_, final NewClass openClass) throws RuleFailedException {
+    return CollectionLiterals.<NewClass>newArrayList();
+  }
+}

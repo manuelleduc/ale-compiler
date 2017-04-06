@@ -1,0 +1,126 @@
+import ale.xtext.ale.AlePackage
+import ale.xtext.ale.Class
+import ale.xtext.ale.DefMethod
+import ale.xtext.ale.NewClass
+import ale.xtext.ale.OpenClass
+import ale.xtext.ale.Root
+import java.util.List
+import ale.xtext.ale.OverrideMethod
+
+system ale.xtext.AleType
+//
+//judgments {
+//	classType |- ale.xtext.ale.Class clazz: output String
+//}
+
+auxiliary {
+	superClasses(Class openClass, List<Class> existing)
+	imported(Root root, List<Root> roots)
+}
+
+
+auxiliary superClasses(Class openClass, List<Class> existing) {
+	if(openClass.superClass != null) {
+		for(c: openClass.superClass) {
+			if(!existing.contains(c)) {
+				existing.add(c)
+				superClasses(c, existing)
+			}
+		}
+	}
+}
+
+auxiliary imported(Root root, List<Root> roots) {
+	if(root.imports != null) {
+		for(i: root.imports) {
+			if(!roots.contains(i.ref)) {
+				roots.add(i.ref)
+				imported(i.ref, roots)
+			}
+		}
+	}
+}
+
+
+checkrule NoCyclicOpenClassHierarchy for
+	OpenClass clazz
+from {
+	val ext = newArrayList()
+	superClasses(clazz, ext)
+	if(ext.contains(clazz)) {
+		fail
+			error "Cyclic dependency"
+			source clazz
+			feature AlePackage::eINSTANCE.class_SuperClass
+		
+	}
+}
+
+checkrule defMethodDoesNotAlreadyExists for
+	DefMethod method
+from {
+	val classes = newArrayList()
+	superClasses(method.eContainer as Class, classes)
+	if(!classes.filter[c | !c.methods.filter[name == method.name].^empty].^empty) {
+		fail
+			error "Method already defined"
+			source method
+			feature AlePackage::eINSTANCE.method_Name
+	}
+}
+
+checkrule overrideMethodDoesMustExists for
+	OverrideMethod method
+from {
+	val classes = newArrayList()
+	superClasses(method.eContainer as Class, classes)
+	if(classes.filter[c | !c.methods.filter[name == method.name].^empty].^empty) {
+		fail
+			error "Overrided method does not exist in parents"
+			source method
+			feature AlePackage::eINSTANCE.method_Name
+	}
+}
+
+checkrule NoCyclicBehaviorImport for 
+	Root root
+from {
+	
+}
+
+checkrule NoCyclicNewClassHierarchy for
+	NewClass clazz
+from {
+	val ext = newArrayList()
+	superClasses(clazz, ext)
+	if(ext.contains(clazz)) {
+		fail
+			error "Cyclic dependency"
+			source clazz
+			feature AlePackage::eINSTANCE.class_SuperClass
+	}
+}
+
+checkrule CheckClassNames for
+	Root root
+from {
+	for(x: root.classes.groupBy[name].filter[p1, p2| p2.length > 1].values.flatten) {
+		fail
+			error "Duplicated name"
+			source x
+			feature AlePackage::eINSTANCE.class_Name
+	}
+}
+
+
+// TODO: take in account imported classes once available
+checkrule CheckFieldName for
+	Class clazz
+from {
+	for(x: clazz.fields.groupBy[name].filter[p1, p2|p2.length>1].values.flatten) {
+		fail
+			error "Duplicated name"
+			source x
+			feature AlePackage::eINSTANCE.field_Name
+	}
+}

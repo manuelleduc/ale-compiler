@@ -1,0 +1,28 @@
+package ale.xtext.validation;
+
+import ale.xtext.AleType;
+import ale.xtext.ale.Root;
+import com.google.inject.Inject;
+import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
+import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
+import org.eclipse.xtext.validation.Check;
+
+@SuppressWarnings("all")
+public class AleTypeValidator extends AbstractDeclarativeValidator {
+  @Inject
+  protected XsemanticsValidatorErrorGenerator errorGenerator;
+  
+  @Inject
+  protected AleType xsemanticsSystem;
+  
+  protected AleType getXsemanticsSystem() {
+    return this.xsemanticsSystem;
+  }
+  
+  @Check
+  public void checkClassNames(final Root root) {
+    errorGenerator.generateErrors(this,
+    	getXsemanticsSystem().checkClassNames(root),
+    		root);
+  }
+}

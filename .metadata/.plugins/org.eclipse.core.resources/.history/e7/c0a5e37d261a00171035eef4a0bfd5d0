@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Compiler
+Bundle-SymbolicName: fluffy-umbrella-compiler
+Bundle-Version: 1.0.0.qualifier
+Export-Package: fr.mleduc.mt.compiler
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.codegen.ecore,
+ org.eclipse.core.resources,
+ fr.inria.diverse.objectalgebragenerator,
+ org.eclipse.equinox.registry,
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib.macro
+

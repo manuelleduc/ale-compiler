@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: dsl.xtext.ide
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: dsl.xtext.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: dsl.xtext,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: dsl.xtext.ide.contentassist.antlr.internal,
+ dsl.xtext.ide.contentassist.antlr
+
