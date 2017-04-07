@@ -57,6 +57,8 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.ETypedElement
+import ale.xtext.ale.OADenot
+
 //import ale.xtext.ale.OADenot
 
 class GenerateAlgebra {
@@ -90,7 +92,7 @@ class GenerateAlgebra {
 	private def String operationInterfacePath(EClass clazz,
 		String filenameDSL) '''«filenameDSL».algebra.operation.«clazz.EPackage.name».«filenameDSL.toFirstUpper»«clazz.name.toFirstUpper»Operation'''
 
-	def String processConcreteOperation(GraphNode<EClass> entry, EPackage epackage, String filenameDsl, AleClass behaviorClass) {
+	def String processConcreteOperation(GraphNode<EClass> entry, EPackage epackage, String filenameDsl, AleClass behaviorClass, Boolean overloaded) {
 		val clazz = entry.elem
 		val graph = buildGraph(
 			epackage)
@@ -145,15 +147,15 @@ class GenerateAlgebra {
 			«IF behaviorClass != null»
 			«FOR field:behaviorClass.fields»
 			public «field.type.solveStaticType(epackage)» get«field.name.toFirstUpper»() {
-				return self.get«field.name.toFirstUpper»();
+				«IF ! overloaded»return self.get«field.name.toFirstUpper»();«ELSE»return null;«ENDIF»
 			}
 			public void set«field.name.toFirstUpper»(«field.type.solveStaticType(epackage)» «field.name») {
-				self.set«field.name.toFirstUpper»(«field.name»);
+				«IF !overloaded»self.set«field.name.toFirstUpper»(«field.name»);«ENDIF»
 			}
 			«ENDFOR»
 			«FOR method: behaviorClass.methods»
 			public «method.type.solveStaticType(epackage)» «method.name»(«FOR p: method.params»«p.type.solveStaticType(epackage)» «p.name»«ENDFOR») {
-	 			«method.block.printBlock(epackage)»
+	 			«IF !overloaded»«method.block.printBlock(epackage)»«ELSE» «IF method.type.solveStaticType(epackage) != 'void'»return null;«ENDIF»«ENDIF»
 			}
 			«ENDFOR»
 			«ENDIF»
@@ -169,44 +171,44 @@ class GenerateAlgebra {
 	'''
 	
 	
-	def dispatch String printExpression(AddOperation addOperation) {
-		'''«addOperation.left.printExpression» + «addOperation.right.printExpression»'''
+	def dispatch String printExpression(AddOperation addOperation, EPackage epackage) {
+		'''«addOperation.left.printExpression(epackage)» + «addOperation.right.printExpression(epackage)»'''
 	}
 	
-	def dispatch String printExpression(BooleanAndOperation booleanAndOperation) 
-		'''«booleanAndOperation.left.printExpression» && «booleanAndOperation.right.printExpression»'''
+	def dispatch String printExpression(BooleanAndOperation booleanAndOperation, EPackage epackage) 
+		'''«booleanAndOperation.left.printExpression(epackage)» && «booleanAndOperation.right.printExpression(epackage)»'''
 	
-	def dispatch String printExpression(BooleanLiteral booleanLit) {
+	def dispatch String printExpression(BooleanLiteral booleanLit, EPackage epackage) {
 		return booleanLit.value
 	}
 	
-	def dispatch String printExpression(BooleanOrOperation exp) '''«exp.left.printExpression» || «exp.right.printExpression»'''
-	def dispatch String printExpression(BooleanXorOperation exp) '''«exp.left.printExpression» ^ «exp.right.printExpression»'''
-	def dispatch String printExpression(ChainedCall exp) '''«exp.left.printExpression».«exp.right.printExpression»'''
-	def dispatch String printExpression(ChainedCallArrow exp) '''«exp.left.printExpression».«exp.right.printExpression»'''
-	def dispatch String printExpression(CompareGEOperation exp) '''«exp.left.printExpression» >= «exp.right.printExpression»'''
-	def dispatch String printExpression(CompareGOperation exp) '''«exp.left.printExpression» > «exp.right.printExpression»'''
-	def dispatch String printExpression(CompareLEOperation exp) '''«exp.left.printExpression» <= «exp.right.printExpression»'''
-	def dispatch String printExpression(CompareLOperation exp) '''«exp.left.printExpression» < «exp.right.printExpression»'''
-	def dispatch String printExpression(CompareNEOperation exp) '''«exp.left.printExpression» != «exp.right.printExpression»'''
-	def dispatch String printExpression(DivOperation exp) '''«exp.left.printExpression» / «exp.right.printExpression»'''
-	def dispatch String printExpression(EqualityOperation exp) '''java.util.Objects.equals(«exp.left.printExpression», «exp.right.printExpression»)'''
-	def dispatch String printExpression(ImpliesOperation exp) '''!«exp.left.printExpression» || «exp.right.printExpression»'''
-	def dispatch String printExpression(IntLiteral exp) '''«exp.value»'''
-	def dispatch String printExpression(IntRange exp) '''__TODO IntRange__'''
-	def dispatch String printExpression(MultOperation exp) '''«exp.left.printExpression» * «exp.right.printExpression»'''
-	def dispatch String printExpression(NegInfixOperation exp) '''-«exp.expression.printExpression»'''
-	def dispatch String printExpression(NotInfixOperation exp) '''!«exp.expression.printExpression»'''
-	def dispatch String printExpression(NullLiteral exp) '''null'''
-	def dispatch String printExpression(OperationCallOperation exp) {
+	def dispatch String printExpression(BooleanOrOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» || «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(BooleanXorOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» ^ «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(ChainedCall exp, EPackage epackage) '''«exp.left.printExpression(epackage)».«exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(ChainedCallArrow exp, EPackage epackage) '''«exp.left.printExpression(epackage)».«exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(CompareGEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» >= «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(CompareGOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» > «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(CompareLEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» <= «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(CompareLOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» < «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(CompareNEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» != «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(DivOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» / «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(EqualityOperation exp, EPackage epackage) '''java.util.Objects.equals(«exp.left.printExpression(epackage)», «exp.right.printExpression(epackage)»)'''
+	def dispatch String printExpression(ImpliesOperation exp, EPackage epackage) '''!«exp.left.printExpression(epackage)» || «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(IntLiteral exp, EPackage epackage) '''«exp.value»'''
+	def dispatch String printExpression(IntRange exp, EPackage epackage) '''__TODO IntRange__'''
+	def dispatch String printExpression(MultOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» * «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(NegInfixOperation exp, EPackage epackage) '''-«exp.expression.printExpression(epackage)»'''
+	def dispatch String printExpression(NotInfixOperation exp, EPackage epackage) '''!«exp.expression.printExpression(epackage)»'''
+	def dispatch String printExpression(NullLiteral exp, EPackage epackage) '''null'''
+	def dispatch String printExpression(OperationCallOperation exp, EPackage epackage) {
 		if(exp.eContainer instanceof ChainedCallArrow) {
 			return switch(exp.name) {
-				case 'select': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»).collect(new EListCollector<>())'''
-				case  'reject': '''stream().filter(«exp.parameters.head.lambda» -> !(«exp.parameters.head.expression.printExpression»)).collect(new EListCollector<>())'''
-				case 'collect': '''stream().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»).collect(new EListCollector<>())'''
-				case  'any': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»).findAny().orElse(null)''' 
-				case 'exists' : '''stream().stream().findAny().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»).orElse(false)'''
-				case  'forAll': '''stream().stream().allMatch(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»)'''
+				case 'select': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»).collect(new EListCollector<>())'''
+				case  'reject': '''stream().filter(«exp.parameters.head.lambda» -> !(«exp.parameters.head.expression.printExpression(epackage)»)).collect(new EListCollector<>())'''
+				case 'collect': '''stream().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»).collect(new EListCollector<>())'''
+				case  'any': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»).findAny().orElse(null)''' 
+				case 'exists' : '''stream().stream().findAny().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»).orElse(false)'''
+				case  'forAll': '''stream().stream().allMatch(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»)'''
 				case 'isUnique' : '''__TODO__'''
 				case 'one' : '''__TODO__'''
 				case 'sortedBy': '''__TODO__''' 
@@ -214,31 +216,39 @@ class GenerateAlgebra {
 			}
 		} else {
 			if(exp.name == 'println') exp.name='System.out.println';
-			'''«exp.name»(«FOR param: exp.parameters SEPARATOR ',' »«IF param.lambda!= null»«param.lambda» -> «ENDIF»«param.expression.printExpression»«ENDFOR»)''' // TODO deal with lambdas !
+			'''«exp.name»(«FOR param: exp.parameters SEPARATOR ',' »«IF param.lambda!= null»«param.lambda» -> «ENDIF»«param.expression.printExpression(epackage)»«ENDFOR»)''' // TODO deal with lambdas !
 		}
 	}
-	def dispatch String printExpression(OrderedSetDecl exp) '''__TODO OrderSetDecl__'''
-	def dispatch String printExpression(RealLiteral exp) '''«exp.value»'''
-//	def dispatch String printExpression(OADenot exp) '''algebra.$(«exp.exp.printExpression»)'''
-	def dispatch String printExpression(SelfRef exp) '''self''' // TODO: probably more smart than that!! aka delegation
-	def dispatch String printExpression(SequenceDecl exp) '''__TODO SequenceDECL__'''
-	def dispatch String printExpression(StringLiteral exp) '''"«exp.value»"'''
-	def dispatch String printExpression(SubOperation exp) '''«exp.left.printExpression» - «exp.right.printExpression»'''
-	def dispatch String printExpression(SuperRef exp) '''__TODO call super__''' // TODO: has to resolve where to call!!
-	def dispatch String printExpression(VarRef exp) '''«exp.value»'''
-	def dispatch String printExpression(ConstructorOperation exp) '''new XXXFactory.eInstance.create«exp.name»()'''
-	def dispatch String printStatement(Expression expression, EPackage ePackage) '''«printExpression(expression)»;'''
+	def dispatch String printExpression(OrderedSetDecl exp, EPackage epackage) '''__TODO OrderSetDecl__'''
+	def dispatch String printExpression(RealLiteral exp, EPackage epackage) '''«exp.value»'''
+	def dispatch String printExpression(OADenot exp, EPackage epackage) '''algebra.$(«exp.exp.printExpression(epackage)»)'''
+	def dispatch String printExpression(SelfRef exp, EPackage epackage) '''self''' // TODO: probably more smart than that!! aka delegation
+	def dispatch String printExpression(SequenceDecl exp, EPackage epackage) '''__TODO SequenceDECL__'''
+	def dispatch String printExpression(StringLiteral exp, EPackage epackage) '''"«exp.value»"'''
+	def dispatch String printExpression(SubOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» - «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(SuperRef exp, EPackage epackage) '''__TODO call super__''' // TODO: has to resolve where to call!!
+	def dispatch String printExpression(VarRef exp, EPackage epackage) '''«exp.value»'''
+	def dispatch String printExpression(ConstructorOperation exp, EPackage epackage) '''«exp.getPackageName(epackage)»Factory.eINSTANCE.create«exp.name»()'''
+	
+	def String getPackageName(ConstructorOperation co, EPackage epackage) {
+		val graph = buildGraph(epackage)
+		var packageName = graph.nodes.filter[e | e.elem.name == co.name].head.elem.EPackage.name
+		return '''«packageName».«packageName.toFirstUpper»'''
+		
+	}
+	
+	def dispatch String printStatement(Expression expression, EPackage ePackage) '''«expression.printExpression(ePackage)»;'''
 	
 	def dispatch String printStatement(ForLoop forLoop, EPackage ePackage) {
 		'''
-		for(«forLoop.type.solveStaticType(ePackage)» «forLoop.name»: «forLoop.collection.printExpression») {
+		for(«forLoop.type.solveStaticType(ePackage)» «forLoop.name»: «forLoop.collection.printExpression(ePackage)») {
 			«forLoop.block.printBlock(ePackage)»
 		}
 		'''
 	}
 	
 	def dispatch String printStatement(IfStatement ifStatement, EPackage ePackage) {
-		'''if(«ifStatement.condition.printExpression») {
+		'''if(«ifStatement.condition.printExpression(ePackage)») {
 			«ifStatement.thenBranch.printBlock(ePackage)»
 		} «IF ifStatement.elseBranch != null» else {
 			«ifStatement.elseBranch.printBlock(ePackage)»
@@ -251,16 +261,16 @@ class GenerateAlgebra {
 	}
 	
 	def dispatch String printStatement(ReturnStatement returnStatement, EPackage ePackage) {
-		'''return «returnStatement.returned.printExpression»;'''
+		'''return «returnStatement.returned.printExpression(ePackage)»;'''
 	}
 	
 	def dispatch String printStatement(VarAssign varAssign, EPackage ePackage) 
-		'''«varAssign.type.solveStaticType(ePackage)» «varAssign.name» = «varAssign.value.printExpression»;'''
+		'''«varAssign.type.solveStaticType(ePackage)» «varAssign.name» = «varAssign.value.printExpression(ePackage)»;'''
 	
 	
 	def dispatch String printStatement(WhileStatement whileStatement, EPackage ePackage) {
 		'''
-		while(«whileStatement.condition.printExpression») {
+		while(«whileStatement.condition.printExpression(ePackage)») {
 			«whileStatement.whileBlock.printBlock(ePackage)»
 		}
 		'''

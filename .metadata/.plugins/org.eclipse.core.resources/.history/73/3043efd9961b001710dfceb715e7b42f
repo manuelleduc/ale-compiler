@@ -1,0 +1,36 @@
+package dsl.xtext.validation;
+
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
+
+import ale.xtext.ale.Root;
+
+public class DslBehaviorValidator {
+
+	private List<Root> root;
+	private AbstractDeclarativeValidator validator;
+	private List<EPackage> syntaxes;
+
+	DslBehaviorValidator(List<Root> roots, List<EPackage> syntaxes, AbstractDeclarativeValidator validator) {
+		this.root = root;
+		this.syntaxes = syntaxes;
+		this.validator = validator;
+	}
+
+	void validate() {
+		this.oneClassPerOpenClass();
+	}
+
+	private void oneClassPerOpenClass() {
+		Map<String, Long> collect = root.stream().flatMap(r -> r.getClasses().stream()).collect(Collectors.groupingBy(x -> x.getName(), Collectors.counting()));
+		collect.entrySet().forEach(e -> {
+			if(e.getValue() > 1) {
+				this.validator.err
+			}
+		});
+	}
+
+}

@@ -160,6 +160,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//OperationCallOperation/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//OperationCallOperation/parameters"/>
     </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//OADenot">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//OADenot/exp"/>
+    </genClasses>
     <genClasses ecoreClass="Ale.ecore#//SelfRef"/>
     <genClasses ecoreClass="Ale.ecore#//SuperRef"/>
     <genClasses ecoreClass="Ale.ecore#//StringLiteral">

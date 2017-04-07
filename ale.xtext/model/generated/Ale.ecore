@@ -211,6 +211,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//ParamCall" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OADenot" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelfRef" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="SuperRef" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="StringLiteral" eSuperTypes="#//Expression">

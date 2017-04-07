@@ -43,6 +43,7 @@ import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
 import ale.xtext.ale.NullTypeT;
+import ale.xtext.ale.OADenot;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -393,6 +394,13 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * @generated
    */
   private EClass operationCallOperationEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass oaDenotEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1799,6 +1807,26 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getOADenot()
+  {
+    return oaDenotEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOADenot_Exp()
+  {
+    return (EReference)oaDenotEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getSelfRef()
   {
     return selfRefEClass;
@@ -2337,6 +2365,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     createEAttribute(operationCallOperationEClass, OPERATION_CALL_OPERATION__NAME);
     createEReference(operationCallOperationEClass, OPERATION_CALL_OPERATION__PARAMETERS);
 
+    oaDenotEClass = createEClass(OA_DENOT);
+    createEReference(oaDenotEClass, OA_DENOT__EXP);
+
     selfRefEClass = createEClass(SELF_REF);
 
     superRefEClass = createEClass(SUPER_REF);
@@ -2458,6 +2489,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     negInfixOperationEClass.getESuperTypes().add(this.getExpression());
     constructorOperationEClass.getESuperTypes().add(this.getExpression());
     operationCallOperationEClass.getESuperTypes().add(this.getExpression());
+    oaDenotEClass.getESuperTypes().add(this.getExpression());
     selfRefEClass.getESuperTypes().add(this.getExpression());
     superRefEClass.getESuperTypes().add(this.getExpression());
     stringLiteralEClass.getESuperTypes().add(this.getExpression());
@@ -2643,6 +2675,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEClass(operationCallOperationEClass, OperationCallOperation.class, "OperationCallOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getOperationCallOperation_Name(), ecorePackage.getEString(), "name", null, 0, 1, OperationCallOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getOperationCallOperation_Parameters(), this.getParamCall(), null, "parameters", null, 0, -1, OperationCallOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(oaDenotEClass, OADenot.class, "OADenot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getOADenot_Exp(), this.getExpression(), null, "exp", null, 0, 1, OADenot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(selfRefEClass, SelfRef.class, "SelfRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

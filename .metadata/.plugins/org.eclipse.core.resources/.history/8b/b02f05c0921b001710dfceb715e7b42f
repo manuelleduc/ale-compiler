@@ -1,0 +1,5 @@
+package ale.compiler;
+
+public class AleTypeCheck {
+
+}

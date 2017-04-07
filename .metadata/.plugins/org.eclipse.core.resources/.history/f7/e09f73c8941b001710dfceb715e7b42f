@@ -1,0 +1,20 @@
+package dsl.xtext.validation;
+
+import dsl.xtext.validation.DslValidator;
+import org.eclipse.emf.ecore.EObject;
+
+import ale.xtext.ale.Root;
+
+public class DslBehaviorValidator {
+
+	private Root root;
+	
+	DslBehaviorValidator(Root object, DslValidator validator) {
+	  this.root = root;
+	}
+	
+	void validate() {
+		
+	}
+
+}

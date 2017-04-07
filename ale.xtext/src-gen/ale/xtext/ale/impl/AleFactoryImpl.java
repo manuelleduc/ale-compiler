@@ -109,6 +109,7 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.NEG_INFIX_OPERATION: return createNegInfixOperation();
       case AlePackage.CONSTRUCTOR_OPERATION: return createConstructorOperation();
       case AlePackage.OPERATION_CALL_OPERATION: return createOperationCallOperation();
+      case AlePackage.OA_DENOT: return createOADenot();
       case AlePackage.SELF_REF: return createSelfRef();
       case AlePackage.SUPER_REF: return createSuperRef();
       case AlePackage.STRING_LITERAL: return createStringLiteral();
@@ -617,6 +618,17 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     OperationCallOperationImpl operationCallOperation = new OperationCallOperationImpl();
     return operationCallOperation;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OADenot createOADenot()
+  {
+    OADenotImpl oaDenot = new OADenotImpl();
+    return oaDenot;
   }
 
   /**

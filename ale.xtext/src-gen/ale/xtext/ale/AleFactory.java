@@ -420,6 +420,15 @@ public interface AleFactory extends EFactory
   OperationCallOperation createOperationCallOperation();
 
   /**
+   * Returns a new object of class '<em>OA Denot</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>OA Denot</em>'.
+   * @generated
+   */
+  OADenot createOADenot();
+
+  /**
    * Returns a new object of class '<em>Self Ref</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

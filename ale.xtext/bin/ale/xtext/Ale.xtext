@@ -127,7 +127,7 @@ ParamCall:
 
 AtomicLiteral returns Expression:
 	('(' Expression ')') |
-//	{OADenot} '$' '[' exp=Expression ']' |
+	{OADenot} '$' '[' exp=Expression ']' |
 	{SelfRef} 'self' |
 	{SuperRef} 'super' |
 	{StringLiteral} value=STRING |

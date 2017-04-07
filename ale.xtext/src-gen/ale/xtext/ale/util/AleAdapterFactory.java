@@ -296,6 +296,11 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createOperationCallOperationAdapter();
       }
       @Override
+      public Adapter caseOADenot(OADenot object)
+      {
+        return createOADenotAdapter();
+      }
+      @Override
       public Adapter caseSelfRef(SelfRef object)
       {
         return createSelfRefAdapter();
@@ -1078,6 +1083,21 @@ public class AleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createOperationCallOperationAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.OADenot <em>OA Denot</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.OADenot
+   * @generated
+   */
+  public Adapter createOADenotAdapter()
   {
     return null;
   }

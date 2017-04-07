@@ -463,6 +463,16 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AlePackage.OA_DENOT:
+      {
+        OADenot oaDenot = (OADenot)theEObject;
+        T result = caseOADenot(oaDenot);
+        if (result == null) result = caseExpression(oaDenot);
+        if (result == null) result = caseStatement(oaDenot);
+        if (result == null) result = caseSymbol(oaDenot);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AlePackage.SELF_REF:
       {
         SelfRef selfRef = (SelfRef)theEObject;
@@ -1357,6 +1367,22 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseOperationCallOperation(OperationCallOperation object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>OA Denot</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>OA Denot</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOADenot(OADenot object)
   {
     return null;
   }

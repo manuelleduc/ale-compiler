@@ -82,7 +82,7 @@ auxiliary imported(Root root, List<Root> roots) {
 	}
 }
 
-axiom ClassTypeAAAA
+axiom ClassType
 	G |> AleClass aleClass : AleFactory::eINSTANCE.createClassTypeT
 
 axiom BooleanLiteral

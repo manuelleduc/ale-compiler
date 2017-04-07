@@ -3,16 +3,26 @@
  */
 package dsl.xtext.validation
 
+import ale.xtext.AleStandaloneSetup
+import ale.xtext.ale.AlePackage
+import ale.xtext.ale.Root
+import com.google.inject.Injector
+import dsl.xtext.dsl.DSL
 import dsl.xtext.dsl.DslPackage
 import dsl.xtext.dsl.Syntax
+import java.util.List
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.EcorePackage
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import org.eclipse.xtext.resource.XtextResource
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.validation.Check
-import java.util.List
-import ale.xtext.ale.AlePackage
+import java.lang.reflect.InvocationTargetException
 
 /**
  * This class contains custom validation rules. 
@@ -24,14 +34,14 @@ class DslValidator extends DslTypeValidator {
 //	public static val INVALID_NAME = 'invalidName'
 //
 	String BEHAVIOURS_URI_NOT_FOUND = "behaviours.uri.not.found"
+	String BEHAVIOR_NOT_FOUND = "behavior.not.found"
 
-	
 	override List<EPackage> getEPackages() {
 		newArrayList(DslPackage.eINSTANCE, AlePackage.eINSTANCE)
 	}
 
 	@Check
-	def checkGreetingStartsWithCapital(Syntax syntax) {
+	def checkValidSyntax(Syntax syntax) {
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI))
 			EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE)
 
@@ -47,6 +57,49 @@ class DslValidator extends DslTypeValidator {
 				BEHAVIOURS_URI_NOT_FOUND
 			)
 		}
+	}
+
+	@Check
+	def checkDsl(DSL dsl) {
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("dsl", new XMIResourceFactoryImpl());
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ale", new XMIResourceFactoryImpl());
+
+		val Injector injector2 = new AleStandaloneSetup().createInjectorAndDoEMFRegistration();
+		val XtextResourceSet resourceSet2 = injector2.getInstance(typeof(XtextResourceSet));
+		resourceSet2.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+
+		val behaviors = dsl.behaviours.map [ b |
+			val URI createURI = URI.createURI(b.getValue());
+			var Resource resource2 = null
+			try {
+				resource2 = resourceSet2.getResource(createURI, true);
+			} catch(InvocationTargetException e) {
+				error("ale file reference cannot be resolved", b, DslPackage.Literals.SYNTAX__VALUE, BEHAVIOR_NOT_FOUND)
+			} catch (Exception e) {
+				error("ale file reference cannot be resolved", b, DslPackage.Literals.SYNTAX__VALUE, BEHAVIOR_NOT_FOUND)
+			}
+			resource2.contents.head as Root
+		].toList
+		
+		
+		val ResourceSetImpl resSet = new ResourceSetImpl();
+		
+		val syntx = dsl.syntaxes.map[stx | 
+			if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI))
+			EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
+
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
+
+			return resSet.packageRegistry.getEPackage(stx.value.replaceAll("\"", "")) as EPackage
+		].toList
+				
+		
+		new DslBehaviorValidator(behaviors, syntx, dsl,  this).validate();
+
+	}
+	
+	public def errorB(String message, EObject source, EStructuralFeature feature) {
+		this.error(message, source, feature);
 	}
 
 }

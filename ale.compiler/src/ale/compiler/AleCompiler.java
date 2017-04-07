@@ -67,9 +67,11 @@ public class AleCompiler {
 	private final java.net.URI dslURI;
 	private List<EPackage> syntaxes;
 	private List<EPackage> models;
+	private String filenamedsl;
 
-	public AleCompiler(final java.net.URI uri) {
+	public AleCompiler(final java.net.URI uri, String filenamedsl) {
 		this.dslURI = uri;
+		this.filenamedsl =  filenamedsl;
 	}
 
 	private GenModel saveGenModel(final ResourceSetImpl resSet, final String languageName, final EPackage rootPackage,
@@ -156,7 +158,7 @@ public class AleCompiler {
 			return resSet.getPackageRegistry().getEPackage(syntax.getValue());
 		}).collect(Collectors.toList());
 
-		final String fileNameDsl = "executefsm";
+		final String fileNameDsl = this.filenamedsl.substring(0, this.filenamedsl.length()-4);
 		final String projectName = "test";
 
 		final EPackage rootPackage = EcoreFactory.eINSTANCE.createEPackage();
@@ -221,8 +223,9 @@ public class AleCompiler {
 
 	private void generateConceteOperation(final GraphNode<EClass> entry, final IProject project,
 			final EPackage ePackage, final String fileNameDsl, final ale.xtext.ale.AleClass openClass) {
+		boolean overloaded = openClass != null && openClass.getFields().size()>0 && !((EPackage)entry.elem.eContainer()).getName().equals(((Root)openClass.eContainer() ).getName());
 		final String fileContent = new GenerateAlgebra().processConcreteOperation(entry, ePackage, fileNameDsl,
-				openClass);
+				openClass, overloaded);
 		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra")
 				.append("impl").append("operation");
 		directoryAlgebra.toFile().mkdirs();
