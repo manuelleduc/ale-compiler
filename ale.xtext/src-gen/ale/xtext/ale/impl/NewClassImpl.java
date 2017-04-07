@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class NewClassImpl extends ClassImpl implements NewClass
+public class NewClassImpl extends AleClassImpl implements NewClass
 {
   /**
    * <!-- begin-user-doc -->

@@ -48,7 +48,7 @@ public interface AleFactory extends EFactory
    * @return a new object of class '<em>Class</em>'.
    * @generated
    */
-  Class createClass();
+  AleClass createAleClass();
 
   /**
    * Returns a new object of class '<em>Field</em>'.
@@ -418,15 +418,6 @@ public interface AleFactory extends EFactory
    * @generated
    */
   OperationCallOperation createOperationCallOperation();
-
-  /**
-   * Returns a new object of class '<em>OA Denot</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>OA Denot</em>'.
-   * @generated
-   */
-  OADenot createOADenot();
 
   /**
    * Returns a new object of class '<em>Self Ref</em>'.

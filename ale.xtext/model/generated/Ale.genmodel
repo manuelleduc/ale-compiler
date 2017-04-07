@@ -15,11 +15,11 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ale.ecore#//Import/ref"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//Import/name"/>
     </genClasses>
-    <genClasses ecoreClass="Ale.ecore#//Class">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//Class/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ale.ecore#//Class/superClass"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//Class/fields"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//Class/methods"/>
+    <genClasses ecoreClass="Ale.ecore#//AleClass">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//AleClass/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ale.ecore#//AleClass/superClass"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//AleClass/fields"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//AleClass/methods"/>
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//Field">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//Field/type"/>
@@ -159,9 +159,6 @@
     <genClasses ecoreClass="Ale.ecore#//OperationCallOperation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//OperationCallOperation/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//OperationCallOperation/parameters"/>
-    </genClasses>
-    <genClasses ecoreClass="Ale.ecore#//OADenot">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//OADenot/exp"/>
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//SelfRef"/>
     <genClasses ecoreClass="Ale.ecore#//SuperRef"/>

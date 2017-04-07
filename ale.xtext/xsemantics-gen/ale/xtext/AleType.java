@@ -1,7 +1,9 @@
 package ale.xtext;
 
+import ale.xtext.ale.AleClass;
 import ale.xtext.ale.AleFactory;
 import ale.xtext.ale.AlePackage;
+import ale.xtext.ale.Block;
 import ale.xtext.ale.BooleanLiteral;
 import ale.xtext.ale.BooleanOrOperation;
 import ale.xtext.ale.BooleanTypeT;
@@ -23,7 +25,9 @@ import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
 import ale.xtext.ale.NullTypeT;
 import ale.xtext.ale.OpenClass;
+import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OverrideMethod;
+import ale.xtext.ale.Param;
 import ale.xtext.ale.RealLiteral;
 import ale.xtext.ale.RealTypeT;
 import ale.xtext.ale.ReturnStatement;
@@ -36,6 +40,7 @@ import ale.xtext.ale.StringTypeT;
 import ale.xtext.ale.Type;
 import ale.xtext.ale.TypeSystem;
 import ale.xtext.ale.VarAssign;
+import ale.xtext.ale.VarRef;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.inject.Provider;
@@ -87,9 +92,13 @@ public class AleType extends XsemanticsRuntimeSystem {
   
   public final static String RETURNSTATEMENT = "ale.xtext.ReturnStatement";
   
+  public final static String VARREF = "ale.xtext.VarRef";
+  
   public final static String CHAINEDCALL = "ale.xtext.ChainedCall";
   
   public final static String NOTINFIXOPERATIONRULE = "ale.xtext.NotInfixOperationRule";
+  
+  public final static String OPERATIONCALLOPERATION = "ale.xtext.OperationCallOperation";
   
   public final static String BOOLEANOROPERATION = "ale.xtext.BooleanOrOperation";
   
@@ -124,11 +133,11 @@ public class AleType extends XsemanticsRuntimeSystem {
     	"importedImpl", 3);
   }
   
-  public Boolean superClasses(final ale.xtext.ale.Class openClass, final List<ale.xtext.ale.Class> existing) throws RuleFailedException {
+  public Boolean superClasses(final AleClass openClass, final List<AleClass> existing) throws RuleFailedException {
     return superClasses(null, openClass, existing);
   }
   
-  public Boolean superClasses(final RuleApplicationTrace _trace_, final ale.xtext.ale.Class openClass, final List<ale.xtext.ale.Class> existing) throws RuleFailedException {
+  public Boolean superClasses(final RuleApplicationTrace _trace_, final AleClass openClass, final List<AleClass> existing) throws RuleFailedException {
     try {
     	return superClassesInternal(_trace_, openClass, existing);
     } catch (Exception _e_superClasses) {
@@ -193,7 +202,7 @@ public class AleType extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> noCyclicOpenClassHierarchyInternal(final RuleApplicationTrace _trace_, final OpenClass clazz) throws RuleFailedException {
-    final ArrayList<ale.xtext.ale.Class> ext = CollectionLiterals.<ale.xtext.ale.Class>newArrayList();
+    final ArrayList<AleClass> ext = CollectionLiterals.<AleClass>newArrayList();
     Boolean _superClasses = this.superClassesInternal(_trace_, clazz, ext);
     /* superClasses(clazz, ext) */
     if (!_superClasses) {
@@ -201,11 +210,11 @@ public class AleType extends XsemanticsRuntimeSystem {
     }
     boolean _contains = ext.contains(clazz);
     if (_contains) {
-      /* fail error "Cyclic dependency" source clazz feature AlePackage::eINSTANCE.class_SuperClass */
+      /* fail error "Cyclic dependency" source clazz feature AlePackage::eINSTANCE.aleClass_SuperClass */
       String error = "Cyclic dependency";
       EObject source = clazz;
-      EReference _class_SuperClass = AlePackage.eINSTANCE.getClass_SuperClass();
-      EStructuralFeature feature = _class_SuperClass;
+      EReference _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
+      EStructuralFeature feature = _aleClass_SuperClass;
       throwForExplicitFail(error, new ErrorInformation(source, feature));
     }
     return new Result<Boolean>(true);
@@ -224,14 +233,14 @@ public class AleType extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> defMethodDoesNotAlreadyExistsInternal(final RuleApplicationTrace _trace_, final DefMethod method) throws RuleFailedException {
-    final ArrayList<ale.xtext.ale.Class> classes = CollectionLiterals.<ale.xtext.ale.Class>newArrayList();
+    final ArrayList<AleClass> classes = CollectionLiterals.<AleClass>newArrayList();
     EObject _eContainer = method.eContainer();
-    Boolean _superClasses = this.superClassesInternal(_trace_, ((ale.xtext.ale.Class) _eContainer), classes);
-    /* superClasses(method.eContainer as Class, classes) */
+    Boolean _superClasses = this.superClassesInternal(_trace_, ((AleClass) _eContainer), classes);
+    /* superClasses(method.eContainer as AleClass, classes) */
     if (!_superClasses) {
-      sneakyThrowRuleFailedException("superClasses(method.eContainer as Class, classes)");
+      sneakyThrowRuleFailedException("superClasses(method.eContainer as AleClass, classes)");
     }
-    final Function1<ale.xtext.ale.Class, Boolean> _function = (ale.xtext.ale.Class c) -> {
+    final Function1<AleClass, Boolean> _function = (AleClass c) -> {
       EList<Method> _methods = c.getMethods();
       final Function1<Method, Boolean> _function_1 = (Method it) -> {
         String _name = it.getName();
@@ -242,7 +251,7 @@ public class AleType extends XsemanticsRuntimeSystem {
       boolean _isEmpty = IterableExtensions.isEmpty(_filter);
       return Boolean.valueOf((!_isEmpty));
     };
-    Iterable<ale.xtext.ale.Class> _filter = IterableExtensions.<ale.xtext.ale.Class>filter(classes, _function);
+    Iterable<AleClass> _filter = IterableExtensions.<AleClass>filter(classes, _function);
     boolean _isEmpty = IterableExtensions.isEmpty(_filter);
     boolean _not = (!_isEmpty);
     if (_not) {
@@ -269,14 +278,14 @@ public class AleType extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> overrideMethodDoesMustExistsInternal(final RuleApplicationTrace _trace_, final OverrideMethod method) throws RuleFailedException {
-    final ArrayList<ale.xtext.ale.Class> classes = CollectionLiterals.<ale.xtext.ale.Class>newArrayList();
+    final ArrayList<AleClass> classes = CollectionLiterals.<AleClass>newArrayList();
     EObject _eContainer = method.eContainer();
-    Boolean _superClasses = this.superClassesInternal(_trace_, ((ale.xtext.ale.Class) _eContainer), classes);
-    /* superClasses(method.eContainer as Class, classes) */
+    Boolean _superClasses = this.superClassesInternal(_trace_, ((AleClass) _eContainer), classes);
+    /* superClasses(method.eContainer as AleClass, classes) */
     if (!_superClasses) {
-      sneakyThrowRuleFailedException("superClasses(method.eContainer as Class, classes)");
+      sneakyThrowRuleFailedException("superClasses(method.eContainer as AleClass, classes)");
     }
-    final Function1<ale.xtext.ale.Class, Boolean> _function = (ale.xtext.ale.Class c) -> {
+    final Function1<AleClass, Boolean> _function = (AleClass c) -> {
       EList<Method> _methods = c.getMethods();
       final Function1<Method, Boolean> _function_1 = (Method it) -> {
         String _name = it.getName();
@@ -287,7 +296,7 @@ public class AleType extends XsemanticsRuntimeSystem {
       boolean _isEmpty = IterableExtensions.isEmpty(_filter);
       return Boolean.valueOf((!_isEmpty));
     };
-    Iterable<ale.xtext.ale.Class> _filter = IterableExtensions.<ale.xtext.ale.Class>filter(classes, _function);
+    Iterable<AleClass> _filter = IterableExtensions.<AleClass>filter(classes, _function);
     boolean _isEmpty = IterableExtensions.isEmpty(_filter);
     if (_isEmpty) {
       /* fail error "Overrided method does not exist in parents" source method feature AlePackage::eINSTANCE.method_Name */
@@ -344,7 +353,7 @@ public class AleType extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> noCyclicNewClassHierarchyInternal(final RuleApplicationTrace _trace_, final NewClass clazz) throws RuleFailedException {
-    final ArrayList<ale.xtext.ale.Class> ext = CollectionLiterals.<ale.xtext.ale.Class>newArrayList();
+    final ArrayList<AleClass> ext = CollectionLiterals.<AleClass>newArrayList();
     Boolean _superClasses = this.superClassesInternal(_trace_, clazz, ext);
     /* superClasses(clazz, ext) */
     if (!_superClasses) {
@@ -352,11 +361,11 @@ public class AleType extends XsemanticsRuntimeSystem {
     }
     boolean _contains = ext.contains(clazz);
     if (_contains) {
-      /* fail error "Cyclic dependency" source clazz feature AlePackage::eINSTANCE.class_SuperClass */
+      /* fail error "Cyclic dependency" source clazz feature AlePackage::eINSTANCE.aleClass_SuperClass */
       String error = "Cyclic dependency";
       EObject source = clazz;
-      EReference _class_SuperClass = AlePackage.eINSTANCE.getClass_SuperClass();
-      EStructuralFeature feature = _class_SuperClass;
+      EReference _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
+      EStructuralFeature feature = _aleClass_SuperClass;
       throwForExplicitFail(error, new ErrorInformation(source, feature));
     }
     return new Result<Boolean>(true);
@@ -375,34 +384,34 @@ public class AleType extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> checkClassNamesInternal(final RuleApplicationTrace _trace_, final Root root) throws RuleFailedException {
-    EList<ale.xtext.ale.Class> _classes = root.getClasses();
-    final Function1<ale.xtext.ale.Class, String> _function = (ale.xtext.ale.Class it) -> {
+    EList<AleClass> _classes = root.getClasses();
+    final Function1<AleClass, String> _function = (AleClass it) -> {
       return it.getName();
     };
-    Map<String, List<ale.xtext.ale.Class>> _groupBy = IterableExtensions.<String, ale.xtext.ale.Class>groupBy(_classes, _function);
-    final Function2<String, List<ale.xtext.ale.Class>, Boolean> _function_1 = (String p1, List<ale.xtext.ale.Class> p2) -> {
+    Map<String, List<AleClass>> _groupBy = IterableExtensions.<String, AleClass>groupBy(_classes, _function);
+    final Function2<String, List<AleClass>, Boolean> _function_1 = (String p1, List<AleClass> p2) -> {
       int _length = ((Object[])Conversions.unwrapArray(p2, Object.class)).length;
       return Boolean.valueOf((_length > 1));
     };
-    Map<String, List<ale.xtext.ale.Class>> _filter = MapExtensions.<String, List<ale.xtext.ale.Class>>filter(_groupBy, _function_1);
-    Collection<List<ale.xtext.ale.Class>> _values = _filter.values();
-    Iterable<ale.xtext.ale.Class> _flatten = Iterables.<ale.xtext.ale.Class>concat(_values);
-    for (final ale.xtext.ale.Class x : _flatten) {
-      /* fail error "Duplicated name" source x feature AlePackage::eINSTANCE.class_Name */
+    Map<String, List<AleClass>> _filter = MapExtensions.<String, List<AleClass>>filter(_groupBy, _function_1);
+    Collection<List<AleClass>> _values = _filter.values();
+    Iterable<AleClass> _flatten = Iterables.<AleClass>concat(_values);
+    for (final AleClass x : _flatten) {
+      /* fail error "Duplicated name" source x feature AlePackage::eINSTANCE.aleClass_Name */
       String error = "Duplicated name";
       EObject source = x;
-      EAttribute _class_Name = AlePackage.eINSTANCE.getClass_Name();
-      EStructuralFeature feature = _class_Name;
+      EAttribute _aleClass_Name = AlePackage.eINSTANCE.getAleClass_Name();
+      EStructuralFeature feature = _aleClass_Name;
       throwForExplicitFail(error, new ErrorInformation(source, feature));
     }
     return new Result<Boolean>(true);
   }
   
-  public Result<Boolean> checkFieldName(final ale.xtext.ale.Class clazz) {
+  public Result<Boolean> checkFieldName(final AleClass clazz) {
     return checkFieldName(null, clazz);
   }
   
-  public Result<Boolean> checkFieldName(final RuleApplicationTrace _trace_, final ale.xtext.ale.Class clazz) {
+  public Result<Boolean> checkFieldName(final RuleApplicationTrace _trace_, final AleClass clazz) {
     try {
     	return checkFieldNameInternal(_trace_, clazz);
     } catch (Exception _e_CheckFieldName) {
@@ -410,7 +419,7 @@ public class AleType extends XsemanticsRuntimeSystem {
     }
   }
   
-  protected Result<Boolean> checkFieldNameInternal(final RuleApplicationTrace _trace_, final ale.xtext.ale.Class clazz) throws RuleFailedException {
+  protected Result<Boolean> checkFieldNameInternal(final RuleApplicationTrace _trace_, final AleClass clazz) throws RuleFailedException {
     EList<Field> _fields = clazz.getFields();
     final Function1<Field, String> _function = (Field it) -> {
       return it.getName();
@@ -434,7 +443,7 @@ public class AleType extends XsemanticsRuntimeSystem {
     return new Result<Boolean>(true);
   }
   
-  protected Boolean superClassesInternal(final RuleApplicationTrace _trace_, final ale.xtext.ale.Class openClass, final List<ale.xtext.ale.Class> existing) {
+  protected Boolean superClassesInternal(final RuleApplicationTrace _trace_, final AleClass openClass, final List<AleClass> existing) {
     try {
     	checkParamsNotNull(openClass, existing);
     	return superClassesDispatcher.invoke(_trace_, openClass, existing);
@@ -444,7 +453,7 @@ public class AleType extends XsemanticsRuntimeSystem {
     }
   }
   
-  protected void superClassesThrowException(final String _error, final String _issue, final Exception _ex, final ale.xtext.ale.Class openClass, final List<ale.xtext.ale.Class> existing, final ErrorInformation[] _errorInformations) throws RuleFailedException {
+  protected void superClassesThrowException(final String _error, final String _issue, final Exception _ex, final AleClass openClass, final List<AleClass> existing, final ErrorInformation[] _errorInformations) throws RuleFailedException {
     throwRuleFailedException(_error, _issue, _ex, _errorInformations);
   }
   
@@ -496,7 +505,7 @@ public class AleType extends XsemanticsRuntimeSystem {
     	_issue, _ex, new ErrorInformation(source, null));
   }
   
-  protected Boolean superClassesImpl(final RuleApplicationTrace _trace_, final ale.xtext.ale.Class openClass, final List<ale.xtext.ale.Class> existing) throws RuleFailedException {
+  protected Boolean superClassesImpl(final RuleApplicationTrace _trace_, final AleClass openClass, final List<AleClass> existing) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
     	final Boolean _result_ = applyAuxFunSuperClasses(_subtrace_, openClass, existing);
@@ -515,12 +524,12 @@ public class AleType extends XsemanticsRuntimeSystem {
     }
   }
   
-  protected Boolean applyAuxFunSuperClasses(final RuleApplicationTrace _trace_, final ale.xtext.ale.Class openClass, final List<ale.xtext.ale.Class> existing) throws RuleFailedException {
-    EList<ale.xtext.ale.Class> _superClass = openClass.getSuperClass();
+  protected Boolean applyAuxFunSuperClasses(final RuleApplicationTrace _trace_, final AleClass openClass, final List<AleClass> existing) throws RuleFailedException {
+    EList<AleClass> _superClass = openClass.getSuperClass();
     boolean _notEquals = (!Objects.equal(_superClass, null));
     if (_notEquals) {
-      EList<ale.xtext.ale.Class> _superClass_1 = openClass.getSuperClass();
-      for (final ale.xtext.ale.Class c : _superClass_1) {
+      EList<AleClass> _superClass_1 = openClass.getSuperClass();
+      for (final AleClass c : _superClass_1) {
         boolean _contains = existing.contains(c);
         boolean _not = (!_contains);
         if (_not) {
@@ -781,12 +790,12 @@ public class AleType extends XsemanticsRuntimeSystem {
     ClassTypeT ts = null; // output parameter
     Iterable<EObject> _allContainers = EcoreUtil2.getAllContainers(ref);
     final Function1<EObject, Boolean> _function = (EObject e) -> {
-      return Boolean.valueOf((e instanceof ale.xtext.ale.Class));
+      return Boolean.valueOf((e instanceof AleClass));
     };
     final EObject selfClass = IterableExtensions.<EObject>findFirst(_allContainers, _function);
     ClassTypeT _createClassTypeT = AleFactory.eINSTANCE.createClassTypeT();
     ts = _createClassTypeT;
-    ts.setClazz(((ale.xtext.ale.Class) selfClass));
+    ts.setClazz(((AleClass) selfClass));
     return new Result<TypeSystem>(ts);
   }
   
@@ -818,6 +827,92 @@ public class AleType extends XsemanticsRuntimeSystem {
     typeRet = (TypeSystem) result.getFirst();
     
     return new Result<TypeSystem>(typeRet);
+  }
+  
+  protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VarRef varRef) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final Result<TypeSystem> _result_ = applyRuleVarRef(G, _subtrace_, varRef);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return ruleName("VarRef") + stringRepForEnv(G) + " |- " + stringRep(varRef) + " : " + stringRep(_result_.getFirst());
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyRuleVarRef) {
+    	typeThrowException(ruleName("VarRef") + stringRepForEnv(G) + " |- " + stringRep(varRef) + " : " + "TypeSystem",
+    		VARREF,
+    		e_applyRuleVarRef, varRef, new ErrorInformation[] {new ErrorInformation(varRef)});
+    	return null;
+    }
+  }
+  
+  protected Result<TypeSystem> applyRuleVarRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VarRef varRef) throws RuleFailedException {
+    TypeSystem vrt = null; // output parameter
+    EObject _eContainer = varRef.eContainer();
+    if ((_eContainer instanceof Block)) {
+      Iterable<EObject> _allContainers = EcoreUtil2.getAllContainers(varRef);
+      final Function1<EObject, Boolean> _function = (EObject e) -> {
+        return Boolean.valueOf((e instanceof Block));
+      };
+      EObject _findFirst = IterableExtensions.<EObject>findFirst(_allContainers, _function);
+      Block parentBlock = ((Block) _findFirst);
+      EList<Statement> _body = parentBlock.getBody();
+      int varRefIdx = _body.indexOf(varRef);
+      EList<Statement> _body_1 = parentBlock.getBody();
+      List<Statement> scope = _body_1.subList(0, (varRefIdx - 1));
+      final Function1<Statement, Boolean> _function_1 = (Statement e) -> {
+        return Boolean.valueOf((e instanceof VarAssign));
+      };
+      Iterable<Statement> _filter = IterableExtensions.<Statement>filter(scope, _function_1);
+      final Function1<Statement, Boolean> _function_2 = (Statement e) -> {
+        String _name = ((VarAssign) e).getName();
+        String _value = varRef.getValue();
+        return Boolean.valueOf(Objects.equal(_name, _value));
+      };
+      Iterable<Statement> res = IterableExtensions.<Statement>filter(_filter, _function_2);
+      boolean _isEmpty = IterableExtensions.isEmpty(res);
+      boolean _not = (!_isEmpty);
+      if (_not) {
+        /* G |- res.head : var TypeSystem varType */
+        Statement _head = IterableExtensions.<Statement>head(res);
+        TypeSystem varType = null;
+        Result<TypeSystem> result = typeInternal(G, _trace_, _head);
+        checkAssignableTo(result.getFirst(), TypeSystem.class);
+        varType = (TypeSystem) result.getFirst();
+        
+        vrt = varType;
+      } else {
+        Iterable<EObject> _allContainers_1 = EcoreUtil2.getAllContainers(varRef);
+        final Function1<EObject, Boolean> _function_3 = (EObject e) -> {
+          return Boolean.valueOf((e instanceof Method));
+        };
+        EObject _findFirst_1 = IterableExtensions.<EObject>findFirst(_allContainers_1, _function_3);
+        Method method = ((Method) _findFirst_1);
+        EList<Param> _params = method.getParams();
+        final Function1<Param, Boolean> _function_4 = (Param p) -> {
+          String _name = p.getName();
+          String _value = varRef.getValue();
+          return Boolean.valueOf(Objects.equal(_name, _value));
+        };
+        Iterable<Param> param = IterableExtensions.<Param>filter(_params, _function_4);
+        boolean _isEmpty_1 = IterableExtensions.isEmpty(param);
+        boolean _not_1 = (!_isEmpty_1);
+        if (_not_1) {
+          /* G |= param.head.type : var TypeSystem paramType */
+          Param _head_1 = IterableExtensions.<Param>head(param);
+          Type _type = _head_1.getType();
+          TypeSystem paramType = null;
+          Result<TypeSystem> result_1 = staticTypeInternal(G, _trace_, _type);
+          checkAssignableTo(result_1.getFirst(), TypeSystem.class);
+          paramType = (TypeSystem) result_1.getFirst();
+          
+          vrt = paramType;
+        }
+      }
+    }
+    return new Result<TypeSystem>(vrt);
   }
   
   protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ChainedCall cc) throws RuleFailedException {
@@ -891,6 +986,63 @@ public class AleType extends XsemanticsRuntimeSystem {
     nioT = (BooleanTypeT) result.getFirst();
     
     return new Result<TypeSystem>(nioT);
+  }
+  
+  protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final OperationCallOperation oc) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final Result<TypeSystem> _result_ = applyRuleOperationCallOperation(G, _subtrace_, oc);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return ruleName("OperationCallOperation") + stringRepForEnv(G) + " |- " + stringRep(oc) + " : " + stringRep(_result_.getFirst());
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyRuleOperationCallOperation) {
+    	typeThrowException(ruleName("OperationCallOperation") + stringRepForEnv(G) + " |- " + stringRep(oc) + " : " + "TypeSystem",
+    		OPERATIONCALLOPERATION,
+    		e_applyRuleOperationCallOperation, oc, new ErrorInformation[] {new ErrorInformation(oc)});
+    	return null;
+    }
+  }
+  
+  protected Result<TypeSystem> applyRuleOperationCallOperation(final RuleEnvironment G, final RuleApplicationTrace _trace_, final OperationCallOperation oc) throws RuleFailedException {
+    TypeSystem oct = null; // output parameter
+    EObject _eContainer = oc.eContainer();
+    if ((_eContainer instanceof ChainedCall)) {
+      /* G |- (oc.eContainer as ChainedCall).left : var TypeSystem leftType */
+      EObject _eContainer_1 = oc.eContainer();
+      Expression _left = ((ChainedCall) _eContainer_1).getLeft();
+      TypeSystem leftType = null;
+      Result<TypeSystem> result = typeInternal(G, _trace_, _left);
+      checkAssignableTo(result.getFirst(), TypeSystem.class);
+      leftType = (TypeSystem) result.getFirst();
+      
+      if ((leftType instanceof ClassTypeT)) {
+        AleClass _clazz = ((ClassTypeT)leftType).getClazz();
+        EList<Method> _methods = _clazz.getMethods();
+        final Function1<Method, Boolean> _function = (Method m) -> {
+          return Boolean.valueOf((Objects.equal(m.getName(), oc.getName()) && (m.getParams().size() == oc.getParameters().size())));
+        };
+        Iterable<Method> methods = IterableExtensions.<Method>filter(_methods, _function);
+        boolean _isEmpty = IterableExtensions.isEmpty(methods);
+        boolean _not = (!_isEmpty);
+        if (_not) {
+          /* G |= methods.head.type : var TypeSystem metType */
+          Method _head = IterableExtensions.<Method>head(methods);
+          Type _type = _head.getType();
+          TypeSystem metType = null;
+          Result<TypeSystem> result_1 = staticTypeInternal(G, _trace_, _type);
+          checkAssignableTo(result_1.getFirst(), TypeSystem.class);
+          metType = (TypeSystem) result_1.getFirst();
+          
+          oct = metType;
+        } else {
+        }
+      }
+    }
+    return new Result<TypeSystem>(oct);
   }
   
   protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final BooleanOrOperation boo) throws RuleFailedException {

@@ -3,72 +3,7 @@
  */
 package ale.xtext.ale.util;
 
-import ale.xtext.ale.AddOperation;
-import ale.xtext.ale.AlePackage;
-import ale.xtext.ale.Block;
-import ale.xtext.ale.BooleanAndOperation;
-import ale.xtext.ale.BooleanLiteral;
-import ale.xtext.ale.BooleanOrOperation;
-import ale.xtext.ale.BooleanTypeT;
-import ale.xtext.ale.BooleanXorOperation;
-import ale.xtext.ale.ChainedCall;
-import ale.xtext.ale.ChainedCallArrow;
-import ale.xtext.ale.ClassTypeT;
-import ale.xtext.ale.CompareGEOperation;
-import ale.xtext.ale.CompareGOperation;
-import ale.xtext.ale.CompareLEOperation;
-import ale.xtext.ale.CompareLOperation;
-import ale.xtext.ale.CompareNEOperation;
-import ale.xtext.ale.ConstructorOperation;
-import ale.xtext.ale.DefMethod;
-import ale.xtext.ale.DivOperation;
-import ale.xtext.ale.EqualityOperation;
-import ale.xtext.ale.Expression;
-import ale.xtext.ale.Field;
-import ale.xtext.ale.ForLoop;
-import ale.xtext.ale.IfStatement;
-import ale.xtext.ale.ImpliesOperation;
-import ale.xtext.ale.Import;
-import ale.xtext.ale.IntLiteral;
-import ale.xtext.ale.IntRange;
-import ale.xtext.ale.IntTypeT;
-import ale.xtext.ale.LetStatement;
-import ale.xtext.ale.LiteralType;
-import ale.xtext.ale.Method;
-import ale.xtext.ale.MultOperation;
-import ale.xtext.ale.NegInfixOperation;
-import ale.xtext.ale.NewClass;
-import ale.xtext.ale.NotInfixOperation;
-import ale.xtext.ale.NullLiteral;
-import ale.xtext.ale.NullTypeT;
-import ale.xtext.ale.OADenot;
-import ale.xtext.ale.OpenClass;
-import ale.xtext.ale.OperationCallOperation;
-import ale.xtext.ale.OrderedSetDecl;
-import ale.xtext.ale.OrderedSetType;
-import ale.xtext.ale.OutOfScopeType;
-import ale.xtext.ale.OverrideMethod;
-import ale.xtext.ale.Param;
-import ale.xtext.ale.ParamCall;
-import ale.xtext.ale.RealLiteral;
-import ale.xtext.ale.RealTypeT;
-import ale.xtext.ale.ReturnStatement;
-import ale.xtext.ale.Root;
-import ale.xtext.ale.SelfRef;
-import ale.xtext.ale.SequenceDecl;
-import ale.xtext.ale.SequenceType;
-import ale.xtext.ale.SequenceTypeT;
-import ale.xtext.ale.Statement;
-import ale.xtext.ale.StringLiteral;
-import ale.xtext.ale.StringTypeT;
-import ale.xtext.ale.SubOperation;
-import ale.xtext.ale.SuperRef;
-import ale.xtext.ale.Symbol;
-import ale.xtext.ale.Type;
-import ale.xtext.ale.TypeSystem;
-import ale.xtext.ale.VarAssign;
-import ale.xtext.ale.VarRef;
-import ale.xtext.ale.WhileStatement;
+import ale.xtext.ale.*;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -151,9 +86,9 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createImportAdapter();
       }
       @Override
-      public Adapter caseClass(ale.xtext.ale.Class object)
+      public Adapter caseAleClass(AleClass object)
       {
-        return createClassAdapter();
+        return createAleClassAdapter();
       }
       @Override
       public Adapter caseField(Field object)
@@ -361,11 +296,6 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createOperationCallOperationAdapter();
       }
       @Override
-      public Adapter caseOADenot(OADenot object)
-      {
-        return createOADenotAdapter();
-      }
-      @Override
       public Adapter caseSelfRef(SelfRef object)
       {
         return createSelfRefAdapter();
@@ -523,16 +453,16 @@ public class AleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link ale.xtext.ale.Class <em>Class</em>}'.
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.AleClass <em>Class</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see ale.xtext.ale.Class
+   * @see ale.xtext.ale.AleClass
    * @generated
    */
-  public Adapter createClassAdapter()
+  public Adapter createAleClassAdapter()
   {
     return null;
   }
@@ -1148,21 +1078,6 @@ public class AleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createOperationCallOperationAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link ale.xtext.ale.OADenot <em>OA Denot</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see ale.xtext.ale.OADenot
-   * @generated
-   */
-  public Adapter createOADenotAdapter()
   {
     return null;
   }

@@ -3,6 +3,7 @@
  */
 package ale.xtext.ale.impl;
 
+import ale.xtext.ale.AleClass;
 import ale.xtext.ale.AlePackage;
 import ale.xtext.ale.Import;
 import ale.xtext.ale.Root;
@@ -78,7 +79,7 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root
    * @generated
    * @ordered
    */
-  protected EList<ale.xtext.ale.Class> classes;
+  protected EList<AleClass> classes;
 
   /**
    * <!-- begin-user-doc -->
@@ -143,11 +144,11 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<ale.xtext.ale.Class> getClasses()
+  public EList<AleClass> getClasses()
   {
     if (classes == null)
     {
-      classes = new EObjectContainmentEList<ale.xtext.ale.Class>(ale.xtext.ale.Class.class, this, AlePackage.ROOT__CLASSES);
+      classes = new EObjectContainmentEList<AleClass>(AleClass.class, this, AlePackage.ROOT__CLASSES);
     }
     return classes;
   }
@@ -210,7 +211,7 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root
         return;
       case AlePackage.ROOT__CLASSES:
         getClasses().clear();
-        getClasses().addAll((Collection<? extends ale.xtext.ale.Class>)newValue);
+        getClasses().addAll((Collection<? extends AleClass>)newValue);
         return;
     }
     super.eSet(featureID, newValue);

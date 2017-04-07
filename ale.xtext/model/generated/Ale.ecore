@@ -6,16 +6,16 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
         eType="#//Import" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1"
-        eType="#//Class" containment="true"/>
+        eType="#//AleClass" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Import">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//Root"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Class">
+  <eClassifiers xsi:type="ecore:EClass" name="AleClass">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="superClass" unique="false"
-        upperBound="-1" eType="#//Class"/>
+        upperBound="-1" eType="#//AleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fields" upperBound="-1"
         eType="#//Field" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="methods" upperBound="-1"
@@ -58,8 +58,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TypeSystem"/>
-  <eClassifiers xsi:type="ecore:EClass" name="OpenClass" eSuperTypes="#//Class"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NewClass" eSuperTypes="#//Class"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OpenClass" eSuperTypes="#//AleClass"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewClass" eSuperTypes="#//AleClass"/>
   <eClassifiers xsi:type="ecore:EClass" name="ReturnStatement" eSuperTypes="#//Statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="returned" eType="#//Expression"
         containment="true"/>
@@ -211,10 +211,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//ParamCall" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OADenot" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="#//Expression"
-        containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelfRef" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="SuperRef" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="StringLiteral" eSuperTypes="#//Expression">
@@ -268,6 +264,6 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClassTypeT" eSuperTypes="#//TypeSystem">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="clazz" eType="#//Class"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="clazz" eType="#//AleClass"/>
   </eClassifiers>
 </ecore:EPackage>

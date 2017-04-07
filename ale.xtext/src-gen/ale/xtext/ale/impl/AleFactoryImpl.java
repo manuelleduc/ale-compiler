@@ -3,73 +3,7 @@
  */
 package ale.xtext.ale.impl;
 
-import ale.xtext.ale.AddOperation;
-import ale.xtext.ale.AleFactory;
-import ale.xtext.ale.AlePackage;
-import ale.xtext.ale.Block;
-import ale.xtext.ale.BooleanAndOperation;
-import ale.xtext.ale.BooleanLiteral;
-import ale.xtext.ale.BooleanOrOperation;
-import ale.xtext.ale.BooleanTypeT;
-import ale.xtext.ale.BooleanXorOperation;
-import ale.xtext.ale.ChainedCall;
-import ale.xtext.ale.ChainedCallArrow;
-import ale.xtext.ale.ClassTypeT;
-import ale.xtext.ale.CompareGEOperation;
-import ale.xtext.ale.CompareGOperation;
-import ale.xtext.ale.CompareLEOperation;
-import ale.xtext.ale.CompareLOperation;
-import ale.xtext.ale.CompareNEOperation;
-import ale.xtext.ale.ConstructorOperation;
-import ale.xtext.ale.DefMethod;
-import ale.xtext.ale.DivOperation;
-import ale.xtext.ale.EqualityOperation;
-import ale.xtext.ale.Expression;
-import ale.xtext.ale.Field;
-import ale.xtext.ale.ForLoop;
-import ale.xtext.ale.IfStatement;
-import ale.xtext.ale.ImpliesOperation;
-import ale.xtext.ale.Import;
-import ale.xtext.ale.IntLiteral;
-import ale.xtext.ale.IntRange;
-import ale.xtext.ale.IntTypeT;
-import ale.xtext.ale.LetStatement;
-import ale.xtext.ale.LiteralType;
-import ale.xtext.ale.Method;
-import ale.xtext.ale.MultOperation;
-import ale.xtext.ale.NegInfixOperation;
-import ale.xtext.ale.NewClass;
-import ale.xtext.ale.NotInfixOperation;
-import ale.xtext.ale.NullLiteral;
-import ale.xtext.ale.NullTypeT;
-import ale.xtext.ale.OADenot;
-import ale.xtext.ale.OpenClass;
-import ale.xtext.ale.OperationCallOperation;
-import ale.xtext.ale.OrderedSetDecl;
-import ale.xtext.ale.OrderedSetType;
-import ale.xtext.ale.OutOfScopeType;
-import ale.xtext.ale.OverrideMethod;
-import ale.xtext.ale.Param;
-import ale.xtext.ale.ParamCall;
-import ale.xtext.ale.RealLiteral;
-import ale.xtext.ale.RealTypeT;
-import ale.xtext.ale.ReturnStatement;
-import ale.xtext.ale.Root;
-import ale.xtext.ale.SelfRef;
-import ale.xtext.ale.SequenceDecl;
-import ale.xtext.ale.SequenceType;
-import ale.xtext.ale.SequenceTypeT;
-import ale.xtext.ale.Statement;
-import ale.xtext.ale.StringLiteral;
-import ale.xtext.ale.StringTypeT;
-import ale.xtext.ale.SubOperation;
-import ale.xtext.ale.SuperRef;
-import ale.xtext.ale.Symbol;
-import ale.xtext.ale.Type;
-import ale.xtext.ale.TypeSystem;
-import ale.xtext.ale.VarAssign;
-import ale.xtext.ale.VarRef;
-import ale.xtext.ale.WhileStatement;
+import ale.xtext.ale.*;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -133,7 +67,7 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
     {
       case AlePackage.ROOT: return createRoot();
       case AlePackage.IMPORT: return createImport();
-      case AlePackage.CLASS: return createClass();
+      case AlePackage.ALE_CLASS: return createAleClass();
       case AlePackage.FIELD: return createField();
       case AlePackage.METHOD: return createMethod();
       case AlePackage.DEF_METHOD: return createDefMethod();
@@ -175,7 +109,6 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.NEG_INFIX_OPERATION: return createNegInfixOperation();
       case AlePackage.CONSTRUCTOR_OPERATION: return createConstructorOperation();
       case AlePackage.OPERATION_CALL_OPERATION: return createOperationCallOperation();
-      case AlePackage.OA_DENOT: return createOADenot();
       case AlePackage.SELF_REF: return createSelfRef();
       case AlePackage.SUPER_REF: return createSuperRef();
       case AlePackage.STRING_LITERAL: return createStringLiteral();
@@ -229,10 +162,10 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ale.xtext.ale.Class createClass()
+  public AleClass createAleClass()
   {
-    ClassImpl class_ = new ClassImpl();
-    return class_;
+    AleClassImpl aleClass = new AleClassImpl();
+    return aleClass;
   }
 
   /**
@@ -684,17 +617,6 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     OperationCallOperationImpl operationCallOperation = new OperationCallOperationImpl();
     return operationCallOperation;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public OADenot createOADenot()
-  {
-    OADenotImpl oaDenot = new OADenotImpl();
-    return oaDenot;
   }
 
   /**

@@ -14,6 +14,6 @@ package ale.xtext.ale;
  * @model
  * @generated
  */
-public interface OpenClass extends ale.xtext.ale.Class
+public interface OpenClass extends AleClass
 {
 } // OpenClass

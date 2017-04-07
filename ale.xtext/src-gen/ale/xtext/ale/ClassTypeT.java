@@ -31,12 +31,12 @@ public interface ClassTypeT extends TypeSystem
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Clazz</em>' reference.
-   * @see #setClazz(ale.xtext.ale.Class)
+   * @see #setClazz(AleClass)
    * @see ale.xtext.ale.AlePackage#getClassTypeT_Clazz()
    * @model
    * @generated
    */
-  ale.xtext.ale.Class getClazz();
+  AleClass getClazz();
 
   /**
    * Sets the value of the '{@link ale.xtext.ale.ClassTypeT#getClazz <em>Clazz</em>}' reference.
@@ -46,6 +46,6 @@ public interface ClassTypeT extends TypeSystem
    * @see #getClazz()
    * @generated
    */
-  void setClazz(ale.xtext.ale.Class value);
+  void setClazz(AleClass value);
 
 } // ClassTypeT

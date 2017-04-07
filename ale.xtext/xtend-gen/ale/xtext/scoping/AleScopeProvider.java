@@ -3,6 +3,7 @@
  */
 package ale.xtext.scoping;
 
+import ale.xtext.ale.AleClass;
 import ale.xtext.ale.AlePackage;
 import ale.xtext.ale.Import;
 import ale.xtext.ale.NewClass;
@@ -34,32 +35,32 @@ public class AleScopeProvider extends AbstractAleScopeProvider {
   @Override
   public IScope getScope(final EObject context, final EReference reference) {
     if ((context instanceof OpenClass)) {
-      EReference _class_SuperClass = AlePackage.eINSTANCE.getClass_SuperClass();
-      boolean _equals = Objects.equal(reference, _class_SuperClass);
+      EReference _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
+      boolean _equals = Objects.equal(reference, _aleClass_SuperClass);
       if (_equals) {
         final IScope tmp = super.getScope(context, reference);
         EObject _eContainer = ((OpenClass)context).eContainer();
         final Root currentRoot = ((Root) _eContainer);
         EList<Import> _imports = currentRoot.getImports();
-        final Function1<Import, EList<ale.xtext.ale.Class>> _function = (Import i) -> {
+        final Function1<Import, EList<AleClass>> _function = (Import i) -> {
           Root _ref = i.getRef();
           return _ref.getClasses();
         };
-        List<EList<ale.xtext.ale.Class>> _map = ListExtensions.<Import, EList<ale.xtext.ale.Class>>map(_imports, _function);
-        Iterable<ale.xtext.ale.Class> _flatten = Iterables.<ale.xtext.ale.Class>concat(_map);
-        final Function1<ale.xtext.ale.Class, Boolean> _function_1 = (ale.xtext.ale.Class c) -> {
+        List<EList<AleClass>> _map = ListExtensions.<Import, EList<AleClass>>map(_imports, _function);
+        Iterable<AleClass> _flatten = Iterables.<AleClass>concat(_map);
+        final Function1<AleClass, Boolean> _function_1 = (AleClass c) -> {
           return Boolean.valueOf((c instanceof OpenClass));
         };
-        final Iterable<ale.xtext.ale.Class> imports = IterableExtensions.<ale.xtext.ale.Class>filter(_flatten, _function_1);
-        return Scopes.<ale.xtext.ale.Class>scopeFor(imports, new Function<ale.xtext.ale.Class, QualifiedName>() {
+        final Iterable<AleClass> imports = IterableExtensions.<AleClass>filter(_flatten, _function_1);
+        return Scopes.<AleClass>scopeFor(imports, new Function<AleClass, QualifiedName>() {
           @Override
-          public QualifiedName apply(final ale.xtext.ale.Class t) {
+          public QualifiedName apply(final AleClass t) {
             QualifiedName _xblockexpression = null;
             {
               EList<Import> _imports = currentRoot.getImports();
               final Function1<Import, Boolean> _function = (Import i) -> {
                 Root _ref = i.getRef();
-                EList<ale.xtext.ale.Class> _classes = _ref.getClasses();
+                EList<AleClass> _classes = _ref.getClasses();
                 return Boolean.valueOf(_classes.contains(t));
               };
               Iterable<Import> _filter = IterableExtensions.<Import>filter(_imports, _function);
@@ -74,32 +75,32 @@ public class AleScopeProvider extends AbstractAleScopeProvider {
       }
     }
     if ((context instanceof NewClass)) {
-      EReference _class_SuperClass_1 = AlePackage.eINSTANCE.getClass_SuperClass();
-      boolean _equals_1 = Objects.equal(reference, _class_SuperClass_1);
+      EReference _aleClass_SuperClass_1 = AlePackage.eINSTANCE.getAleClass_SuperClass();
+      boolean _equals_1 = Objects.equal(reference, _aleClass_SuperClass_1);
       if (_equals_1) {
         final IScope tmp_1 = super.getScope(context, reference);
         EObject _eContainer_1 = ((NewClass)context).eContainer();
         final Root currentRoot_1 = ((Root) _eContainer_1);
         EList<Import> _imports_1 = currentRoot_1.getImports();
-        final Function1<Import, EList<ale.xtext.ale.Class>> _function_2 = (Import i) -> {
+        final Function1<Import, EList<AleClass>> _function_2 = (Import i) -> {
           Root _ref = i.getRef();
           return _ref.getClasses();
         };
-        List<EList<ale.xtext.ale.Class>> _map_1 = ListExtensions.<Import, EList<ale.xtext.ale.Class>>map(_imports_1, _function_2);
-        Iterable<ale.xtext.ale.Class> _flatten_1 = Iterables.<ale.xtext.ale.Class>concat(_map_1);
-        final Function1<ale.xtext.ale.Class, Boolean> _function_3 = (ale.xtext.ale.Class c) -> {
+        List<EList<AleClass>> _map_1 = ListExtensions.<Import, EList<AleClass>>map(_imports_1, _function_2);
+        Iterable<AleClass> _flatten_1 = Iterables.<AleClass>concat(_map_1);
+        final Function1<AleClass, Boolean> _function_3 = (AleClass c) -> {
           return Boolean.valueOf((c instanceof OpenClass));
         };
-        final Iterable<ale.xtext.ale.Class> imports_1 = IterableExtensions.<ale.xtext.ale.Class>filter(_flatten_1, _function_3);
-        return Scopes.<ale.xtext.ale.Class>scopeFor(imports_1, new Function<ale.xtext.ale.Class, QualifiedName>() {
+        final Iterable<AleClass> imports_1 = IterableExtensions.<AleClass>filter(_flatten_1, _function_3);
+        return Scopes.<AleClass>scopeFor(imports_1, new Function<AleClass, QualifiedName>() {
           @Override
-          public QualifiedName apply(final ale.xtext.ale.Class t) {
+          public QualifiedName apply(final AleClass t) {
             QualifiedName _xblockexpression = null;
             {
               EList<Import> _imports = currentRoot_1.getImports();
               final Function1<Import, Boolean> _function = (Import i) -> {
                 Root _ref = i.getRef();
-                EList<ale.xtext.ale.Class> _classes = _ref.getClasses();
+                EList<AleClass> _classes = _ref.getClasses();
                 return Boolean.valueOf(_classes.contains(t));
               };
               Iterable<Import> _filter = IterableExtensions.<Import>filter(_imports, _function);

@@ -11,17 +11,24 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.eclipse.xtext.validation.Check
+import java.util.List
+import ale.xtext.ale.AlePackage
 
 /**
  * This class contains custom validation rules. 
  * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
-class DslValidator extends AbstractDslValidator {
+class DslValidator extends DslTypeValidator {
 
 //	public static val INVALID_NAME = 'invalidName'
 //
 	String BEHAVIOURS_URI_NOT_FOUND = "behaviours.uri.not.found"
+
+	
+	override List<EPackage> getEPackages() {
+		newArrayList(DslPackage.eINSTANCE, AlePackage.eINSTANCE)
+	}
 
 	@Check
 	def checkGreetingStartsWithCapital(Syntax syntax) {

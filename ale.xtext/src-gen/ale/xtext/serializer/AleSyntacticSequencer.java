@@ -66,7 +66,6 @@ public class AleSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     '('*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '$' '[' exp=Expression
 	 *     (rule start) (ambiguity) '-' expression=Expression
 	 *     (rule start) (ambiguity) 'OrderedSet' '{' '}' ';' (rule start)
 	 *     (rule start) (ambiguity) 'OrderedSet' '{' '}' (rule start)

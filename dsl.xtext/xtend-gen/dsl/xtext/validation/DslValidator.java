@@ -3,10 +3,12 @@
  */
 package dsl.xtext.validation;
 
+import ale.xtext.ale.AlePackage;
 import com.google.common.base.Objects;
 import dsl.xtext.dsl.DslPackage;
 import dsl.xtext.dsl.Syntax;
-import dsl.xtext.validation.AbstractDslValidator;
+import dsl.xtext.validation.DslTypeValidator;
+import java.util.List;
 import java.util.Map;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -14,6 +16,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 
 /**
  * This class contains custom validation rules.
@@ -21,8 +24,13 @@ import org.eclipse.xtext.validation.Check;
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @SuppressWarnings("all")
-public class DslValidator extends AbstractDslValidator {
+public class DslValidator extends DslTypeValidator {
   private String BEHAVIOURS_URI_NOT_FOUND = "behaviours.uri.not.found";
+  
+  @Override
+  public List<EPackage> getEPackages() {
+    return CollectionLiterals.<EPackage>newArrayList(DslPackage.eINSTANCE, AlePackage.eINSTANCE);
+  }
   
   @Check
   public void checkGreetingStartsWithCapital(final Syntax syntax) {

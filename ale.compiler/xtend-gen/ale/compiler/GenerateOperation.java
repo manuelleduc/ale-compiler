@@ -1,5 +1,6 @@
 package ale.compiler;
 
+import ale.xtext.ale.AleClass;
 import fr.inria.diverse.objectalgebragenerator.GenerateAlgebra;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,7 +14,7 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
 public class GenerateOperation {
-  public void generate(final EClass clazz, final IProject project, final String dslName, final ale.xtext.ale.Class behavior, final EPackage ePackage) {
+  public void generate(final EClass clazz, final IProject project, final String dslName, final AleClass behavior, final EPackage ePackage) {
     GenerateAlgebra _generateAlgebra = new GenerateAlgebra();
     final String fileContent = _generateAlgebra.generateOperation(clazz, dslName, behavior, ePackage);
     IPath _location = project.getLocation();

@@ -3,6 +3,7 @@
  */
 package ale.xtext.ale.impl;
 
+import ale.xtext.ale.AleClass;
 import ale.xtext.ale.AlePackage;
 import ale.xtext.ale.ClassTypeT;
 
@@ -36,7 +37,7 @@ public class ClassTypeTImpl extends TypeSystemImpl implements ClassTypeT
    * @generated
    * @ordered
    */
-  protected ale.xtext.ale.Class clazz;
+  protected AleClass clazz;
 
   /**
    * <!-- begin-user-doc -->
@@ -64,12 +65,12 @@ public class ClassTypeTImpl extends TypeSystemImpl implements ClassTypeT
    * <!-- end-user-doc -->
    * @generated
    */
-  public ale.xtext.ale.Class getClazz()
+  public AleClass getClazz()
   {
     if (clazz != null && clazz.eIsProxy())
     {
       InternalEObject oldClazz = (InternalEObject)clazz;
-      clazz = (ale.xtext.ale.Class)eResolveProxy(oldClazz);
+      clazz = (AleClass)eResolveProxy(oldClazz);
       if (clazz != oldClazz)
       {
         if (eNotificationRequired())
@@ -84,7 +85,7 @@ public class ClassTypeTImpl extends TypeSystemImpl implements ClassTypeT
    * <!-- end-user-doc -->
    * @generated
    */
-  public ale.xtext.ale.Class basicGetClazz()
+  public AleClass basicGetClazz()
   {
     return clazz;
   }
@@ -94,9 +95,9 @@ public class ClassTypeTImpl extends TypeSystemImpl implements ClassTypeT
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setClazz(ale.xtext.ale.Class newClazz)
+  public void setClazz(AleClass newClazz)
   {
-    ale.xtext.ale.Class oldClazz = clazz;
+    AleClass oldClazz = clazz;
     clazz = newClazz;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, AlePackage.CLASS_TYPE_T__CLAZZ, oldClazz, clazz));
@@ -130,7 +131,7 @@ public class ClassTypeTImpl extends TypeSystemImpl implements ClassTypeT
     switch (featureID)
     {
       case AlePackage.CLASS_TYPE_T__CLAZZ:
-        setClazz((ale.xtext.ale.Class)newValue);
+        setClazz((AleClass)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -147,7 +148,7 @@ public class ClassTypeTImpl extends TypeSystemImpl implements ClassTypeT
     switch (featureID)
     {
       case AlePackage.CLASS_TYPE_T__CLAZZ:
-        setClazz((ale.xtext.ale.Class)null);
+        setClazz((AleClass)null);
         return;
     }
     super.eUnset(featureID);

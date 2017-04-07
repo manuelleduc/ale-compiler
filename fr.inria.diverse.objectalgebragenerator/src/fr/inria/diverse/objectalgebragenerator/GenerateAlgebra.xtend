@@ -8,7 +8,7 @@ import ale.xtext.ale.BooleanOrOperation
 import ale.xtext.ale.BooleanXorOperation
 import ale.xtext.ale.ChainedCall
 import ale.xtext.ale.ChainedCallArrow
-import ale.xtext.ale.Class
+import ale.xtext.ale.AleClass
 import ale.xtext.ale.CompareGEOperation
 import ale.xtext.ale.CompareGOperation
 import ale.xtext.ale.CompareLEOperation
@@ -57,7 +57,7 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.ETypedElement
-import ale.xtext.ale.OADenot
+//import ale.xtext.ale.OADenot
 
 class GenerateAlgebra {
 
@@ -90,7 +90,7 @@ class GenerateAlgebra {
 	private def String operationInterfacePath(EClass clazz,
 		String filenameDSL) '''«filenameDSL».algebra.operation.«clazz.EPackage.name».«filenameDSL.toFirstUpper»«clazz.name.toFirstUpper»Operation'''
 
-	def String processConcreteOperation(GraphNode<EClass> entry, EPackage epackage, String filenameDsl, Class behaviorClass) {
+	def String processConcreteOperation(GraphNode<EClass> entry, EPackage epackage, String filenameDsl, AleClass behaviorClass) {
 		val clazz = entry.elem
 		val graph = buildGraph(
 			epackage)
@@ -219,7 +219,7 @@ class GenerateAlgebra {
 	}
 	def dispatch String printExpression(OrderedSetDecl exp) '''__TODO OrderSetDecl__'''
 	def dispatch String printExpression(RealLiteral exp) '''«exp.value»'''
-	def dispatch String printExpression(OADenot exp) '''algebra.$(«exp.exp.printExpression»)'''
+//	def dispatch String printExpression(OADenot exp) '''algebra.$(«exp.exp.printExpression»)'''
 	def dispatch String printExpression(SelfRef exp) '''self''' // TODO: probably more smart than that!! aka delegation
 	def dispatch String printExpression(SequenceDecl exp) '''__TODO SequenceDECL__'''
 	def dispatch String printExpression(StringLiteral exp) '''"«exp.value»"'''
@@ -306,7 +306,7 @@ class GenerateAlgebra {
 
 	def String genericType(EClass clazz, boolean extend) '''«clazz.EPackage.name.replaceAll("\\.","").toFirstUpper»__«clazz.name»T «IF clazz.ESuperTypes.size == 1 && extend» extends «clazz.ESuperTypes.head.genericType(false)»«ENDIF»'''
 
-	def generateOperation(EClass clazz, String dslName, Class openClass, EPackage ePackage) {
+	def generateOperation(EClass clazz, String dslName, AleClass openClass, EPackage ePackage) {
 
 		val clazzName = dslName.toFirstUpper + clazz.name.toFirstUpper +
 			"Operation";
@@ -350,7 +350,7 @@ class GenerateAlgebra {
 		}
 	}
 
-	def static String toJavaType(Class clazz) {
+	def static String toJavaType(AleClass clazz) {
 		val behavior = clazz.eContainer as Root
 		'''«behavior.name».algebra.operation.«behavior.name.toFirstUpper»«clazz.name.toFirstUpper»Operation'''
 	}

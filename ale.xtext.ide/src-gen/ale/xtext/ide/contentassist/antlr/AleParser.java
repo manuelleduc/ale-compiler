@@ -35,7 +35,7 @@ public class AleParser extends AbstractContentAssistParser {
 			nameMappings = new HashMap<AbstractElement, String>() {
 				private static final long serialVersionUID = 1L;
 				{
-					put(grammarAccess.getClassAccess().getAlternatives(), "rule__Class__Alternatives");
+					put(grammarAccess.getAleClassAccess().getAlternatives(), "rule__AleClass__Alternatives");
 					put(grammarAccess.getMethodAccess().getAlternatives(), "rule__Method__Alternatives");
 					put(grammarAccess.getDefMethodAccess().getAlternatives_2(), "rule__DefMethod__Alternatives_2");
 					put(grammarAccess.getStatementAccess().getAlternatives(), "rule__Statement__Alternatives");
@@ -139,13 +139,12 @@ public class AleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getAtomicLiteralAccess().getGroup_7(), "rule__AtomicLiteral__Group_7__0");
 					put(grammarAccess.getAtomicLiteralAccess().getGroup_8(), "rule__AtomicLiteral__Group_8__0");
 					put(grammarAccess.getAtomicLiteralAccess().getGroup_9(), "rule__AtomicLiteral__Group_9__0");
+					put(grammarAccess.getAtomicLiteralAccess().getGroup_9_3(), "rule__AtomicLiteral__Group_9_3__0");
+					put(grammarAccess.getAtomicLiteralAccess().getGroup_9_3_1(), "rule__AtomicLiteral__Group_9_3_1__0");
 					put(grammarAccess.getAtomicLiteralAccess().getGroup_10(), "rule__AtomicLiteral__Group_10__0");
 					put(grammarAccess.getAtomicLiteralAccess().getGroup_10_3(), "rule__AtomicLiteral__Group_10_3__0");
 					put(grammarAccess.getAtomicLiteralAccess().getGroup_10_3_1(), "rule__AtomicLiteral__Group_10_3_1__0");
 					put(grammarAccess.getAtomicLiteralAccess().getGroup_11(), "rule__AtomicLiteral__Group_11__0");
-					put(grammarAccess.getAtomicLiteralAccess().getGroup_11_3(), "rule__AtomicLiteral__Group_11_3__0");
-					put(grammarAccess.getAtomicLiteralAccess().getGroup_11_3_1(), "rule__AtomicLiteral__Group_11_3_1__0");
-					put(grammarAccess.getAtomicLiteralAccess().getGroup_12(), "rule__AtomicLiteral__Group_12__0");
 					put(grammarAccess.getParamAccess().getGroup(), "rule__Param__Group__0");
 					put(grammarAccess.getTypeAccess().getGroup_1(), "rule__Type__Group_1__0");
 					put(grammarAccess.getTypeAccess().getGroup_2(), "rule__Type__Group_2__0");
@@ -221,18 +220,17 @@ public class AleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getInfixOperationAccess().getParametersAssignment_3_2_1_1_1(), "rule__InfixOperation__ParametersAssignment_3_2_1_1_1");
 					put(grammarAccess.getParamCallAccess().getLambdaAssignment_0_0(), "rule__ParamCall__LambdaAssignment_0_0");
 					put(grammarAccess.getParamCallAccess().getExpressionAssignment_1(), "rule__ParamCall__ExpressionAssignment_1");
-					put(grammarAccess.getAtomicLiteralAccess().getExpAssignment_1_3(), "rule__AtomicLiteral__ExpAssignment_1_3");
+					put(grammarAccess.getAtomicLiteralAccess().getValueAssignment_3_1(), "rule__AtomicLiteral__ValueAssignment_3_1");
 					put(grammarAccess.getAtomicLiteralAccess().getValueAssignment_4_1(), "rule__AtomicLiteral__ValueAssignment_4_1");
 					put(grammarAccess.getAtomicLiteralAccess().getValueAssignment_5_1(), "rule__AtomicLiteral__ValueAssignment_5_1");
 					put(grammarAccess.getAtomicLiteralAccess().getValueAssignment_6_1(), "rule__AtomicLiteral__ValueAssignment_6_1");
-					put(grammarAccess.getAtomicLiteralAccess().getValueAssignment_7_1(), "rule__AtomicLiteral__ValueAssignment_7_1");
-					put(grammarAccess.getAtomicLiteralAccess().getStartAssignment_9_2(), "rule__AtomicLiteral__StartAssignment_9_2");
-					put(grammarAccess.getAtomicLiteralAccess().getStopAssignment_9_5(), "rule__AtomicLiteral__StopAssignment_9_5");
+					put(grammarAccess.getAtomicLiteralAccess().getStartAssignment_8_2(), "rule__AtomicLiteral__StartAssignment_8_2");
+					put(grammarAccess.getAtomicLiteralAccess().getStopAssignment_8_5(), "rule__AtomicLiteral__StopAssignment_8_5");
+					put(grammarAccess.getAtomicLiteralAccess().getExpressionsAssignment_9_3_0(), "rule__AtomicLiteral__ExpressionsAssignment_9_3_0");
+					put(grammarAccess.getAtomicLiteralAccess().getExpressionsAssignment_9_3_1_1(), "rule__AtomicLiteral__ExpressionsAssignment_9_3_1_1");
 					put(grammarAccess.getAtomicLiteralAccess().getExpressionsAssignment_10_3_0(), "rule__AtomicLiteral__ExpressionsAssignment_10_3_0");
 					put(grammarAccess.getAtomicLiteralAccess().getExpressionsAssignment_10_3_1_1(), "rule__AtomicLiteral__ExpressionsAssignment_10_3_1_1");
-					put(grammarAccess.getAtomicLiteralAccess().getExpressionsAssignment_11_3_0(), "rule__AtomicLiteral__ExpressionsAssignment_11_3_0");
-					put(grammarAccess.getAtomicLiteralAccess().getExpressionsAssignment_11_3_1_1(), "rule__AtomicLiteral__ExpressionsAssignment_11_3_1_1");
-					put(grammarAccess.getAtomicLiteralAccess().getValueAssignment_12_1(), "rule__AtomicLiteral__ValueAssignment_12_1");
+					put(grammarAccess.getAtomicLiteralAccess().getValueAssignment_11_1(), "rule__AtomicLiteral__ValueAssignment_11_1");
 					put(grammarAccess.getParamAccess().getTypeAssignment_0(), "rule__Param__TypeAssignment_0");
 					put(grammarAccess.getParamAccess().getNameAssignment_1(), "rule__Param__NameAssignment_1");
 					put(grammarAccess.getTypeAccess().getExternalClassAssignment_1_1(), "rule__Type__ExternalClassAssignment_1_1");

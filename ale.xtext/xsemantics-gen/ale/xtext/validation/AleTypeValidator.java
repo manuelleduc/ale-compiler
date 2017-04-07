@@ -1,6 +1,7 @@
 package ale.xtext.validation;
 
 import ale.xtext.AleType;
+import ale.xtext.ale.AleClass;
 import ale.xtext.ale.DefMethod;
 import ale.xtext.ale.NewClass;
 import ale.xtext.ale.OpenClass;
@@ -66,7 +67,7 @@ public class AleTypeValidator extends AbstractDeclarativeValidator {
   }
   
   @Check
-  public void checkFieldName(final ale.xtext.ale.Class clazz) {
+  public void checkFieldName(final AleClass clazz) {
     errorGenerator.generateErrors(this,
     	getXsemanticsSystem().checkFieldName(clazz),
     		clazz);

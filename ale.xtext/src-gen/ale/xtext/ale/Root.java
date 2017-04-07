@@ -71,7 +71,7 @@ public interface Root extends EObject
 
   /**
    * Returns the value of the '<em><b>Classes</b></em>' containment reference list.
-   * The list contents are of type {@link ale.xtext.ale.Class}.
+   * The list contents are of type {@link ale.xtext.ale.AleClass}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Classes</em>' containment reference list isn't clear,
@@ -83,6 +83,6 @@ public interface Root extends EObject
    * @model containment="true"
    * @generated
    */
-  EList<ale.xtext.ale.Class> getClasses();
+  EList<AleClass> getClasses();
 
 } // Root

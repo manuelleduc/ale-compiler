@@ -5,25 +5,25 @@ generate ale "http://www.xtext.ale/Ale"
 Root returns Root:
 	'behavior' name=Qualified ';'
 	imports+=Import*
-	classes+=Class*;
+	classes+=AleClass*;
 
 Import:
 	'import' ref=[Root] 'as' name=ID ';';
 
-Class returns Class:
+AleClass returns AleClass:
 	OpenClass | NewClass;
 
 Tag:
 	'@' ID;
 
-OpenClass returns Class:
-	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=[Class|Qualified] (',' superClass+=[Class|Qualified])*)? ('{'
+OpenClass returns AleClass:
+	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)? ('{'
 	fields+=Field*
 	methods+=Method*
 	'}');
 
-NewClass returns Class:
-	{NewClass} 'class' name=ID ('extends' superClass+=[Class|Qualified] (',' superClass+=[Class|Qualified])*)? ('{'
+NewClass returns AleClass:
+	{NewClass} 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)? ('{'
 	fields+=Field*
 	methods+=Method*
 	'}');
@@ -127,7 +127,7 @@ ParamCall:
 
 AtomicLiteral returns Expression:
 	('(' Expression ')') |
-	{OADenot} '$' '[' exp=Expression ']' |
+//	{OADenot} '$' '[' exp=Expression ']' |
 	{SelfRef} 'self' |
 	{SuperRef} 'super' |
 	{StringLiteral} value=STRING |
@@ -190,5 +190,5 @@ TypeSystem:
 	{StringTypeT} 'String' |
 	{NullTypeT} 'nulltype' |
 	{SequenceTypeT} 'Sequence' subType=TypeSystem |
-	{ClassTypeT} 'class' clazz=[Class]
+	{ClassTypeT} 'class' clazz=[AleClass]
 ;

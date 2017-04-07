@@ -179,7 +179,7 @@ public class AleCompiler {
 
 		final List<EClass> listAllClasses = new GenerateAlgebra().getListAllClasses(rootPackage);
 		listAllClasses.forEach(clazz -> {
-			final ale.xtext.ale.Class openClass = lookupClass(resourceSet, behaviors, clazz.getName());
+			final ale.xtext.ale.AleClass openClass = lookupClass(resourceSet, behaviors, clazz.getName());
 			new GenerateOperation().generate(clazz, project, fileNameDsl, openClass, rootPackage);
 		});
 
@@ -189,9 +189,9 @@ public class AleCompiler {
 
 	}
 
-	private ale.xtext.ale.Class lookupClass(final XtextResourceSet resourceSet, final EList<Behavior> behaviors,
+	private ale.xtext.ale.AleClass lookupClass(final XtextResourceSet resourceSet, final EList<Behavior> behaviors,
 			final String className) {
-		final ale.xtext.ale.Class clazz = behaviors.stream().map(b -> convertBehviorToRoot(resourceSet, b))
+		final ale.xtext.ale.AleClass clazz = behaviors.stream().map(b -> convertBehviorToRoot(resourceSet, b))
 				.flatMap(b -> b.getClasses().stream()).filter(b -> {
 					final String name2 = b.getName();
 					return name2.equals(className);
@@ -213,14 +213,14 @@ public class AleCompiler {
 			final IProject project, final String filenameDsl, final XtextResourceSet resourceSet) {
 		final Graph<EClass> res = new GenerateAlgebra().buildGraph(rootPackage);
 		res.nodes.forEach(entry -> {
-			final ale.xtext.ale.Class openClass = lookupClass(resourceSet, behaviors, entry.elem.getName());
+			final ale.xtext.ale.AleClass openClass = lookupClass(resourceSet, behaviors, entry.elem.getName());
 			generateConceteOperation(entry, project, rootPackage, filenameDsl, openClass);
 		});
 
 	}
 
 	private void generateConceteOperation(final GraphNode<EClass> entry, final IProject project,
-			final EPackage ePackage, final String fileNameDsl, final ale.xtext.ale.Class openClass) {
+			final EPackage ePackage, final String fileNameDsl, final ale.xtext.ale.AleClass openClass) {
 		final String fileContent = new GenerateAlgebra().processConcreteOperation(entry, ePackage, fileNameDsl,
 				openClass);
 		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra")
@@ -281,9 +281,9 @@ public class AleCompiler {
 			final EPackage rootPackage, final XtextResourceSet resourceSet, final EList<Behavior> behaviors)
 			throws IOException {
 		final String behaviourName = modelBehavior.getName();
-		final Map<ale.xtext.ale.Class, List<Field>> clazzList = new HashMap<>();
+		final Map<ale.xtext.ale.AleClass, List<Field>> clazzList = new HashMap<>();
 
-		final List<ale.xtext.ale.Class> classExtensions = modelBehavior.getClasses();
+		final List<ale.xtext.ale.AleClass> classExtensions = modelBehavior.getClasses();
 		classExtensions.forEach(extendedClass -> {
 			if (!extendedClass.getFields().isEmpty()) {
 				final List<Field> attributes = extendedClass.getFields();
@@ -291,11 +291,11 @@ public class AleCompiler {
 			}
 		});
 		
-		Map<ale.xtext.ale.Class, EClass> mapClassEClass = new HashMap<>();
+		Map<ale.xtext.ale.AleClass, EClass> mapClassEClass = new HashMap<>();
 
 		// in a first step we reference all classes
 		clazzList.entrySet().stream().forEach(entry -> {
-			final ale.xtext.ale.Class fromClazz = entry.getKey();
+			final ale.xtext.ale.AleClass fromClazz = entry.getKey();
 			final EClass clazz = EcoreFactory.eINSTANCE.createEClass();
 			clazz.setName(fromClazz.getName());
 			final EClass superClazz = this.getClassFromName(fromClazz.getName());

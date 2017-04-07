@@ -1,16 +1,16 @@
 package ale.compiler
 
-import ale.xtext.ale.Class
 import fr.inria.diverse.objectalgebragenerator.GenerateAlgebra
 import java.io.FileWriter
 import java.io.IOException
 import org.eclipse.core.resources.IProject
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
+import ale.xtext.ale.AleClass
 
 class GenerateOperation {
 
-	def generate(EClass clazz, IProject project, String dslName, Class behavior, EPackage ePackage) {
+	def generate(EClass clazz, IProject project, String dslName, AleClass behavior, EPackage ePackage) {
 
 		val fileContent = new GenerateAlgebra().generateOperation(clazz,  dslName, behavior, ePackage)
 

@@ -141,14 +141,14 @@ public interface AlePackage extends EPackage
   int IMPORT_FEATURE_COUNT = 2;
 
   /**
-   * The meta object id for the '{@link ale.xtext.ale.impl.ClassImpl <em>Class</em>}' class.
+   * The meta object id for the '{@link ale.xtext.ale.impl.AleClassImpl <em>Class</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see ale.xtext.ale.impl.ClassImpl
-   * @see ale.xtext.ale.impl.AlePackageImpl#getClass_()
+   * @see ale.xtext.ale.impl.AleClassImpl
+   * @see ale.xtext.ale.impl.AlePackageImpl#getAleClass()
    * @generated
    */
-  int CLASS = 2;
+  int ALE_CLASS = 2;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -157,7 +157,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int CLASS__NAME = 0;
+  int ALE_CLASS__NAME = 0;
 
   /**
    * The feature id for the '<em><b>Super Class</b></em>' reference list.
@@ -166,7 +166,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int CLASS__SUPER_CLASS = 1;
+  int ALE_CLASS__SUPER_CLASS = 1;
 
   /**
    * The feature id for the '<em><b>Fields</b></em>' containment reference list.
@@ -175,7 +175,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int CLASS__FIELDS = 2;
+  int ALE_CLASS__FIELDS = 2;
 
   /**
    * The feature id for the '<em><b>Methods</b></em>' containment reference list.
@@ -184,7 +184,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int CLASS__METHODS = 3;
+  int ALE_CLASS__METHODS = 3;
 
   /**
    * The number of structural features of the '<em>Class</em>' class.
@@ -193,7 +193,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int CLASS_FEATURE_COUNT = 4;
+  int ALE_CLASS_FEATURE_COUNT = 4;
 
   /**
    * The meta object id for the '{@link ale.xtext.ale.impl.SymbolImpl <em>Symbol</em>}' class.
@@ -666,7 +666,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int OPEN_CLASS__NAME = CLASS__NAME;
+  int OPEN_CLASS__NAME = ALE_CLASS__NAME;
 
   /**
    * The feature id for the '<em><b>Super Class</b></em>' reference list.
@@ -675,7 +675,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int OPEN_CLASS__SUPER_CLASS = CLASS__SUPER_CLASS;
+  int OPEN_CLASS__SUPER_CLASS = ALE_CLASS__SUPER_CLASS;
 
   /**
    * The feature id for the '<em><b>Fields</b></em>' containment reference list.
@@ -684,7 +684,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int OPEN_CLASS__FIELDS = CLASS__FIELDS;
+  int OPEN_CLASS__FIELDS = ALE_CLASS__FIELDS;
 
   /**
    * The feature id for the '<em><b>Methods</b></em>' containment reference list.
@@ -693,7 +693,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int OPEN_CLASS__METHODS = CLASS__METHODS;
+  int OPEN_CLASS__METHODS = ALE_CLASS__METHODS;
 
   /**
    * The number of structural features of the '<em>Open Class</em>' class.
@@ -702,7 +702,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int OPEN_CLASS_FEATURE_COUNT = CLASS_FEATURE_COUNT + 0;
+  int OPEN_CLASS_FEATURE_COUNT = ALE_CLASS_FEATURE_COUNT + 0;
 
   /**
    * The meta object id for the '{@link ale.xtext.ale.impl.NewClassImpl <em>New Class</em>}' class.
@@ -721,7 +721,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NEW_CLASS__NAME = CLASS__NAME;
+  int NEW_CLASS__NAME = ALE_CLASS__NAME;
 
   /**
    * The feature id for the '<em><b>Super Class</b></em>' reference list.
@@ -730,7 +730,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NEW_CLASS__SUPER_CLASS = CLASS__SUPER_CLASS;
+  int NEW_CLASS__SUPER_CLASS = ALE_CLASS__SUPER_CLASS;
 
   /**
    * The feature id for the '<em><b>Fields</b></em>' containment reference list.
@@ -739,7 +739,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NEW_CLASS__FIELDS = CLASS__FIELDS;
+  int NEW_CLASS__FIELDS = ALE_CLASS__FIELDS;
 
   /**
    * The feature id for the '<em><b>Methods</b></em>' containment reference list.
@@ -748,7 +748,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NEW_CLASS__METHODS = CLASS__METHODS;
+  int NEW_CLASS__METHODS = ALE_CLASS__METHODS;
 
   /**
    * The number of structural features of the '<em>New Class</em>' class.
@@ -757,7 +757,7 @@ public interface AlePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NEW_CLASS_FEATURE_COUNT = CLASS_FEATURE_COUNT + 0;
+  int NEW_CLASS_FEATURE_COUNT = ALE_CLASS_FEATURE_COUNT + 0;
 
   /**
    * The meta object id for the '{@link ale.xtext.ale.impl.ReturnStatementImpl <em>Return Statement</em>}' class.
@@ -1731,34 +1731,6 @@ public interface AlePackage extends EPackage
   int OPERATION_CALL_OPERATION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link ale.xtext.ale.impl.OADenotImpl <em>OA Denot</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see ale.xtext.ale.impl.OADenotImpl
-   * @see ale.xtext.ale.impl.AlePackageImpl#getOADenot()
-   * @generated
-   */
-  int OA_DENOT = 44;
-
-  /**
-   * The feature id for the '<em><b>Exp</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int OA_DENOT__EXP = EXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>OA Denot</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int OA_DENOT_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
-
-  /**
    * The meta object id for the '{@link ale.xtext.ale.impl.SelfRefImpl <em>Self Ref</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1766,7 +1738,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSelfRef()
    * @generated
    */
-  int SELF_REF = 45;
+  int SELF_REF = 44;
 
   /**
    * The number of structural features of the '<em>Self Ref</em>' class.
@@ -1785,7 +1757,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSuperRef()
    * @generated
    */
-  int SUPER_REF = 46;
+  int SUPER_REF = 45;
 
   /**
    * The number of structural features of the '<em>Super Ref</em>' class.
@@ -1804,7 +1776,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getStringLiteral()
    * @generated
    */
-  int STRING_LITERAL = 47;
+  int STRING_LITERAL = 46;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1832,7 +1804,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getIntLiteral()
    * @generated
    */
-  int INT_LITERAL = 48;
+  int INT_LITERAL = 47;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1860,7 +1832,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getRealLiteral()
    * @generated
    */
-  int REAL_LITERAL = 49;
+  int REAL_LITERAL = 48;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1888,7 +1860,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getBooleanLiteral()
    * @generated
    */
-  int BOOLEAN_LITERAL = 50;
+  int BOOLEAN_LITERAL = 49;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1916,7 +1888,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getNullLiteral()
    * @generated
    */
-  int NULL_LITERAL = 51;
+  int NULL_LITERAL = 50;
 
   /**
    * The number of structural features of the '<em>Null Literal</em>' class.
@@ -1935,7 +1907,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getIntRange()
    * @generated
    */
-  int INT_RANGE = 52;
+  int INT_RANGE = 51;
 
   /**
    * The feature id for the '<em><b>Start</b></em>' containment reference.
@@ -1972,7 +1944,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSequenceDecl()
    * @generated
    */
-  int SEQUENCE_DECL = 53;
+  int SEQUENCE_DECL = 52;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -2000,7 +1972,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getOrderedSetDecl()
    * @generated
    */
-  int ORDERED_SET_DECL = 54;
+  int ORDERED_SET_DECL = 53;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -2028,7 +2000,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getVarRef()
    * @generated
    */
-  int VAR_REF = 55;
+  int VAR_REF = 54;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2056,7 +2028,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getOutOfScopeType()
    * @generated
    */
-  int OUT_OF_SCOPE_TYPE = 56;
+  int OUT_OF_SCOPE_TYPE = 55;
 
   /**
    * The feature id for the '<em><b>External Class</b></em>' attribute.
@@ -2084,7 +2056,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSequenceType()
    * @generated
    */
-  int SEQUENCE_TYPE = 57;
+  int SEQUENCE_TYPE = 56;
 
   /**
    * The feature id for the '<em><b>Sub Type</b></em>' containment reference.
@@ -2112,7 +2084,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getOrderedSetType()
    * @generated
    */
-  int ORDERED_SET_TYPE = 58;
+  int ORDERED_SET_TYPE = 57;
 
   /**
    * The feature id for the '<em><b>Sub Type</b></em>' containment reference.
@@ -2140,7 +2112,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getBooleanTypeT()
    * @generated
    */
-  int BOOLEAN_TYPE_T = 59;
+  int BOOLEAN_TYPE_T = 58;
 
   /**
    * The number of structural features of the '<em>Boolean Type T</em>' class.
@@ -2159,7 +2131,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getRealTypeT()
    * @generated
    */
-  int REAL_TYPE_T = 60;
+  int REAL_TYPE_T = 59;
 
   /**
    * The number of structural features of the '<em>Real Type T</em>' class.
@@ -2178,7 +2150,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getIntTypeT()
    * @generated
    */
-  int INT_TYPE_T = 61;
+  int INT_TYPE_T = 60;
 
   /**
    * The number of structural features of the '<em>Int Type T</em>' class.
@@ -2197,7 +2169,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getStringTypeT()
    * @generated
    */
-  int STRING_TYPE_T = 62;
+  int STRING_TYPE_T = 61;
 
   /**
    * The number of structural features of the '<em>String Type T</em>' class.
@@ -2216,7 +2188,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getNullTypeT()
    * @generated
    */
-  int NULL_TYPE_T = 63;
+  int NULL_TYPE_T = 62;
 
   /**
    * The number of structural features of the '<em>Null Type T</em>' class.
@@ -2235,7 +2207,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSequenceTypeT()
    * @generated
    */
-  int SEQUENCE_TYPE_T = 64;
+  int SEQUENCE_TYPE_T = 63;
 
   /**
    * The feature id for the '<em><b>Sub Type</b></em>' containment reference.
@@ -2263,7 +2235,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getClassTypeT()
    * @generated
    */
-  int CLASS_TYPE_T = 65;
+  int CLASS_TYPE_T = 64;
 
   /**
    * The feature id for the '<em><b>Clazz</b></em>' reference.
@@ -2360,58 +2332,58 @@ public interface AlePackage extends EPackage
   EAttribute getImport_Name();
 
   /**
-   * Returns the meta object for class '{@link ale.xtext.ale.Class <em>Class</em>}'.
+   * Returns the meta object for class '{@link ale.xtext.ale.AleClass <em>Class</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for class '<em>Class</em>'.
-   * @see ale.xtext.ale.Class
+   * @see ale.xtext.ale.AleClass
    * @generated
    */
-  EClass getClass_();
+  EClass getAleClass();
 
   /**
-   * Returns the meta object for the attribute '{@link ale.xtext.ale.Class#getName <em>Name</em>}'.
+   * Returns the meta object for the attribute '{@link ale.xtext.ale.AleClass#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Name</em>'.
-   * @see ale.xtext.ale.Class#getName()
-   * @see #getClass_()
+   * @see ale.xtext.ale.AleClass#getName()
+   * @see #getAleClass()
    * @generated
    */
-  EAttribute getClass_Name();
+  EAttribute getAleClass_Name();
 
   /**
-   * Returns the meta object for the reference list '{@link ale.xtext.ale.Class#getSuperClass <em>Super Class</em>}'.
+   * Returns the meta object for the reference list '{@link ale.xtext.ale.AleClass#getSuperClass <em>Super Class</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the reference list '<em>Super Class</em>'.
-   * @see ale.xtext.ale.Class#getSuperClass()
-   * @see #getClass_()
+   * @see ale.xtext.ale.AleClass#getSuperClass()
+   * @see #getAleClass()
    * @generated
    */
-  EReference getClass_SuperClass();
+  EReference getAleClass_SuperClass();
 
   /**
-   * Returns the meta object for the containment reference list '{@link ale.xtext.ale.Class#getFields <em>Fields</em>}'.
+   * Returns the meta object for the containment reference list '{@link ale.xtext.ale.AleClass#getFields <em>Fields</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference list '<em>Fields</em>'.
-   * @see ale.xtext.ale.Class#getFields()
-   * @see #getClass_()
+   * @see ale.xtext.ale.AleClass#getFields()
+   * @see #getAleClass()
    * @generated
    */
-  EReference getClass_Fields();
+  EReference getAleClass_Fields();
 
   /**
-   * Returns the meta object for the containment reference list '{@link ale.xtext.ale.Class#getMethods <em>Methods</em>}'.
+   * Returns the meta object for the containment reference list '{@link ale.xtext.ale.AleClass#getMethods <em>Methods</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference list '<em>Methods</em>'.
-   * @see ale.xtext.ale.Class#getMethods()
-   * @see #getClass_()
+   * @see ale.xtext.ale.AleClass#getMethods()
+   * @see #getAleClass()
    * @generated
    */
-  EReference getClass_Methods();
+  EReference getAleClass_Methods();
 
   /**
    * Returns the meta object for class '{@link ale.xtext.ale.Field <em>Field</em>}'.
@@ -3550,27 +3522,6 @@ public interface AlePackage extends EPackage
   EReference getOperationCallOperation_Parameters();
 
   /**
-   * Returns the meta object for class '{@link ale.xtext.ale.OADenot <em>OA Denot</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>OA Denot</em>'.
-   * @see ale.xtext.ale.OADenot
-   * @generated
-   */
-  EClass getOADenot();
-
-  /**
-   * Returns the meta object for the containment reference '{@link ale.xtext.ale.OADenot#getExp <em>Exp</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Exp</em>'.
-   * @see ale.xtext.ale.OADenot#getExp()
-   * @see #getOADenot()
-   * @generated
-   */
-  EReference getOADenot_Exp();
-
-  /**
    * Returns the meta object for class '{@link ale.xtext.ale.SelfRef <em>Self Ref</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4018,14 +3969,14 @@ public interface AlePackage extends EPackage
     EAttribute IMPORT__NAME = eINSTANCE.getImport_Name();
 
     /**
-     * The meta object literal for the '{@link ale.xtext.ale.impl.ClassImpl <em>Class</em>}' class.
+     * The meta object literal for the '{@link ale.xtext.ale.impl.AleClassImpl <em>Class</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see ale.xtext.ale.impl.ClassImpl
-     * @see ale.xtext.ale.impl.AlePackageImpl#getClass_()
+     * @see ale.xtext.ale.impl.AleClassImpl
+     * @see ale.xtext.ale.impl.AlePackageImpl#getAleClass()
      * @generated
      */
-    EClass CLASS = eINSTANCE.getClass_();
+    EClass ALE_CLASS = eINSTANCE.getAleClass();
 
     /**
      * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -4033,7 +3984,7 @@ public interface AlePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute CLASS__NAME = eINSTANCE.getClass_Name();
+    EAttribute ALE_CLASS__NAME = eINSTANCE.getAleClass_Name();
 
     /**
      * The meta object literal for the '<em><b>Super Class</b></em>' reference list feature.
@@ -4041,7 +3992,7 @@ public interface AlePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference CLASS__SUPER_CLASS = eINSTANCE.getClass_SuperClass();
+    EReference ALE_CLASS__SUPER_CLASS = eINSTANCE.getAleClass_SuperClass();
 
     /**
      * The meta object literal for the '<em><b>Fields</b></em>' containment reference list feature.
@@ -4049,7 +4000,7 @@ public interface AlePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference CLASS__FIELDS = eINSTANCE.getClass_Fields();
+    EReference ALE_CLASS__FIELDS = eINSTANCE.getAleClass_Fields();
 
     /**
      * The meta object literal for the '<em><b>Methods</b></em>' containment reference list feature.
@@ -4057,7 +4008,7 @@ public interface AlePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference CLASS__METHODS = eINSTANCE.getClass_Methods();
+    EReference ALE_CLASS__METHODS = eINSTANCE.getAleClass_Methods();
 
     /**
      * The meta object literal for the '{@link ale.xtext.ale.impl.FieldImpl <em>Field</em>}' class.
@@ -4996,24 +4947,6 @@ public interface AlePackage extends EPackage
      * @generated
      */
     EReference OPERATION_CALL_OPERATION__PARAMETERS = eINSTANCE.getOperationCallOperation_Parameters();
-
-    /**
-     * The meta object literal for the '{@link ale.xtext.ale.impl.OADenotImpl <em>OA Denot</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see ale.xtext.ale.impl.OADenotImpl
-     * @see ale.xtext.ale.impl.AlePackageImpl#getOADenot()
-     * @generated
-     */
-    EClass OA_DENOT = eINSTANCE.getOADenot();
-
-    /**
-     * The meta object literal for the '<em><b>Exp</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference OA_DENOT__EXP = eINSTANCE.getOADenot_Exp();
 
     /**
      * The meta object literal for the '{@link ale.xtext.ale.impl.SelfRefImpl <em>Self Ref</em>}' class.

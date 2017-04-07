@@ -4,6 +4,7 @@
 package ale.xtext.ale.impl;
 
 import ale.xtext.ale.AddOperation;
+import ale.xtext.ale.AleClass;
 import ale.xtext.ale.AleFactory;
 import ale.xtext.ale.AlePackage;
 import ale.xtext.ale.Block;
@@ -42,7 +43,6 @@ import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
 import ale.xtext.ale.NullTypeT;
-import ale.xtext.ale.OADenot;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -105,7 +105,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass classEClass = null;
+  private EClass aleClassEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -399,13 +399,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass oaDenotEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   private EClass selfRefEClass = null;
 
   /**
@@ -686,9 +679,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getClass_()
+  public EClass getAleClass()
   {
-    return classEClass;
+    return aleClassEClass;
   }
 
   /**
@@ -696,9 +689,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getClass_Name()
+  public EAttribute getAleClass_Name()
   {
-    return (EAttribute)classEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)aleClassEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -706,9 +699,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getClass_SuperClass()
+  public EReference getAleClass_SuperClass()
   {
-    return (EReference)classEClass.getEStructuralFeatures().get(1);
+    return (EReference)aleClassEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -716,9 +709,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getClass_Fields()
+  public EReference getAleClass_Fields()
   {
-    return (EReference)classEClass.getEStructuralFeatures().get(2);
+    return (EReference)aleClassEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -726,9 +719,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getClass_Methods()
+  public EReference getAleClass_Methods()
   {
-    return (EReference)classEClass.getEStructuralFeatures().get(3);
+    return (EReference)aleClassEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1806,26 +1799,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getOADenot()
-  {
-    return oaDenotEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getOADenot_Exp()
-  {
-    return (EReference)oaDenotEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getSelfRef()
   {
     return selfRefEClass;
@@ -2210,11 +2183,11 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     createEReference(importEClass, IMPORT__REF);
     createEAttribute(importEClass, IMPORT__NAME);
 
-    classEClass = createEClass(CLASS);
-    createEAttribute(classEClass, CLASS__NAME);
-    createEReference(classEClass, CLASS__SUPER_CLASS);
-    createEReference(classEClass, CLASS__FIELDS);
-    createEReference(classEClass, CLASS__METHODS);
+    aleClassEClass = createEClass(ALE_CLASS);
+    createEAttribute(aleClassEClass, ALE_CLASS__NAME);
+    createEReference(aleClassEClass, ALE_CLASS__SUPER_CLASS);
+    createEReference(aleClassEClass, ALE_CLASS__FIELDS);
+    createEReference(aleClassEClass, ALE_CLASS__METHODS);
 
     fieldEClass = createEClass(FIELD);
     createEReference(fieldEClass, FIELD__TYPE);
@@ -2364,9 +2337,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     createEAttribute(operationCallOperationEClass, OPERATION_CALL_OPERATION__NAME);
     createEReference(operationCallOperationEClass, OPERATION_CALL_OPERATION__PARAMETERS);
 
-    oaDenotEClass = createEClass(OA_DENOT);
-    createEReference(oaDenotEClass, OA_DENOT__EXP);
-
     selfRefEClass = createEClass(SELF_REF);
 
     superRefEClass = createEClass(SUPER_REF);
@@ -2460,8 +2430,8 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     expressionEClass.getESuperTypes().add(this.getStatement());
     paramEClass.getESuperTypes().add(this.getSymbol());
     literalTypeEClass.getESuperTypes().add(this.getType());
-    openClassEClass.getESuperTypes().add(this.getClass_());
-    newClassEClass.getESuperTypes().add(this.getClass_());
+    openClassEClass.getESuperTypes().add(this.getAleClass());
+    newClassEClass.getESuperTypes().add(this.getAleClass());
     returnStatementEClass.getESuperTypes().add(this.getStatement());
     letStatementEClass.getESuperTypes().add(this.getStatement());
     ifStatementEClass.getESuperTypes().add(this.getStatement());
@@ -2488,7 +2458,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     negInfixOperationEClass.getESuperTypes().add(this.getExpression());
     constructorOperationEClass.getESuperTypes().add(this.getExpression());
     operationCallOperationEClass.getESuperTypes().add(this.getExpression());
-    oaDenotEClass.getESuperTypes().add(this.getExpression());
     selfRefEClass.getESuperTypes().add(this.getExpression());
     superRefEClass.getESuperTypes().add(this.getExpression());
     stringLiteralEClass.getESuperTypes().add(this.getExpression());
@@ -2515,17 +2484,17 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEClass(rootEClass, Root.class, "Root", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRoot_Name(), ecorePackage.getEString(), "name", null, 0, 1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRoot_Imports(), this.getImport(), null, "imports", null, 0, -1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getRoot_Classes(), this.getClass_(), null, "classes", null, 0, -1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRoot_Classes(), this.getAleClass(), null, "classes", null, 0, -1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getImport_Ref(), this.getRoot(), null, "ref", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getImport_Name(), ecorePackage.getEString(), "name", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(classEClass, ale.xtext.ale.Class.class, "Class", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getClass_Name(), ecorePackage.getEString(), "name", null, 0, 1, ale.xtext.ale.Class.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getClass_SuperClass(), this.getClass_(), null, "superClass", null, 0, -1, ale.xtext.ale.Class.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getClass_Fields(), this.getField(), null, "fields", null, 0, -1, ale.xtext.ale.Class.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getClass_Methods(), this.getMethod(), null, "methods", null, 0, -1, ale.xtext.ale.Class.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(aleClassEClass, AleClass.class, "AleClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getAleClass_Name(), ecorePackage.getEString(), "name", null, 0, 1, AleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAleClass_SuperClass(), this.getAleClass(), null, "superClass", null, 0, -1, AleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAleClass_Fields(), this.getField(), null, "fields", null, 0, -1, AleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAleClass_Methods(), this.getMethod(), null, "methods", null, 0, -1, AleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fieldEClass, Field.class, "Field", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getField_Type(), this.getType(), null, "type", null, 0, 1, Field.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2675,9 +2644,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEAttribute(getOperationCallOperation_Name(), ecorePackage.getEString(), "name", null, 0, 1, OperationCallOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getOperationCallOperation_Parameters(), this.getParamCall(), null, "parameters", null, 0, -1, OperationCallOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(oaDenotEClass, OADenot.class, "OADenot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getOADenot_Exp(), this.getExpression(), null, "exp", null, 0, 1, OADenot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(selfRefEClass, SelfRef.class, "SelfRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(superRefEClass, SuperRef.class, "SuperRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2732,7 +2698,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEReference(getSequenceTypeT_SubType(), this.getTypeSystem(), null, "subType", null, 0, 1, SequenceTypeT.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(classTypeTEClass, ClassTypeT.class, "ClassTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getClassTypeT_Clazz(), this.getClass_(), null, "clazz", null, 0, 1, ClassTypeT.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getClassTypeT_Clazz(), this.getAleClass(), null, "clazz", null, 0, 1, ClassTypeT.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

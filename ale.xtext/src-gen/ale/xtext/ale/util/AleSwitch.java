@@ -3,72 +3,7 @@
  */
 package ale.xtext.ale.util;
 
-import ale.xtext.ale.AddOperation;
-import ale.xtext.ale.AlePackage;
-import ale.xtext.ale.Block;
-import ale.xtext.ale.BooleanAndOperation;
-import ale.xtext.ale.BooleanLiteral;
-import ale.xtext.ale.BooleanOrOperation;
-import ale.xtext.ale.BooleanTypeT;
-import ale.xtext.ale.BooleanXorOperation;
-import ale.xtext.ale.ChainedCall;
-import ale.xtext.ale.ChainedCallArrow;
-import ale.xtext.ale.ClassTypeT;
-import ale.xtext.ale.CompareGEOperation;
-import ale.xtext.ale.CompareGOperation;
-import ale.xtext.ale.CompareLEOperation;
-import ale.xtext.ale.CompareLOperation;
-import ale.xtext.ale.CompareNEOperation;
-import ale.xtext.ale.ConstructorOperation;
-import ale.xtext.ale.DefMethod;
-import ale.xtext.ale.DivOperation;
-import ale.xtext.ale.EqualityOperation;
-import ale.xtext.ale.Expression;
-import ale.xtext.ale.Field;
-import ale.xtext.ale.ForLoop;
-import ale.xtext.ale.IfStatement;
-import ale.xtext.ale.ImpliesOperation;
-import ale.xtext.ale.Import;
-import ale.xtext.ale.IntLiteral;
-import ale.xtext.ale.IntRange;
-import ale.xtext.ale.IntTypeT;
-import ale.xtext.ale.LetStatement;
-import ale.xtext.ale.LiteralType;
-import ale.xtext.ale.Method;
-import ale.xtext.ale.MultOperation;
-import ale.xtext.ale.NegInfixOperation;
-import ale.xtext.ale.NewClass;
-import ale.xtext.ale.NotInfixOperation;
-import ale.xtext.ale.NullLiteral;
-import ale.xtext.ale.NullTypeT;
-import ale.xtext.ale.OADenot;
-import ale.xtext.ale.OpenClass;
-import ale.xtext.ale.OperationCallOperation;
-import ale.xtext.ale.OrderedSetDecl;
-import ale.xtext.ale.OrderedSetType;
-import ale.xtext.ale.OutOfScopeType;
-import ale.xtext.ale.OverrideMethod;
-import ale.xtext.ale.Param;
-import ale.xtext.ale.ParamCall;
-import ale.xtext.ale.RealLiteral;
-import ale.xtext.ale.RealTypeT;
-import ale.xtext.ale.ReturnStatement;
-import ale.xtext.ale.Root;
-import ale.xtext.ale.SelfRef;
-import ale.xtext.ale.SequenceDecl;
-import ale.xtext.ale.SequenceType;
-import ale.xtext.ale.SequenceTypeT;
-import ale.xtext.ale.Statement;
-import ale.xtext.ale.StringLiteral;
-import ale.xtext.ale.StringTypeT;
-import ale.xtext.ale.SubOperation;
-import ale.xtext.ale.SuperRef;
-import ale.xtext.ale.Symbol;
-import ale.xtext.ale.Type;
-import ale.xtext.ale.TypeSystem;
-import ale.xtext.ale.VarAssign;
-import ale.xtext.ale.VarRef;
-import ale.xtext.ale.WhileStatement;
+import ale.xtext.ale.*;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -152,10 +87,10 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AlePackage.CLASS:
+      case AlePackage.ALE_CLASS:
       {
-        ale.xtext.ale.Class class_ = (ale.xtext.ale.Class)theEObject;
-        T result = caseClass(class_);
+        AleClass aleClass = (AleClass)theEObject;
+        T result = caseAleClass(aleClass);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -262,7 +197,7 @@ public class AleSwitch<T> extends Switch<T>
       {
         OpenClass openClass = (OpenClass)theEObject;
         T result = caseOpenClass(openClass);
-        if (result == null) result = caseClass(openClass);
+        if (result == null) result = caseAleClass(openClass);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -270,7 +205,7 @@ public class AleSwitch<T> extends Switch<T>
       {
         NewClass newClass = (NewClass)theEObject;
         T result = caseNewClass(newClass);
-        if (result == null) result = caseClass(newClass);
+        if (result == null) result = caseAleClass(newClass);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -528,16 +463,6 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AlePackage.OA_DENOT:
-      {
-        OADenot oaDenot = (OADenot)theEObject;
-        T result = caseOADenot(oaDenot);
-        if (result == null) result = caseExpression(oaDenot);
-        if (result == null) result = caseStatement(oaDenot);
-        if (result == null) result = caseSymbol(oaDenot);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AlePackage.SELF_REF:
       {
         SelfRef selfRef = (SelfRef)theEObject;
@@ -775,7 +700,7 @@ public class AleSwitch<T> extends Switch<T>
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseClass(ale.xtext.ale.Class object)
+  public T caseAleClass(AleClass object)
   {
     return null;
   }
@@ -1432,22 +1357,6 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseOperationCallOperation(OperationCallOperation object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>OA Denot</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>OA Denot</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseOADenot(OADenot object)
   {
     return null;
   }

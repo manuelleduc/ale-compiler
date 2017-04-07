@@ -4,7 +4,7 @@
 package ale.xtext.scoping
 
 import ale.xtext.ale.AlePackage
-import ale.xtext.ale.Class
+import ale.xtext.ale.AleClass
 import ale.xtext.ale.OpenClass
 import ale.xtext.ale.Root
 import com.google.common.base.Function
@@ -25,13 +25,13 @@ class AleScopeProvider extends AbstractAleScopeProvider {
 
 	override IScope getScope(EObject context, EReference reference) {
 		if (context instanceof OpenClass) {
-			if (reference == AlePackage::eINSTANCE.class_SuperClass) {
+			if (reference == AlePackage::eINSTANCE.aleClass_SuperClass) {
 				val tmp = super.getScope(context, reference)
 				val currentRoot = context.eContainer as Root
 				val imports = currentRoot.imports.map[i|i.ref.classes].flatten.filter[c|c instanceof OpenClass]
-				return Scopes::scopeFor(imports, new Function<Class, QualifiedName>() {
+				return Scopes::scopeFor(imports, new Function<AleClass, QualifiedName>() {
 
-					override apply(Class t) {
+					override apply(AleClass t) {
 						val n = currentRoot.imports.filter[i|i.ref.classes.contains(t)].head.name
 						QualifiedName.create(n, t.name)
 					}
@@ -41,13 +41,13 @@ class AleScopeProvider extends AbstractAleScopeProvider {
 		}
 
 		if (context instanceof NewClass) {
-			if (reference == AlePackage::eINSTANCE.class_SuperClass) {
+			if (reference == AlePackage::eINSTANCE.aleClass_SuperClass) {
 				val tmp = super.getScope(context, reference)
 				val currentRoot = context.eContainer as Root
 				val imports = currentRoot.imports.map[i|i.ref.classes].flatten.filter[c|c instanceof OpenClass]
-				return Scopes::scopeFor(imports, new Function<Class, QualifiedName>() {
+				return Scopes::scopeFor(imports, new Function<AleClass, QualifiedName>() {
 
-					override apply(Class t) {
+					override apply(AleClass t) {
 						val n = currentRoot.imports.filter[i|i.ref.classes.contains(t)].head.name
 						QualifiedName.create(n, t.name)
 					}

@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class OpenClassImpl extends ClassImpl implements OpenClass
+public class OpenClassImpl extends AleClassImpl implements OpenClass
 {
   /**
    * <!-- begin-user-doc -->

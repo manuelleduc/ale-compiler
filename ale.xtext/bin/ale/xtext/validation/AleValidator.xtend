@@ -3,18 +3,18 @@
  */
 package ale.xtext.validation
 
-import java.util.List
-import org.eclipse.emf.ecore.EPackage
-import ale.xtext.ale.AlePackage
+//import ale.xtext.ale.AlePackage
+//import java.util.List
+//import org.eclipse.emf.ecore.EPackage
 
 /**
  * This class contains custom validation rules. 
  * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
-class AleValidator extends AleTypeValidator {
+class AleValidator /*extends AleTypeValidator*/ {
 
-	override protected List<EPackage> getEPackages() {
-		newArrayList(AlePackage.eINSTANCE)
-	}
+//	override protected List<EPackage> getEPackages() {
+//		newArrayList(AlePackage.eINSTANCE)
+//	}
 }
