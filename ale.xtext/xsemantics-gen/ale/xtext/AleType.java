@@ -5,10 +5,13 @@ import ale.xtext.ale.AlePackage;
 import ale.xtext.ale.BooleanLiteral;
 import ale.xtext.ale.BooleanOrOperation;
 import ale.xtext.ale.BooleanTypeT;
+import ale.xtext.ale.ChainedCall;
+import ale.xtext.ale.ClassTypeT;
 import ale.xtext.ale.DefMethod;
 import ale.xtext.ale.EqualityOperation;
 import ale.xtext.ale.Expression;
 import ale.xtext.ale.Field;
+import ale.xtext.ale.ForLoop;
 import ale.xtext.ale.Import;
 import ale.xtext.ale.IntLiteral;
 import ale.xtext.ale.IntRange;
@@ -25,6 +28,7 @@ import ale.xtext.ale.RealLiteral;
 import ale.xtext.ale.RealTypeT;
 import ale.xtext.ale.ReturnStatement;
 import ale.xtext.ale.Root;
+import ale.xtext.ale.SelfRef;
 import ale.xtext.ale.SequenceTypeT;
 import ale.xtext.ale.Statement;
 import ale.xtext.ale.StringLiteral;
@@ -51,6 +55,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
@@ -77,7 +83,11 @@ public class AleType extends XsemanticsRuntimeSystem {
   
   public final static String INTRANGELITERAL = "ale.xtext.IntRangeLiteral";
   
+  public final static String SELFREF = "ale.xtext.SelfRef";
+  
   public final static String RETURNSTATEMENT = "ale.xtext.ReturnStatement";
+  
+  public final static String CHAINEDCALL = "ale.xtext.ChainedCall";
   
   public final static String NOTINFIXOPERATIONRULE = "ale.xtext.NotInfixOperationRule";
   
@@ -88,6 +98,8 @@ public class AleType extends XsemanticsRuntimeSystem {
   public final static String EQUALITYOPERATION = "ale.xtext.EqualityOperation";
   
   public final static String VARASSIGN = "ale.xtext.VarAssign";
+  
+  public final static String FORLOOP = "ale.xtext.ForLoop";
   
   private PolymorphicDispatcher<Boolean> superClassesDispatcher;
   
@@ -461,7 +473,7 @@ public class AleType extends XsemanticsRuntimeSystem {
   }
   
   protected void typeThrowException(final String _error, final String _issue, final Exception _ex, final Statement statement, final ErrorInformation[] _errorInformations) throws RuleFailedException {
-    String error = "cannot type statement";
+    String error = ("cannot type statement " + statement);
     EObject source = statement;
     throwRuleFailedException(error,
     	_issue, _ex, new ErrorInformation(source, null));
@@ -478,7 +490,7 @@ public class AleType extends XsemanticsRuntimeSystem {
   }
   
   protected void staticTypeThrowException(final String _error, final String _issue, final Exception _ex, final Type type, final ErrorInformation[] _errorInformations) throws RuleFailedException {
-    String error = "cannot type type";
+    String error = ("cannot type type " + type);
     EObject source = type;
     throwRuleFailedException(error,
     	_issue, _ex, new ErrorInformation(source, null));
@@ -746,6 +758,38 @@ public class AleType extends XsemanticsRuntimeSystem {
     return new Result<TypeSystem>(x);
   }
   
+  protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final SelfRef ref) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final Result<TypeSystem> _result_ = applyRuleSelfRef(G, _subtrace_, ref);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return ruleName("SelfRef") + stringRepForEnv(G) + " |- " + stringRep(ref) + " : " + stringRep(_result_.getFirst());
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyRuleSelfRef) {
+    	typeThrowException(ruleName("SelfRef") + stringRepForEnv(G) + " |- " + stringRep(ref) + " : " + "ClassTypeT",
+    		SELFREF,
+    		e_applyRuleSelfRef, ref, new ErrorInformation[] {new ErrorInformation(ref)});
+    	return null;
+    }
+  }
+  
+  protected Result<TypeSystem> applyRuleSelfRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final SelfRef ref) throws RuleFailedException {
+    ClassTypeT ts = null; // output parameter
+    Iterable<EObject> _allContainers = EcoreUtil2.getAllContainers(ref);
+    final Function1<EObject, Boolean> _function = (EObject e) -> {
+      return Boolean.valueOf((e instanceof ale.xtext.ale.Class));
+    };
+    final EObject selfClass = IterableExtensions.<EObject>findFirst(_allContainers, _function);
+    ClassTypeT _createClassTypeT = AleFactory.eINSTANCE.createClassTypeT();
+    ts = _createClassTypeT;
+    ts.setClazz(((ale.xtext.ale.Class) selfClass));
+    return new Result<TypeSystem>(ts);
+  }
+  
   protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ReturnStatement returnStatement) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
@@ -776,6 +820,49 @@ public class AleType extends XsemanticsRuntimeSystem {
     return new Result<TypeSystem>(typeRet);
   }
   
+  protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ChainedCall cc) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final Result<TypeSystem> _result_ = applyRuleChainedCall(G, _subtrace_, cc);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return ruleName("ChainedCall") + stringRepForEnv(G) + " |- " + stringRep(cc) + " : " + stringRep(_result_.getFirst());
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyRuleChainedCall) {
+    	typeThrowException(ruleName("ChainedCall") + stringRepForEnv(G) + " |- " + stringRep(cc) + " : " + "TypeSystem",
+    		CHAINEDCALL,
+    		e_applyRuleChainedCall, cc, new ErrorInformation[] {new ErrorInformation(cc)});
+    	return null;
+    }
+  }
+  
+  protected Result<TypeSystem> applyRuleChainedCall(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ChainedCall cc) throws RuleFailedException {
+    TypeSystem cct = null; // output parameter
+    /* G |- cc.left : var TypeSystem cclt */
+    Expression _left = cc.getLeft();
+    TypeSystem cclt = null;
+    Result<TypeSystem> result = typeInternal(G, _trace_, _left);
+    checkAssignableTo(result.getFirst(), TypeSystem.class);
+    cclt = (TypeSystem) result.getFirst();
+    
+    /* G |- cc.right : var TypeSystem ccrt */
+    Expression _right = cc.getRight();
+    TypeSystem ccrt = null;
+    Result<TypeSystem> result_1 = typeInternal(G, _trace_, _right);
+    checkAssignableTo(result_1.getFirst(), TypeSystem.class);
+    ccrt = (TypeSystem) result_1.getFirst();
+    
+    /* fail error cclt + " //// " */
+    String _plus = (cclt + " //// ");
+    String error = _plus;
+    throwForExplicitFail(error, new ErrorInformation(null, null));
+    /* ccrt; */
+    return new Result<TypeSystem>(cct);
+  }
+  
   protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final NotInfixOperation nio) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
@@ -788,7 +875,9 @@ public class AleType extends XsemanticsRuntimeSystem {
     	addAsSubtrace(_trace_, _subtrace_);
     	return _result_;
     } catch (Exception e_applyRuleNotInfixOperationRule) {
-    	notInfixOperationRuleThrowException(e_applyRuleNotInfixOperationRule, nio);
+    	typeThrowException(ruleName("NotInfixOperationRule") + stringRepForEnv(G) + " |- " + stringRep(nio) + " : " + "BooleanTypeT",
+    		NOTINFIXOPERATIONRULE,
+    		e_applyRuleNotInfixOperationRule, nio, new ErrorInformation[] {new ErrorInformation(nio)});
     	return null;
     }
   }
@@ -802,16 +891,6 @@ public class AleType extends XsemanticsRuntimeSystem {
     nioT = (BooleanTypeT) result.getFirst();
     
     return new Result<TypeSystem>(nioT);
-  }
-  
-  private void notInfixOperationRuleThrowException(final Exception e_applyRuleNotInfixOperationRule, final NotInfixOperation nio) throws RuleFailedException {
-    Expression _expression = nio.getExpression();
-    String _plus = (_expression + " is not a boolean expression");
-    String error = _plus;
-    EObject _eContainer = nio.eContainer();
-    EObject source = _eContainer;
-    throwRuleFailedException(error,
-    	NOTINFIXOPERATIONRULE, e_applyRuleNotInfixOperationRule, new ErrorInformation(source, null));
   }
   
   protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final BooleanOrOperation boo) throws RuleFailedException {
@@ -1030,5 +1109,41 @@ public class AleType extends XsemanticsRuntimeSystem {
     }
     varType = valueType;
     return new Result<TypeSystem>(varType);
+  }
+  
+  protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ForLoop fl) throws RuleFailedException {
+    try {
+    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
+    	final Result<TypeSystem> _result_ = applyRuleForLoop(G, _subtrace_, fl);
+    	addToTrace(_trace_, new Provider<Object>() {
+    		public Object get() {
+    			return ruleName("ForLoop") + stringRepForEnv(G) + " |- " + stringRep(fl) + " : " + stringRep(_result_.getFirst());
+    		}
+    	});
+    	addAsSubtrace(_trace_, _subtrace_);
+    	return _result_;
+    } catch (Exception e_applyRuleForLoop) {
+    	typeThrowException(ruleName("ForLoop") + stringRepForEnv(G) + " |- " + stringRep(fl) + " : " + "TypeSystem",
+    		FORLOOP,
+    		e_applyRuleForLoop, fl, new ErrorInformation[] {new ErrorInformation(fl)});
+    	return null;
+    }
+  }
+  
+  protected Result<TypeSystem> applyRuleForLoop(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ForLoop fl) throws RuleFailedException {
+    TypeSystem flt = null; // output parameter
+    /* G |- fl.collection : var TypeSystem colT */
+    Expression _collection = fl.getCollection();
+    TypeSystem colT = null;
+    Result<TypeSystem> result = typeInternal(G, _trace_, _collection);
+    checkAssignableTo(result.getFirst(), TypeSystem.class);
+    colT = (TypeSystem) result.getFirst();
+    
+    if ((colT instanceof SequenceTypeT)) {
+      TypeSystem _subType = ((SequenceTypeT)colT).getSubType();
+      TypeSystem _copy = EcoreUtil.<TypeSystem>copy(_subType);
+      flt = _copy;
+    }
+    return new Result<TypeSystem>(flt);
   }
 }

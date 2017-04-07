@@ -13,6 +13,7 @@ import ale.xtext.ale.BooleanTypeT;
 import ale.xtext.ale.BooleanXorOperation;
 import ale.xtext.ale.ChainedCall;
 import ale.xtext.ale.ChainedCallArrow;
+import ale.xtext.ale.ClassTypeT;
 import ale.xtext.ale.CompareGEOperation;
 import ale.xtext.ale.CompareGOperation;
 import ale.xtext.ale.CompareLEOperation;
@@ -40,6 +41,7 @@ import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
 import ale.xtext.ale.NullTypeT;
+import ale.xtext.ale.OADenot;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -326,26 +328,6 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AlePackage.CHAINED_CALL:
-      {
-        ChainedCall chainedCall = (ChainedCall)theEObject;
-        T result = caseChainedCall(chainedCall);
-        if (result == null) result = caseExpression(chainedCall);
-        if (result == null) result = caseStatement(chainedCall);
-        if (result == null) result = caseSymbol(chainedCall);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AlePackage.CHAINED_CALL_ARROW:
-      {
-        ChainedCallArrow chainedCallArrow = (ChainedCallArrow)theEObject;
-        T result = caseChainedCallArrow(chainedCallArrow);
-        if (result == null) result = caseExpression(chainedCallArrow);
-        if (result == null) result = caseStatement(chainedCallArrow);
-        if (result == null) result = caseSymbol(chainedCallArrow);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AlePackage.IMPLIES_OPERATION:
       {
         ImpliesOperation impliesOperation = (ImpliesOperation)theEObject;
@@ -486,6 +468,26 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AlePackage.CHAINED_CALL:
+      {
+        ChainedCall chainedCall = (ChainedCall)theEObject;
+        T result = caseChainedCall(chainedCall);
+        if (result == null) result = caseExpression(chainedCall);
+        if (result == null) result = caseStatement(chainedCall);
+        if (result == null) result = caseSymbol(chainedCall);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.CHAINED_CALL_ARROW:
+      {
+        ChainedCallArrow chainedCallArrow = (ChainedCallArrow)theEObject;
+        T result = caseChainedCallArrow(chainedCallArrow);
+        if (result == null) result = caseExpression(chainedCallArrow);
+        if (result == null) result = caseStatement(chainedCallArrow);
+        if (result == null) result = caseSymbol(chainedCallArrow);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AlePackage.NOT_INFIX_OPERATION:
       {
         NotInfixOperation notInfixOperation = (NotInfixOperation)theEObject;
@@ -523,6 +525,16 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = caseExpression(operationCallOperation);
         if (result == null) result = caseStatement(operationCallOperation);
         if (result == null) result = caseSymbol(operationCallOperation);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.OA_DENOT:
+      {
+        OADenot oaDenot = (OADenot)theEObject;
+        T result = caseOADenot(oaDenot);
+        if (result == null) result = caseExpression(oaDenot);
+        if (result == null) result = caseStatement(oaDenot);
+        if (result == null) result = caseSymbol(oaDenot);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -705,6 +717,14 @@ public class AleSwitch<T> extends Switch<T>
         SequenceTypeT sequenceTypeT = (SequenceTypeT)theEObject;
         T result = caseSequenceTypeT(sequenceTypeT);
         if (result == null) result = caseTypeSystem(sequenceTypeT);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.CLASS_TYPE_T:
+      {
+        ClassTypeT classTypeT = (ClassTypeT)theEObject;
+        T result = caseClassTypeT(classTypeT);
+        if (result == null) result = caseTypeSystem(classTypeT);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1097,38 +1117,6 @@ public class AleSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Chained Call</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Chained Call</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseChainedCall(ChainedCall object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Chained Call Arrow</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Chained Call Arrow</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseChainedCallArrow(ChainedCallArrow object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Implies Operation</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1353,6 +1341,38 @@ public class AleSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Chained Call</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Chained Call</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseChainedCall(ChainedCall object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Chained Call Arrow</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Chained Call Arrow</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseChainedCallArrow(ChainedCallArrow object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Not Infix Operation</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1412,6 +1432,22 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseOperationCallOperation(OperationCallOperation object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>OA Denot</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>OA Denot</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOADenot(OADenot object)
   {
     return null;
   }
@@ -1732,6 +1768,22 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseSequenceTypeT(SequenceTypeT object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Class Type T</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Class Type T</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClassTypeT(ClassTypeT object)
   {
     return null;
   }

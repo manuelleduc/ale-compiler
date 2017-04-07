@@ -13,6 +13,7 @@ import ale.xtext.ale.BooleanTypeT;
 import ale.xtext.ale.BooleanXorOperation;
 import ale.xtext.ale.ChainedCall;
 import ale.xtext.ale.ChainedCallArrow;
+import ale.xtext.ale.ClassTypeT;
 import ale.xtext.ale.CompareGEOperation;
 import ale.xtext.ale.CompareGOperation;
 import ale.xtext.ale.CompareLEOperation;
@@ -40,6 +41,7 @@ import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
 import ale.xtext.ale.NullTypeT;
+import ale.xtext.ale.OADenot;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -259,16 +261,6 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createVarAssignAdapter();
       }
       @Override
-      public Adapter caseChainedCall(ChainedCall object)
-      {
-        return createChainedCallAdapter();
-      }
-      @Override
-      public Adapter caseChainedCallArrow(ChainedCallArrow object)
-      {
-        return createChainedCallArrowAdapter();
-      }
-      @Override
       public Adapter caseImpliesOperation(ImpliesOperation object)
       {
         return createImpliesOperationAdapter();
@@ -339,6 +331,16 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createSubOperationAdapter();
       }
       @Override
+      public Adapter caseChainedCall(ChainedCall object)
+      {
+        return createChainedCallAdapter();
+      }
+      @Override
+      public Adapter caseChainedCallArrow(ChainedCallArrow object)
+      {
+        return createChainedCallArrowAdapter();
+      }
+      @Override
       public Adapter caseNotInfixOperation(NotInfixOperation object)
       {
         return createNotInfixOperationAdapter();
@@ -357,6 +359,11 @@ public class AleAdapterFactory extends AdapterFactoryImpl
       public Adapter caseOperationCallOperation(OperationCallOperation object)
       {
         return createOperationCallOperationAdapter();
+      }
+      @Override
+      public Adapter caseOADenot(OADenot object)
+      {
+        return createOADenotAdapter();
       }
       @Override
       public Adapter caseSelfRef(SelfRef object)
@@ -457,6 +464,11 @@ public class AleAdapterFactory extends AdapterFactoryImpl
       public Adapter caseSequenceTypeT(SequenceTypeT object)
       {
         return createSequenceTypeTAdapter();
+      }
+      @Override
+      public Adapter caseClassTypeT(ClassTypeT object)
+      {
+        return createClassTypeTAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -841,36 +853,6 @@ public class AleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link ale.xtext.ale.ChainedCall <em>Chained Call</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see ale.xtext.ale.ChainedCall
-   * @generated
-   */
-  public Adapter createChainedCallAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link ale.xtext.ale.ChainedCallArrow <em>Chained Call Arrow</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see ale.xtext.ale.ChainedCallArrow
-   * @generated
-   */
-  public Adapter createChainedCallArrowAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link ale.xtext.ale.ImpliesOperation <em>Implies Operation</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1081,6 +1063,36 @@ public class AleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.ChainedCall <em>Chained Call</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.ChainedCall
+   * @generated
+   */
+  public Adapter createChainedCallAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.ChainedCallArrow <em>Chained Call Arrow</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.ChainedCallArrow
+   * @generated
+   */
+  public Adapter createChainedCallArrowAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link ale.xtext.ale.NotInfixOperation <em>Not Infix Operation</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1136,6 +1148,21 @@ public class AleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createOperationCallOperationAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.OADenot <em>OA Denot</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.OADenot
+   * @generated
+   */
+  public Adapter createOADenotAdapter()
   {
     return null;
   }
@@ -1436,6 +1463,21 @@ public class AleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSequenceTypeTAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.ClassTypeT <em>Class Type T</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.ClassTypeT
+   * @generated
+   */
+  public Adapter createClassTypeTAdapter()
   {
     return null;
   }

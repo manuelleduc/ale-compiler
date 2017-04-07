@@ -13,6 +13,7 @@ import ale.xtext.ale.BooleanTypeT;
 import ale.xtext.ale.BooleanXorOperation;
 import ale.xtext.ale.ChainedCall;
 import ale.xtext.ale.ChainedCallArrow;
+import ale.xtext.ale.ClassTypeT;
 import ale.xtext.ale.CompareGEOperation;
 import ale.xtext.ale.CompareGOperation;
 import ale.xtext.ale.CompareLEOperation;
@@ -38,6 +39,7 @@ import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
 import ale.xtext.ale.NullTypeT;
+import ale.xtext.ale.OADenot;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -115,6 +117,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case AlePackage.CHAINED_CALL_ARROW:
 				sequence_ChaindedCall(context, (ChainedCallArrow) semanticObject); 
 				return; 
+			case AlePackage.CLASS_TYPE_T:
+				sequence_TypeSystem(context, (ClassTypeT) semanticObject); 
+				return; 
 			case AlePackage.COMPARE_GE_OPERATION:
 				sequence_CompareOperation(context, (CompareGEOperation) semanticObject); 
 				return; 
@@ -189,6 +194,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				return; 
 			case AlePackage.NULL_TYPE_T:
 				sequence_TypeSystem(context, (NullTypeT) semanticObject); 
+				return; 
+			case AlePackage.OA_DENOT:
+				sequence_AtomicLiteral(context, (OADenot) semanticObject); 
 				return; 
 			case AlePackage.OPEN_CLASS:
 				sequence_OpenClass(context, (OpenClass) semanticObject); 
@@ -268,9 +276,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns AddOperation
 	 *     Expression returns AddOperation
-	 *     ChaindedCall returns AddOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns AddOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns AddOperation
 	 *     ImpliesOperation returns AddOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns AddOperation
 	 *     BooleanOperation returns AddOperation
@@ -291,10 +296,14 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     AddOperation returns AddOperation
 	 *     AddOperation.AddOperation_1_0_0_0_0 returns AddOperation
 	 *     AddOperation.SubOperation_1_0_0_1_0 returns AddOperation
+	 *     ChaindedCall returns AddOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns AddOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns AddOperation
+	 *     InfixOperation returns AddOperation
 	 *     AtomicLiteral returns AddOperation
 	 *
 	 * Constraint:
-	 *     (left=AddOperation_AddOperation_1_0_0_0_0 right=InfixOperation)
+	 *     (left=AddOperation_AddOperation_1_0_0_0_0 right=ChaindedCall)
 	 */
 	protected void sequence_AddOperation(ISerializationContext context, AddOperation semanticObject) {
 		if (errorAcceptor != null) {
@@ -305,7 +314,7 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAddOperationAccess().getAddOperationLeftAction_1_0_0_0_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getAddOperationAccess().getRightInfixOperationParserRuleCall_1_0_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getAddOperationAccess().getRightChaindedCallParserRuleCall_1_0_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -314,9 +323,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns SubOperation
 	 *     Expression returns SubOperation
-	 *     ChaindedCall returns SubOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns SubOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns SubOperation
 	 *     ImpliesOperation returns SubOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns SubOperation
 	 *     BooleanOperation returns SubOperation
@@ -337,10 +343,14 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     AddOperation returns SubOperation
 	 *     AddOperation.AddOperation_1_0_0_0_0 returns SubOperation
 	 *     AddOperation.SubOperation_1_0_0_1_0 returns SubOperation
+	 *     ChaindedCall returns SubOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns SubOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns SubOperation
+	 *     InfixOperation returns SubOperation
 	 *     AtomicLiteral returns SubOperation
 	 *
 	 * Constraint:
-	 *     (left=AddOperation_SubOperation_1_0_0_1_0 right=InfixOperation)
+	 *     (left=AddOperation_SubOperation_1_0_0_1_0 right=ChaindedCall)
 	 */
 	protected void sequence_AddOperation(ISerializationContext context, SubOperation semanticObject) {
 		if (errorAcceptor != null) {
@@ -351,13 +361,39 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAddOperationAccess().getSubOperationLeftAction_1_0_0_1_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getAddOperationAccess().getRightInfixOperationParserRuleCall_1_0_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getAddOperationAccess().getRightChaindedCallParserRuleCall_1_0_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     Statement returns BooleanLiteral
+	 *     Expression returns BooleanLiteral
+	 *     ImpliesOperation returns BooleanLiteral
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns BooleanLiteral
+	 *     BooleanOperation returns BooleanLiteral
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns BooleanLiteral
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns BooleanLiteral
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns BooleanLiteral
+	 *     CompareOperation returns BooleanLiteral
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns BooleanLiteral
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns BooleanLiteral
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns BooleanLiteral
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns BooleanLiteral
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns BooleanLiteral
+	 *     EqualityOperation returns BooleanLiteral
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns BooleanLiteral
+	 *     MultOperation returns BooleanLiteral
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns BooleanLiteral
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns BooleanLiteral
+	 *     AddOperation returns BooleanLiteral
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns BooleanLiteral
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns BooleanLiteral
+	 *     ChaindedCall returns BooleanLiteral
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns BooleanLiteral
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns BooleanLiteral
+	 *     InfixOperation returns BooleanLiteral
 	 *     AtomicLiteral returns BooleanLiteral
 	 *
 	 * Constraint:
@@ -369,13 +405,39 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.BOOLEAN_LITERAL__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueBOOLEANTerminalRuleCall_6_1_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueBOOLEANTerminalRuleCall_7_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     Statement returns IntLiteral
+	 *     Expression returns IntLiteral
+	 *     ImpliesOperation returns IntLiteral
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns IntLiteral
+	 *     BooleanOperation returns IntLiteral
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns IntLiteral
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns IntLiteral
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns IntLiteral
+	 *     CompareOperation returns IntLiteral
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns IntLiteral
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns IntLiteral
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns IntLiteral
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns IntLiteral
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns IntLiteral
+	 *     EqualityOperation returns IntLiteral
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns IntLiteral
+	 *     MultOperation returns IntLiteral
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns IntLiteral
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns IntLiteral
+	 *     AddOperation returns IntLiteral
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns IntLiteral
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns IntLiteral
+	 *     ChaindedCall returns IntLiteral
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns IntLiteral
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns IntLiteral
+	 *     InfixOperation returns IntLiteral
 	 *     AtomicLiteral returns IntLiteral
 	 *
 	 * Constraint:
@@ -387,13 +449,39 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.INT_LITERAL__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueINTTerminalRuleCall_4_1_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueINTTerminalRuleCall_5_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     Statement returns IntRange
+	 *     Expression returns IntRange
+	 *     ImpliesOperation returns IntRange
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns IntRange
+	 *     BooleanOperation returns IntRange
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns IntRange
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns IntRange
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns IntRange
+	 *     CompareOperation returns IntRange
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns IntRange
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns IntRange
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns IntRange
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns IntRange
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns IntRange
+	 *     EqualityOperation returns IntRange
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns IntRange
+	 *     MultOperation returns IntRange
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns IntRange
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns IntRange
+	 *     AddOperation returns IntRange
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns IntRange
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns IntRange
+	 *     ChaindedCall returns IntRange
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns IntRange
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns IntRange
+	 *     InfixOperation returns IntRange
 	 *     AtomicLiteral returns IntRange
 	 *
 	 * Constraint:
@@ -407,14 +495,40 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.INT_RANGE__STOP));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAtomicLiteralAccess().getStartExpressionParserRuleCall_8_2_0(), semanticObject.getStart());
-		feeder.accept(grammarAccess.getAtomicLiteralAccess().getStopExpressionParserRuleCall_8_5_0(), semanticObject.getStop());
+		feeder.accept(grammarAccess.getAtomicLiteralAccess().getStartExpressionParserRuleCall_9_2_0(), semanticObject.getStart());
+		feeder.accept(grammarAccess.getAtomicLiteralAccess().getStopExpressionParserRuleCall_9_5_0(), semanticObject.getStop());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     Statement returns NullLiteral
+	 *     Expression returns NullLiteral
+	 *     ImpliesOperation returns NullLiteral
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns NullLiteral
+	 *     BooleanOperation returns NullLiteral
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns NullLiteral
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns NullLiteral
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns NullLiteral
+	 *     CompareOperation returns NullLiteral
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns NullLiteral
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns NullLiteral
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns NullLiteral
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns NullLiteral
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns NullLiteral
+	 *     EqualityOperation returns NullLiteral
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns NullLiteral
+	 *     MultOperation returns NullLiteral
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns NullLiteral
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns NullLiteral
+	 *     AddOperation returns NullLiteral
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns NullLiteral
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns NullLiteral
+	 *     ChaindedCall returns NullLiteral
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns NullLiteral
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns NullLiteral
+	 *     InfixOperation returns NullLiteral
 	 *     AtomicLiteral returns NullLiteral
 	 *
 	 * Constraint:
@@ -427,6 +541,76 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Statement returns OADenot
+	 *     Expression returns OADenot
+	 *     ImpliesOperation returns OADenot
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns OADenot
+	 *     BooleanOperation returns OADenot
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns OADenot
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns OADenot
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns OADenot
+	 *     CompareOperation returns OADenot
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns OADenot
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns OADenot
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns OADenot
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns OADenot
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns OADenot
+	 *     EqualityOperation returns OADenot
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns OADenot
+	 *     MultOperation returns OADenot
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns OADenot
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns OADenot
+	 *     AddOperation returns OADenot
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns OADenot
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns OADenot
+	 *     ChaindedCall returns OADenot
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns OADenot
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns OADenot
+	 *     InfixOperation returns OADenot
+	 *     AtomicLiteral returns OADenot
+	 *
+	 * Constraint:
+	 *     exp=Expression
+	 */
+	protected void sequence_AtomicLiteral(ISerializationContext context, OADenot semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.OA_DENOT__EXP) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.OA_DENOT__EXP));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAtomicLiteralAccess().getExpExpressionParserRuleCall_1_3_0(), semanticObject.getExp());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Statement returns OrderedSetDecl
+	 *     Expression returns OrderedSetDecl
+	 *     ImpliesOperation returns OrderedSetDecl
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns OrderedSetDecl
+	 *     BooleanOperation returns OrderedSetDecl
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns OrderedSetDecl
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns OrderedSetDecl
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns OrderedSetDecl
+	 *     CompareOperation returns OrderedSetDecl
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns OrderedSetDecl
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns OrderedSetDecl
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns OrderedSetDecl
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns OrderedSetDecl
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns OrderedSetDecl
+	 *     EqualityOperation returns OrderedSetDecl
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns OrderedSetDecl
+	 *     MultOperation returns OrderedSetDecl
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns OrderedSetDecl
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns OrderedSetDecl
+	 *     AddOperation returns OrderedSetDecl
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns OrderedSetDecl
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns OrderedSetDecl
+	 *     ChaindedCall returns OrderedSetDecl
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns OrderedSetDecl
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns OrderedSetDecl
+	 *     InfixOperation returns OrderedSetDecl
 	 *     AtomicLiteral returns OrderedSetDecl
 	 *
 	 * Constraint:
@@ -439,6 +623,32 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Statement returns RealLiteral
+	 *     Expression returns RealLiteral
+	 *     ImpliesOperation returns RealLiteral
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns RealLiteral
+	 *     BooleanOperation returns RealLiteral
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns RealLiteral
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns RealLiteral
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns RealLiteral
+	 *     CompareOperation returns RealLiteral
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns RealLiteral
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns RealLiteral
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns RealLiteral
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns RealLiteral
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns RealLiteral
+	 *     EqualityOperation returns RealLiteral
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns RealLiteral
+	 *     MultOperation returns RealLiteral
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns RealLiteral
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns RealLiteral
+	 *     AddOperation returns RealLiteral
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns RealLiteral
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns RealLiteral
+	 *     ChaindedCall returns RealLiteral
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns RealLiteral
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns RealLiteral
+	 *     InfixOperation returns RealLiteral
 	 *     AtomicLiteral returns RealLiteral
 	 *
 	 * Constraint:
@@ -450,13 +660,39 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.REAL_LITERAL__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueREALTerminalRuleCall_5_1_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueREALTerminalRuleCall_6_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     Statement returns SelfRef
+	 *     Expression returns SelfRef
+	 *     ImpliesOperation returns SelfRef
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns SelfRef
+	 *     BooleanOperation returns SelfRef
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns SelfRef
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns SelfRef
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns SelfRef
+	 *     CompareOperation returns SelfRef
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns SelfRef
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns SelfRef
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns SelfRef
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns SelfRef
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns SelfRef
+	 *     EqualityOperation returns SelfRef
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns SelfRef
+	 *     MultOperation returns SelfRef
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns SelfRef
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns SelfRef
+	 *     AddOperation returns SelfRef
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns SelfRef
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns SelfRef
+	 *     ChaindedCall returns SelfRef
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns SelfRef
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns SelfRef
+	 *     InfixOperation returns SelfRef
 	 *     AtomicLiteral returns SelfRef
 	 *
 	 * Constraint:
@@ -469,6 +705,32 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Statement returns SequenceDecl
+	 *     Expression returns SequenceDecl
+	 *     ImpliesOperation returns SequenceDecl
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns SequenceDecl
+	 *     BooleanOperation returns SequenceDecl
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns SequenceDecl
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns SequenceDecl
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns SequenceDecl
+	 *     CompareOperation returns SequenceDecl
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns SequenceDecl
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns SequenceDecl
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns SequenceDecl
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns SequenceDecl
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns SequenceDecl
+	 *     EqualityOperation returns SequenceDecl
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns SequenceDecl
+	 *     MultOperation returns SequenceDecl
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns SequenceDecl
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns SequenceDecl
+	 *     AddOperation returns SequenceDecl
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns SequenceDecl
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns SequenceDecl
+	 *     ChaindedCall returns SequenceDecl
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns SequenceDecl
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns SequenceDecl
+	 *     InfixOperation returns SequenceDecl
 	 *     AtomicLiteral returns SequenceDecl
 	 *
 	 * Constraint:
@@ -481,6 +743,32 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Statement returns StringLiteral
+	 *     Expression returns StringLiteral
+	 *     ImpliesOperation returns StringLiteral
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns StringLiteral
+	 *     BooleanOperation returns StringLiteral
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns StringLiteral
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns StringLiteral
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns StringLiteral
+	 *     CompareOperation returns StringLiteral
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns StringLiteral
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns StringLiteral
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns StringLiteral
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns StringLiteral
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns StringLiteral
+	 *     EqualityOperation returns StringLiteral
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns StringLiteral
+	 *     MultOperation returns StringLiteral
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns StringLiteral
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns StringLiteral
+	 *     AddOperation returns StringLiteral
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns StringLiteral
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns StringLiteral
+	 *     ChaindedCall returns StringLiteral
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns StringLiteral
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns StringLiteral
+	 *     InfixOperation returns StringLiteral
 	 *     AtomicLiteral returns StringLiteral
 	 *
 	 * Constraint:
@@ -492,13 +780,39 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.STRING_LITERAL__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueSTRINGTerminalRuleCall_3_1_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueSTRINGTerminalRuleCall_4_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     Statement returns SuperRef
+	 *     Expression returns SuperRef
+	 *     ImpliesOperation returns SuperRef
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns SuperRef
+	 *     BooleanOperation returns SuperRef
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns SuperRef
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns SuperRef
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns SuperRef
+	 *     CompareOperation returns SuperRef
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns SuperRef
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns SuperRef
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns SuperRef
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns SuperRef
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns SuperRef
+	 *     EqualityOperation returns SuperRef
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns SuperRef
+	 *     MultOperation returns SuperRef
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns SuperRef
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns SuperRef
+	 *     AddOperation returns SuperRef
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns SuperRef
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns SuperRef
+	 *     ChaindedCall returns SuperRef
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns SuperRef
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns SuperRef
+	 *     InfixOperation returns SuperRef
 	 *     AtomicLiteral returns SuperRef
 	 *
 	 * Constraint:
@@ -511,6 +825,32 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Statement returns VarRef
+	 *     Expression returns VarRef
+	 *     ImpliesOperation returns VarRef
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns VarRef
+	 *     BooleanOperation returns VarRef
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns VarRef
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns VarRef
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns VarRef
+	 *     CompareOperation returns VarRef
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns VarRef
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns VarRef
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns VarRef
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns VarRef
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns VarRef
+	 *     EqualityOperation returns VarRef
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns VarRef
+	 *     MultOperation returns VarRef
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns VarRef
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns VarRef
+	 *     AddOperation returns VarRef
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns VarRef
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns VarRef
+	 *     ChaindedCall returns VarRef
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns VarRef
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns VarRef
+	 *     InfixOperation returns VarRef
 	 *     AtomicLiteral returns VarRef
 	 *
 	 * Constraint:
@@ -522,7 +862,7 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.VAR_REF__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueIDTerminalRuleCall_11_1_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getAtomicLiteralAccess().getValueIDTerminalRuleCall_12_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
@@ -543,15 +883,30 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns BooleanAndOperation
 	 *     Expression returns BooleanAndOperation
-	 *     ChaindedCall returns BooleanAndOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns BooleanAndOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns BooleanAndOperation
 	 *     ImpliesOperation returns BooleanAndOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns BooleanAndOperation
 	 *     BooleanOperation returns BooleanAndOperation
 	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns BooleanAndOperation
 	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns BooleanAndOperation
 	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns BooleanAndOperation
+	 *     CompareOperation returns BooleanAndOperation
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns BooleanAndOperation
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns BooleanAndOperation
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns BooleanAndOperation
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns BooleanAndOperation
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns BooleanAndOperation
+	 *     EqualityOperation returns BooleanAndOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns BooleanAndOperation
+	 *     MultOperation returns BooleanAndOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns BooleanAndOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns BooleanAndOperation
+	 *     AddOperation returns BooleanAndOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns BooleanAndOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns BooleanAndOperation
+	 *     ChaindedCall returns BooleanAndOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns BooleanAndOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns BooleanAndOperation
+	 *     InfixOperation returns BooleanAndOperation
 	 *     AtomicLiteral returns BooleanAndOperation
 	 *
 	 * Constraint:
@@ -575,15 +930,30 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns BooleanOrOperation
 	 *     Expression returns BooleanOrOperation
-	 *     ChaindedCall returns BooleanOrOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns BooleanOrOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns BooleanOrOperation
 	 *     ImpliesOperation returns BooleanOrOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns BooleanOrOperation
 	 *     BooleanOperation returns BooleanOrOperation
 	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns BooleanOrOperation
 	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns BooleanOrOperation
 	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns BooleanOrOperation
+	 *     CompareOperation returns BooleanOrOperation
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns BooleanOrOperation
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns BooleanOrOperation
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns BooleanOrOperation
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns BooleanOrOperation
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns BooleanOrOperation
+	 *     EqualityOperation returns BooleanOrOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns BooleanOrOperation
+	 *     MultOperation returns BooleanOrOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns BooleanOrOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns BooleanOrOperation
+	 *     AddOperation returns BooleanOrOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns BooleanOrOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns BooleanOrOperation
+	 *     ChaindedCall returns BooleanOrOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns BooleanOrOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns BooleanOrOperation
+	 *     InfixOperation returns BooleanOrOperation
 	 *     AtomicLiteral returns BooleanOrOperation
 	 *
 	 * Constraint:
@@ -607,15 +977,30 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns BooleanXorOperation
 	 *     Expression returns BooleanXorOperation
-	 *     ChaindedCall returns BooleanXorOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns BooleanXorOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns BooleanXorOperation
 	 *     ImpliesOperation returns BooleanXorOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns BooleanXorOperation
 	 *     BooleanOperation returns BooleanXorOperation
 	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns BooleanXorOperation
 	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns BooleanXorOperation
 	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns BooleanXorOperation
+	 *     CompareOperation returns BooleanXorOperation
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns BooleanXorOperation
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns BooleanXorOperation
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns BooleanXorOperation
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns BooleanXorOperation
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns BooleanXorOperation
+	 *     EqualityOperation returns BooleanXorOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns BooleanXorOperation
+	 *     MultOperation returns BooleanXorOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns BooleanXorOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns BooleanXorOperation
+	 *     AddOperation returns BooleanXorOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns BooleanXorOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns BooleanXorOperation
+	 *     ChaindedCall returns BooleanXorOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns BooleanXorOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns BooleanXorOperation
+	 *     InfixOperation returns BooleanXorOperation
 	 *     AtomicLiteral returns BooleanXorOperation
 	 *
 	 * Constraint:
@@ -639,13 +1024,34 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns ChainedCall
 	 *     Expression returns ChainedCall
+	 *     ImpliesOperation returns ChainedCall
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns ChainedCall
+	 *     BooleanOperation returns ChainedCall
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns ChainedCall
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns ChainedCall
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns ChainedCall
+	 *     CompareOperation returns ChainedCall
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns ChainedCall
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns ChainedCall
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns ChainedCall
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns ChainedCall
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns ChainedCall
+	 *     EqualityOperation returns ChainedCall
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns ChainedCall
+	 *     MultOperation returns ChainedCall
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns ChainedCall
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns ChainedCall
+	 *     AddOperation returns ChainedCall
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns ChainedCall
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns ChainedCall
 	 *     ChaindedCall returns ChainedCall
 	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns ChainedCall
 	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns ChainedCall
+	 *     InfixOperation returns ChainedCall
 	 *     AtomicLiteral returns ChainedCall
 	 *
 	 * Constraint:
-	 *     (left=ChaindedCall_ChainedCall_1_0_0_0_0 right=ImpliesOperation)
+	 *     (left=ChaindedCall_ChainedCall_1_0_0_0_0 right=InfixOperation)
 	 */
 	protected void sequence_ChaindedCall(ISerializationContext context, ChainedCall semanticObject) {
 		if (errorAcceptor != null) {
@@ -656,7 +1062,7 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getChaindedCallAccess().getChainedCallLeftAction_1_0_0_0_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getChaindedCallAccess().getRightImpliesOperationParserRuleCall_1_0_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getChaindedCallAccess().getRightInfixOperationParserRuleCall_1_0_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -665,13 +1071,34 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns ChainedCallArrow
 	 *     Expression returns ChainedCallArrow
+	 *     ImpliesOperation returns ChainedCallArrow
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns ChainedCallArrow
+	 *     BooleanOperation returns ChainedCallArrow
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns ChainedCallArrow
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns ChainedCallArrow
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns ChainedCallArrow
+	 *     CompareOperation returns ChainedCallArrow
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns ChainedCallArrow
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns ChainedCallArrow
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns ChainedCallArrow
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns ChainedCallArrow
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns ChainedCallArrow
+	 *     EqualityOperation returns ChainedCallArrow
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns ChainedCallArrow
+	 *     MultOperation returns ChainedCallArrow
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns ChainedCallArrow
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns ChainedCallArrow
+	 *     AddOperation returns ChainedCallArrow
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns ChainedCallArrow
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns ChainedCallArrow
 	 *     ChaindedCall returns ChainedCallArrow
 	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns ChainedCallArrow
 	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns ChainedCallArrow
+	 *     InfixOperation returns ChainedCallArrow
 	 *     AtomicLiteral returns ChainedCallArrow
 	 *
 	 * Constraint:
-	 *     (left=ChaindedCall_ChainedCallArrow_1_0_0_1_0 right=ImpliesOperation)
+	 *     (left=ChaindedCall_ChainedCallArrow_1_0_0_1_0 right=InfixOperation)
 	 */
 	protected void sequence_ChaindedCall(ISerializationContext context, ChainedCallArrow semanticObject) {
 		if (errorAcceptor != null) {
@@ -682,7 +1109,7 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getChaindedCallAccess().getChainedCallArrowLeftAction_1_0_0_1_0(), semanticObject.getLeft());
-		feeder.accept(grammarAccess.getChaindedCallAccess().getRightImpliesOperationParserRuleCall_1_0_1_0(), semanticObject.getRight());
+		feeder.accept(grammarAccess.getChaindedCallAccess().getRightInfixOperationParserRuleCall_1_0_1_0(), semanticObject.getRight());
 		feeder.finish();
 	}
 	
@@ -691,9 +1118,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns CompareGEOperation
 	 *     Expression returns CompareGEOperation
-	 *     ChaindedCall returns CompareGEOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareGEOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareGEOperation
 	 *     ImpliesOperation returns CompareGEOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns CompareGEOperation
 	 *     BooleanOperation returns CompareGEOperation
@@ -706,6 +1130,18 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns CompareGEOperation
 	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns CompareGEOperation
 	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns CompareGEOperation
+	 *     EqualityOperation returns CompareGEOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns CompareGEOperation
+	 *     MultOperation returns CompareGEOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns CompareGEOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns CompareGEOperation
+	 *     AddOperation returns CompareGEOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns CompareGEOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns CompareGEOperation
+	 *     ChaindedCall returns CompareGEOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareGEOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareGEOperation
+	 *     InfixOperation returns CompareGEOperation
 	 *     AtomicLiteral returns CompareGEOperation
 	 *
 	 * Constraint:
@@ -729,9 +1165,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns CompareGOperation
 	 *     Expression returns CompareGOperation
-	 *     ChaindedCall returns CompareGOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareGOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareGOperation
 	 *     ImpliesOperation returns CompareGOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns CompareGOperation
 	 *     BooleanOperation returns CompareGOperation
@@ -744,6 +1177,18 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns CompareGOperation
 	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns CompareGOperation
 	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns CompareGOperation
+	 *     EqualityOperation returns CompareGOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns CompareGOperation
+	 *     MultOperation returns CompareGOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns CompareGOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns CompareGOperation
+	 *     AddOperation returns CompareGOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns CompareGOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns CompareGOperation
+	 *     ChaindedCall returns CompareGOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareGOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareGOperation
+	 *     InfixOperation returns CompareGOperation
 	 *     AtomicLiteral returns CompareGOperation
 	 *
 	 * Constraint:
@@ -767,9 +1212,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns CompareLEOperation
 	 *     Expression returns CompareLEOperation
-	 *     ChaindedCall returns CompareLEOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareLEOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareLEOperation
 	 *     ImpliesOperation returns CompareLEOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns CompareLEOperation
 	 *     BooleanOperation returns CompareLEOperation
@@ -782,6 +1224,18 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns CompareLEOperation
 	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns CompareLEOperation
 	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns CompareLEOperation
+	 *     EqualityOperation returns CompareLEOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns CompareLEOperation
+	 *     MultOperation returns CompareLEOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns CompareLEOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns CompareLEOperation
+	 *     AddOperation returns CompareLEOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns CompareLEOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns CompareLEOperation
+	 *     ChaindedCall returns CompareLEOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareLEOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareLEOperation
+	 *     InfixOperation returns CompareLEOperation
 	 *     AtomicLiteral returns CompareLEOperation
 	 *
 	 * Constraint:
@@ -805,9 +1259,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns CompareLOperation
 	 *     Expression returns CompareLOperation
-	 *     ChaindedCall returns CompareLOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareLOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareLOperation
 	 *     ImpliesOperation returns CompareLOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns CompareLOperation
 	 *     BooleanOperation returns CompareLOperation
@@ -820,6 +1271,18 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns CompareLOperation
 	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns CompareLOperation
 	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns CompareLOperation
+	 *     EqualityOperation returns CompareLOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns CompareLOperation
+	 *     MultOperation returns CompareLOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns CompareLOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns CompareLOperation
+	 *     AddOperation returns CompareLOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns CompareLOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns CompareLOperation
+	 *     ChaindedCall returns CompareLOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareLOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareLOperation
+	 *     InfixOperation returns CompareLOperation
 	 *     AtomicLiteral returns CompareLOperation
 	 *
 	 * Constraint:
@@ -843,9 +1306,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns CompareNEOperation
 	 *     Expression returns CompareNEOperation
-	 *     ChaindedCall returns CompareNEOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareNEOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareNEOperation
 	 *     ImpliesOperation returns CompareNEOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns CompareNEOperation
 	 *     BooleanOperation returns CompareNEOperation
@@ -858,6 +1318,18 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns CompareNEOperation
 	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns CompareNEOperation
 	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns CompareNEOperation
+	 *     EqualityOperation returns CompareNEOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns CompareNEOperation
+	 *     MultOperation returns CompareNEOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns CompareNEOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns CompareNEOperation
+	 *     AddOperation returns CompareNEOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns CompareNEOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns CompareNEOperation
+	 *     ChaindedCall returns CompareNEOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns CompareNEOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns CompareNEOperation
+	 *     InfixOperation returns CompareNEOperation
 	 *     AtomicLiteral returns CompareNEOperation
 	 *
 	 * Constraint:
@@ -894,9 +1366,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns EqualityOperation
 	 *     Expression returns EqualityOperation
-	 *     ChaindedCall returns EqualityOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns EqualityOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns EqualityOperation
 	 *     ImpliesOperation returns EqualityOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns EqualityOperation
 	 *     BooleanOperation returns EqualityOperation
@@ -911,6 +1380,16 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns EqualityOperation
 	 *     EqualityOperation returns EqualityOperation
 	 *     EqualityOperation.EqualityOperation_1_0_0 returns EqualityOperation
+	 *     MultOperation returns EqualityOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns EqualityOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns EqualityOperation
+	 *     AddOperation returns EqualityOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns EqualityOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns EqualityOperation
+	 *     ChaindedCall returns EqualityOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns EqualityOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns EqualityOperation
+	 *     InfixOperation returns EqualityOperation
 	 *     AtomicLiteral returns EqualityOperation
 	 *
 	 * Constraint:
@@ -1000,11 +1479,30 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns ImpliesOperation
 	 *     Expression returns ImpliesOperation
+	 *     ImpliesOperation returns ImpliesOperation
+	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns ImpliesOperation
+	 *     BooleanOperation returns ImpliesOperation
+	 *     BooleanOperation.BooleanOrOperation_1_0_0_0_0 returns ImpliesOperation
+	 *     BooleanOperation.BooleanAndOperation_1_0_0_1_0 returns ImpliesOperation
+	 *     BooleanOperation.BooleanXorOperation_1_0_0_2_0 returns ImpliesOperation
+	 *     CompareOperation returns ImpliesOperation
+	 *     CompareOperation.CompareLEOperation_1_0_0_0_0 returns ImpliesOperation
+	 *     CompareOperation.CompareGEOperation_1_0_0_1_0 returns ImpliesOperation
+	 *     CompareOperation.CompareNEOperation_1_0_0_2_0 returns ImpliesOperation
+	 *     CompareOperation.CompareLOperation_1_0_0_3_0 returns ImpliesOperation
+	 *     CompareOperation.CompareGOperation_1_0_0_4_0 returns ImpliesOperation
+	 *     EqualityOperation returns ImpliesOperation
+	 *     EqualityOperation.EqualityOperation_1_0_0 returns ImpliesOperation
+	 *     MultOperation returns ImpliesOperation
+	 *     MultOperation.MultOperation_1_0_0_0_0 returns ImpliesOperation
+	 *     MultOperation.DivOperation_1_0_0_1_0 returns ImpliesOperation
+	 *     AddOperation returns ImpliesOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns ImpliesOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns ImpliesOperation
 	 *     ChaindedCall returns ImpliesOperation
 	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns ImpliesOperation
 	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns ImpliesOperation
-	 *     ImpliesOperation returns ImpliesOperation
-	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns ImpliesOperation
+	 *     InfixOperation returns ImpliesOperation
 	 *     AtomicLiteral returns ImpliesOperation
 	 *
 	 * Constraint:
@@ -1049,9 +1547,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns ConstructorOperation
 	 *     Expression returns ConstructorOperation
-	 *     ChaindedCall returns ConstructorOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns ConstructorOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns ConstructorOperation
 	 *     ImpliesOperation returns ConstructorOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns ConstructorOperation
 	 *     BooleanOperation returns ConstructorOperation
@@ -1072,6 +1567,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     AddOperation returns ConstructorOperation
 	 *     AddOperation.AddOperation_1_0_0_0_0 returns ConstructorOperation
 	 *     AddOperation.SubOperation_1_0_0_1_0 returns ConstructorOperation
+	 *     ChaindedCall returns ConstructorOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns ConstructorOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns ConstructorOperation
 	 *     InfixOperation returns ConstructorOperation
 	 *     AtomicLiteral returns ConstructorOperation
 	 *
@@ -1093,9 +1591,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns NegInfixOperation
 	 *     Expression returns NegInfixOperation
-	 *     ChaindedCall returns NegInfixOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns NegInfixOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns NegInfixOperation
 	 *     ImpliesOperation returns NegInfixOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns NegInfixOperation
 	 *     BooleanOperation returns NegInfixOperation
@@ -1116,6 +1611,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     AddOperation returns NegInfixOperation
 	 *     AddOperation.AddOperation_1_0_0_0_0 returns NegInfixOperation
 	 *     AddOperation.SubOperation_1_0_0_1_0 returns NegInfixOperation
+	 *     ChaindedCall returns NegInfixOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns NegInfixOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns NegInfixOperation
 	 *     InfixOperation returns NegInfixOperation
 	 *     AtomicLiteral returns NegInfixOperation
 	 *
@@ -1137,9 +1635,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns NotInfixOperation
 	 *     Expression returns NotInfixOperation
-	 *     ChaindedCall returns NotInfixOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns NotInfixOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns NotInfixOperation
 	 *     ImpliesOperation returns NotInfixOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns NotInfixOperation
 	 *     BooleanOperation returns NotInfixOperation
@@ -1160,6 +1655,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     AddOperation returns NotInfixOperation
 	 *     AddOperation.AddOperation_1_0_0_0_0 returns NotInfixOperation
 	 *     AddOperation.SubOperation_1_0_0_1_0 returns NotInfixOperation
+	 *     ChaindedCall returns NotInfixOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns NotInfixOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns NotInfixOperation
 	 *     InfixOperation returns NotInfixOperation
 	 *     AtomicLiteral returns NotInfixOperation
 	 *
@@ -1181,9 +1679,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns OperationCallOperation
 	 *     Expression returns OperationCallOperation
-	 *     ChaindedCall returns OperationCallOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns OperationCallOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns OperationCallOperation
 	 *     ImpliesOperation returns OperationCallOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns OperationCallOperation
 	 *     BooleanOperation returns OperationCallOperation
@@ -1204,6 +1699,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     AddOperation returns OperationCallOperation
 	 *     AddOperation.AddOperation_1_0_0_0_0 returns OperationCallOperation
 	 *     AddOperation.SubOperation_1_0_0_1_0 returns OperationCallOperation
+	 *     ChaindedCall returns OperationCallOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns OperationCallOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns OperationCallOperation
 	 *     InfixOperation returns OperationCallOperation
 	 *     AtomicLiteral returns OperationCallOperation
 	 *
@@ -1245,9 +1743,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns DivOperation
 	 *     Expression returns DivOperation
-	 *     ChaindedCall returns DivOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns DivOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns DivOperation
 	 *     ImpliesOperation returns DivOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns DivOperation
 	 *     BooleanOperation returns DivOperation
@@ -1265,6 +1760,13 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     MultOperation returns DivOperation
 	 *     MultOperation.MultOperation_1_0_0_0_0 returns DivOperation
 	 *     MultOperation.DivOperation_1_0_0_1_0 returns DivOperation
+	 *     AddOperation returns DivOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns DivOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns DivOperation
+	 *     ChaindedCall returns DivOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns DivOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns DivOperation
+	 *     InfixOperation returns DivOperation
 	 *     AtomicLiteral returns DivOperation
 	 *
 	 * Constraint:
@@ -1288,9 +1790,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 * Contexts:
 	 *     Statement returns MultOperation
 	 *     Expression returns MultOperation
-	 *     ChaindedCall returns MultOperation
-	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns MultOperation
-	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns MultOperation
 	 *     ImpliesOperation returns MultOperation
 	 *     ImpliesOperation.ImpliesOperation_1_0_0_0 returns MultOperation
 	 *     BooleanOperation returns MultOperation
@@ -1308,6 +1807,13 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     MultOperation returns MultOperation
 	 *     MultOperation.MultOperation_1_0_0_0_0 returns MultOperation
 	 *     MultOperation.DivOperation_1_0_0_1_0 returns MultOperation
+	 *     AddOperation returns MultOperation
+	 *     AddOperation.AddOperation_1_0_0_0_0 returns MultOperation
+	 *     AddOperation.SubOperation_1_0_0_1_0 returns MultOperation
+	 *     ChaindedCall returns MultOperation
+	 *     ChaindedCall.ChainedCall_1_0_0_0_0 returns MultOperation
+	 *     ChaindedCall.ChainedCallArrow_1_0_0_1_0 returns MultOperation
+	 *     InfixOperation returns MultOperation
 	 *     AtomicLiteral returns MultOperation
 	 *
 	 * Constraint:
@@ -1440,6 +1946,24 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 */
 	protected void sequence_TypeSystem(ISerializationContext context, BooleanTypeT semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     TypeSystem returns ClassTypeT
+	 *
+	 * Constraint:
+	 *     clazz=[Class|ID]
+	 */
+	protected void sequence_TypeSystem(ISerializationContext context, ClassTypeT semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.CLASS_TYPE_T__CLAZZ) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.CLASS_TYPE_T__CLAZZ));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getTypeSystemAccess().getClazzClassIDTerminalRuleCall_6_2_0_1(), semanticObject.getClazz());
+		feeder.finish();
 	}
 	
 	

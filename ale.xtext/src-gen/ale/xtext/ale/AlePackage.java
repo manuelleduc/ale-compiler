@@ -1009,80 +1009,6 @@ public interface AlePackage extends EPackage
   int VAR_ASSIGN_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 3;
 
   /**
-   * The meta object id for the '{@link ale.xtext.ale.impl.ChainedCallImpl <em>Chained Call</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see ale.xtext.ale.impl.ChainedCallImpl
-   * @see ale.xtext.ale.impl.AlePackageImpl#getChainedCall()
-   * @generated
-   */
-  int CHAINED_CALL = 24;
-
-  /**
-   * The feature id for the '<em><b>Left</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CHAINED_CALL__LEFT = EXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Right</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CHAINED_CALL__RIGHT = EXPRESSION_FEATURE_COUNT + 1;
-
-  /**
-   * The number of structural features of the '<em>Chained Call</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CHAINED_CALL_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
-
-  /**
-   * The meta object id for the '{@link ale.xtext.ale.impl.ChainedCallArrowImpl <em>Chained Call Arrow</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see ale.xtext.ale.impl.ChainedCallArrowImpl
-   * @see ale.xtext.ale.impl.AlePackageImpl#getChainedCallArrow()
-   * @generated
-   */
-  int CHAINED_CALL_ARROW = 25;
-
-  /**
-   * The feature id for the '<em><b>Left</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CHAINED_CALL_ARROW__LEFT = EXPRESSION_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Right</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CHAINED_CALL_ARROW__RIGHT = EXPRESSION_FEATURE_COUNT + 1;
-
-  /**
-   * The number of structural features of the '<em>Chained Call Arrow</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CHAINED_CALL_ARROW_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
-
-  /**
    * The meta object id for the '{@link ale.xtext.ale.impl.ImpliesOperationImpl <em>Implies Operation</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1090,7 +1016,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getImpliesOperation()
    * @generated
    */
-  int IMPLIES_OPERATION = 26;
+  int IMPLIES_OPERATION = 24;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1127,7 +1053,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getBooleanOrOperation()
    * @generated
    */
-  int BOOLEAN_OR_OPERATION = 27;
+  int BOOLEAN_OR_OPERATION = 25;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1164,7 +1090,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getBooleanAndOperation()
    * @generated
    */
-  int BOOLEAN_AND_OPERATION = 28;
+  int BOOLEAN_AND_OPERATION = 26;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1201,7 +1127,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getBooleanXorOperation()
    * @generated
    */
-  int BOOLEAN_XOR_OPERATION = 29;
+  int BOOLEAN_XOR_OPERATION = 27;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1238,7 +1164,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getCompareLEOperation()
    * @generated
    */
-  int COMPARE_LE_OPERATION = 30;
+  int COMPARE_LE_OPERATION = 28;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1275,7 +1201,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getCompareGEOperation()
    * @generated
    */
-  int COMPARE_GE_OPERATION = 31;
+  int COMPARE_GE_OPERATION = 29;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1312,7 +1238,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getCompareNEOperation()
    * @generated
    */
-  int COMPARE_NE_OPERATION = 32;
+  int COMPARE_NE_OPERATION = 30;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1349,7 +1275,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getCompareLOperation()
    * @generated
    */
-  int COMPARE_LOPERATION = 33;
+  int COMPARE_LOPERATION = 31;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1386,7 +1312,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getCompareGOperation()
    * @generated
    */
-  int COMPARE_GOPERATION = 34;
+  int COMPARE_GOPERATION = 32;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1423,7 +1349,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getEqualityOperation()
    * @generated
    */
-  int EQUALITY_OPERATION = 35;
+  int EQUALITY_OPERATION = 33;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1469,7 +1395,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getMultOperation()
    * @generated
    */
-  int MULT_OPERATION = 36;
+  int MULT_OPERATION = 34;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1506,7 +1432,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getDivOperation()
    * @generated
    */
-  int DIV_OPERATION = 37;
+  int DIV_OPERATION = 35;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1543,7 +1469,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getAddOperation()
    * @generated
    */
-  int ADD_OPERATION = 38;
+  int ADD_OPERATION = 36;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1580,7 +1506,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSubOperation()
    * @generated
    */
-  int SUB_OPERATION = 39;
+  int SUB_OPERATION = 37;
 
   /**
    * The feature id for the '<em><b>Left</b></em>' containment reference.
@@ -1608,6 +1534,80 @@ public interface AlePackage extends EPackage
    * @ordered
    */
   int SUB_OPERATION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link ale.xtext.ale.impl.ChainedCallImpl <em>Chained Call</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see ale.xtext.ale.impl.ChainedCallImpl
+   * @see ale.xtext.ale.impl.AlePackageImpl#getChainedCall()
+   * @generated
+   */
+  int CHAINED_CALL = 38;
+
+  /**
+   * The feature id for the '<em><b>Left</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CHAINED_CALL__LEFT = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CHAINED_CALL__RIGHT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Chained Call</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CHAINED_CALL_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link ale.xtext.ale.impl.ChainedCallArrowImpl <em>Chained Call Arrow</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see ale.xtext.ale.impl.ChainedCallArrowImpl
+   * @see ale.xtext.ale.impl.AlePackageImpl#getChainedCallArrow()
+   * @generated
+   */
+  int CHAINED_CALL_ARROW = 39;
+
+  /**
+   * The feature id for the '<em><b>Left</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CHAINED_CALL_ARROW__LEFT = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Right</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CHAINED_CALL_ARROW__RIGHT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Chained Call Arrow</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CHAINED_CALL_ARROW_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link ale.xtext.ale.impl.NotInfixOperationImpl <em>Not Infix Operation</em>}' class.
@@ -1731,6 +1731,34 @@ public interface AlePackage extends EPackage
   int OPERATION_CALL_OPERATION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
 
   /**
+   * The meta object id for the '{@link ale.xtext.ale.impl.OADenotImpl <em>OA Denot</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see ale.xtext.ale.impl.OADenotImpl
+   * @see ale.xtext.ale.impl.AlePackageImpl#getOADenot()
+   * @generated
+   */
+  int OA_DENOT = 44;
+
+  /**
+   * The feature id for the '<em><b>Exp</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OA_DENOT__EXP = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>OA Denot</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OA_DENOT_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
    * The meta object id for the '{@link ale.xtext.ale.impl.SelfRefImpl <em>Self Ref</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1738,7 +1766,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSelfRef()
    * @generated
    */
-  int SELF_REF = 44;
+  int SELF_REF = 45;
 
   /**
    * The number of structural features of the '<em>Self Ref</em>' class.
@@ -1757,7 +1785,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSuperRef()
    * @generated
    */
-  int SUPER_REF = 45;
+  int SUPER_REF = 46;
 
   /**
    * The number of structural features of the '<em>Super Ref</em>' class.
@@ -1776,7 +1804,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getStringLiteral()
    * @generated
    */
-  int STRING_LITERAL = 46;
+  int STRING_LITERAL = 47;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1804,7 +1832,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getIntLiteral()
    * @generated
    */
-  int INT_LITERAL = 47;
+  int INT_LITERAL = 48;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1832,7 +1860,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getRealLiteral()
    * @generated
    */
-  int REAL_LITERAL = 48;
+  int REAL_LITERAL = 49;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1860,7 +1888,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getBooleanLiteral()
    * @generated
    */
-  int BOOLEAN_LITERAL = 49;
+  int BOOLEAN_LITERAL = 50;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1888,7 +1916,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getNullLiteral()
    * @generated
    */
-  int NULL_LITERAL = 50;
+  int NULL_LITERAL = 51;
 
   /**
    * The number of structural features of the '<em>Null Literal</em>' class.
@@ -1907,7 +1935,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getIntRange()
    * @generated
    */
-  int INT_RANGE = 51;
+  int INT_RANGE = 52;
 
   /**
    * The feature id for the '<em><b>Start</b></em>' containment reference.
@@ -1944,7 +1972,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSequenceDecl()
    * @generated
    */
-  int SEQUENCE_DECL = 52;
+  int SEQUENCE_DECL = 53;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -1972,7 +2000,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getOrderedSetDecl()
    * @generated
    */
-  int ORDERED_SET_DECL = 53;
+  int ORDERED_SET_DECL = 54;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -2000,7 +2028,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getVarRef()
    * @generated
    */
-  int VAR_REF = 54;
+  int VAR_REF = 55;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2028,7 +2056,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getOutOfScopeType()
    * @generated
    */
-  int OUT_OF_SCOPE_TYPE = 55;
+  int OUT_OF_SCOPE_TYPE = 56;
 
   /**
    * The feature id for the '<em><b>External Class</b></em>' attribute.
@@ -2056,7 +2084,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSequenceType()
    * @generated
    */
-  int SEQUENCE_TYPE = 56;
+  int SEQUENCE_TYPE = 57;
 
   /**
    * The feature id for the '<em><b>Sub Type</b></em>' containment reference.
@@ -2084,7 +2112,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getOrderedSetType()
    * @generated
    */
-  int ORDERED_SET_TYPE = 57;
+  int ORDERED_SET_TYPE = 58;
 
   /**
    * The feature id for the '<em><b>Sub Type</b></em>' containment reference.
@@ -2112,7 +2140,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getBooleanTypeT()
    * @generated
    */
-  int BOOLEAN_TYPE_T = 58;
+  int BOOLEAN_TYPE_T = 59;
 
   /**
    * The number of structural features of the '<em>Boolean Type T</em>' class.
@@ -2131,7 +2159,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getRealTypeT()
    * @generated
    */
-  int REAL_TYPE_T = 59;
+  int REAL_TYPE_T = 60;
 
   /**
    * The number of structural features of the '<em>Real Type T</em>' class.
@@ -2150,7 +2178,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getIntTypeT()
    * @generated
    */
-  int INT_TYPE_T = 60;
+  int INT_TYPE_T = 61;
 
   /**
    * The number of structural features of the '<em>Int Type T</em>' class.
@@ -2169,7 +2197,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getStringTypeT()
    * @generated
    */
-  int STRING_TYPE_T = 61;
+  int STRING_TYPE_T = 62;
 
   /**
    * The number of structural features of the '<em>String Type T</em>' class.
@@ -2188,7 +2216,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getNullTypeT()
    * @generated
    */
-  int NULL_TYPE_T = 62;
+  int NULL_TYPE_T = 63;
 
   /**
    * The number of structural features of the '<em>Null Type T</em>' class.
@@ -2207,7 +2235,7 @@ public interface AlePackage extends EPackage
    * @see ale.xtext.ale.impl.AlePackageImpl#getSequenceTypeT()
    * @generated
    */
-  int SEQUENCE_TYPE_T = 63;
+  int SEQUENCE_TYPE_T = 64;
 
   /**
    * The feature id for the '<em><b>Sub Type</b></em>' containment reference.
@@ -2226,6 +2254,34 @@ public interface AlePackage extends EPackage
    * @ordered
    */
   int SEQUENCE_TYPE_T_FEATURE_COUNT = TYPE_SYSTEM_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link ale.xtext.ale.impl.ClassTypeTImpl <em>Class Type T</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see ale.xtext.ale.impl.ClassTypeTImpl
+   * @see ale.xtext.ale.impl.AlePackageImpl#getClassTypeT()
+   * @generated
+   */
+  int CLASS_TYPE_T = 65;
+
+  /**
+   * The feature id for the '<em><b>Clazz</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLASS_TYPE_T__CLAZZ = TYPE_SYSTEM_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Class Type T</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLASS_TYPE_T_FEATURE_COUNT = TYPE_SYSTEM_FEATURE_COUNT + 1;
 
 
   /**
@@ -2876,70 +2932,6 @@ public interface AlePackage extends EPackage
   EReference getVarAssign_Value();
 
   /**
-   * Returns the meta object for class '{@link ale.xtext.ale.ChainedCall <em>Chained Call</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Chained Call</em>'.
-   * @see ale.xtext.ale.ChainedCall
-   * @generated
-   */
-  EClass getChainedCall();
-
-  /**
-   * Returns the meta object for the containment reference '{@link ale.xtext.ale.ChainedCall#getLeft <em>Left</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Left</em>'.
-   * @see ale.xtext.ale.ChainedCall#getLeft()
-   * @see #getChainedCall()
-   * @generated
-   */
-  EReference getChainedCall_Left();
-
-  /**
-   * Returns the meta object for the containment reference '{@link ale.xtext.ale.ChainedCall#getRight <em>Right</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Right</em>'.
-   * @see ale.xtext.ale.ChainedCall#getRight()
-   * @see #getChainedCall()
-   * @generated
-   */
-  EReference getChainedCall_Right();
-
-  /**
-   * Returns the meta object for class '{@link ale.xtext.ale.ChainedCallArrow <em>Chained Call Arrow</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Chained Call Arrow</em>'.
-   * @see ale.xtext.ale.ChainedCallArrow
-   * @generated
-   */
-  EClass getChainedCallArrow();
-
-  /**
-   * Returns the meta object for the containment reference '{@link ale.xtext.ale.ChainedCallArrow#getLeft <em>Left</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Left</em>'.
-   * @see ale.xtext.ale.ChainedCallArrow#getLeft()
-   * @see #getChainedCallArrow()
-   * @generated
-   */
-  EReference getChainedCallArrow_Left();
-
-  /**
-   * Returns the meta object for the containment reference '{@link ale.xtext.ale.ChainedCallArrow#getRight <em>Right</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Right</em>'.
-   * @see ale.xtext.ale.ChainedCallArrow#getRight()
-   * @see #getChainedCallArrow()
-   * @generated
-   */
-  EReference getChainedCallArrow_Right();
-
-  /**
    * Returns the meta object for class '{@link ale.xtext.ale.ImpliesOperation <em>Implies Operation</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3399,6 +3391,70 @@ public interface AlePackage extends EPackage
   EReference getSubOperation_Right();
 
   /**
+   * Returns the meta object for class '{@link ale.xtext.ale.ChainedCall <em>Chained Call</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Chained Call</em>'.
+   * @see ale.xtext.ale.ChainedCall
+   * @generated
+   */
+  EClass getChainedCall();
+
+  /**
+   * Returns the meta object for the containment reference '{@link ale.xtext.ale.ChainedCall#getLeft <em>Left</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Left</em>'.
+   * @see ale.xtext.ale.ChainedCall#getLeft()
+   * @see #getChainedCall()
+   * @generated
+   */
+  EReference getChainedCall_Left();
+
+  /**
+   * Returns the meta object for the containment reference '{@link ale.xtext.ale.ChainedCall#getRight <em>Right</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @see ale.xtext.ale.ChainedCall#getRight()
+   * @see #getChainedCall()
+   * @generated
+   */
+  EReference getChainedCall_Right();
+
+  /**
+   * Returns the meta object for class '{@link ale.xtext.ale.ChainedCallArrow <em>Chained Call Arrow</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Chained Call Arrow</em>'.
+   * @see ale.xtext.ale.ChainedCallArrow
+   * @generated
+   */
+  EClass getChainedCallArrow();
+
+  /**
+   * Returns the meta object for the containment reference '{@link ale.xtext.ale.ChainedCallArrow#getLeft <em>Left</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Left</em>'.
+   * @see ale.xtext.ale.ChainedCallArrow#getLeft()
+   * @see #getChainedCallArrow()
+   * @generated
+   */
+  EReference getChainedCallArrow_Left();
+
+  /**
+   * Returns the meta object for the containment reference '{@link ale.xtext.ale.ChainedCallArrow#getRight <em>Right</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Right</em>'.
+   * @see ale.xtext.ale.ChainedCallArrow#getRight()
+   * @see #getChainedCallArrow()
+   * @generated
+   */
+  EReference getChainedCallArrow_Right();
+
+  /**
    * Returns the meta object for class '{@link ale.xtext.ale.NotInfixOperation <em>Not Infix Operation</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3492,6 +3548,27 @@ public interface AlePackage extends EPackage
    * @generated
    */
   EReference getOperationCallOperation_Parameters();
+
+  /**
+   * Returns the meta object for class '{@link ale.xtext.ale.OADenot <em>OA Denot</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>OA Denot</em>'.
+   * @see ale.xtext.ale.OADenot
+   * @generated
+   */
+  EClass getOADenot();
+
+  /**
+   * Returns the meta object for the containment reference '{@link ale.xtext.ale.OADenot#getExp <em>Exp</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Exp</em>'.
+   * @see ale.xtext.ale.OADenot#getExp()
+   * @see #getOADenot()
+   * @generated
+   */
+  EReference getOADenot_Exp();
 
   /**
    * Returns the meta object for class '{@link ale.xtext.ale.SelfRef <em>Self Ref</em>}'.
@@ -3835,6 +3912,27 @@ public interface AlePackage extends EPackage
    * @generated
    */
   EReference getSequenceTypeT_SubType();
+
+  /**
+   * Returns the meta object for class '{@link ale.xtext.ale.ClassTypeT <em>Class Type T</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Class Type T</em>'.
+   * @see ale.xtext.ale.ClassTypeT
+   * @generated
+   */
+  EClass getClassTypeT();
+
+  /**
+   * Returns the meta object for the reference '{@link ale.xtext.ale.ClassTypeT#getClazz <em>Clazz</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Clazz</em>'.
+   * @see ale.xtext.ale.ClassTypeT#getClazz()
+   * @see #getClassTypeT()
+   * @generated
+   */
+  EReference getClassTypeT_Clazz();
 
   /**
    * Returns the factory that creates the instances of the model.
@@ -4396,58 +4494,6 @@ public interface AlePackage extends EPackage
     EReference VAR_ASSIGN__VALUE = eINSTANCE.getVarAssign_Value();
 
     /**
-     * The meta object literal for the '{@link ale.xtext.ale.impl.ChainedCallImpl <em>Chained Call</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see ale.xtext.ale.impl.ChainedCallImpl
-     * @see ale.xtext.ale.impl.AlePackageImpl#getChainedCall()
-     * @generated
-     */
-    EClass CHAINED_CALL = eINSTANCE.getChainedCall();
-
-    /**
-     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CHAINED_CALL__LEFT = eINSTANCE.getChainedCall_Left();
-
-    /**
-     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CHAINED_CALL__RIGHT = eINSTANCE.getChainedCall_Right();
-
-    /**
-     * The meta object literal for the '{@link ale.xtext.ale.impl.ChainedCallArrowImpl <em>Chained Call Arrow</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see ale.xtext.ale.impl.ChainedCallArrowImpl
-     * @see ale.xtext.ale.impl.AlePackageImpl#getChainedCallArrow()
-     * @generated
-     */
-    EClass CHAINED_CALL_ARROW = eINSTANCE.getChainedCallArrow();
-
-    /**
-     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CHAINED_CALL_ARROW__LEFT = eINSTANCE.getChainedCallArrow_Left();
-
-    /**
-     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CHAINED_CALL_ARROW__RIGHT = eINSTANCE.getChainedCallArrow_Right();
-
-    /**
      * The meta object literal for the '{@link ale.xtext.ale.impl.ImpliesOperationImpl <em>Implies Operation</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4820,6 +4866,58 @@ public interface AlePackage extends EPackage
     EReference SUB_OPERATION__RIGHT = eINSTANCE.getSubOperation_Right();
 
     /**
+     * The meta object literal for the '{@link ale.xtext.ale.impl.ChainedCallImpl <em>Chained Call</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see ale.xtext.ale.impl.ChainedCallImpl
+     * @see ale.xtext.ale.impl.AlePackageImpl#getChainedCall()
+     * @generated
+     */
+    EClass CHAINED_CALL = eINSTANCE.getChainedCall();
+
+    /**
+     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CHAINED_CALL__LEFT = eINSTANCE.getChainedCall_Left();
+
+    /**
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CHAINED_CALL__RIGHT = eINSTANCE.getChainedCall_Right();
+
+    /**
+     * The meta object literal for the '{@link ale.xtext.ale.impl.ChainedCallArrowImpl <em>Chained Call Arrow</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see ale.xtext.ale.impl.ChainedCallArrowImpl
+     * @see ale.xtext.ale.impl.AlePackageImpl#getChainedCallArrow()
+     * @generated
+     */
+    EClass CHAINED_CALL_ARROW = eINSTANCE.getChainedCallArrow();
+
+    /**
+     * The meta object literal for the '<em><b>Left</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CHAINED_CALL_ARROW__LEFT = eINSTANCE.getChainedCallArrow_Left();
+
+    /**
+     * The meta object literal for the '<em><b>Right</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CHAINED_CALL_ARROW__RIGHT = eINSTANCE.getChainedCallArrow_Right();
+
+    /**
      * The meta object literal for the '{@link ale.xtext.ale.impl.NotInfixOperationImpl <em>Not Infix Operation</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4898,6 +4996,24 @@ public interface AlePackage extends EPackage
      * @generated
      */
     EReference OPERATION_CALL_OPERATION__PARAMETERS = eINSTANCE.getOperationCallOperation_Parameters();
+
+    /**
+     * The meta object literal for the '{@link ale.xtext.ale.impl.OADenotImpl <em>OA Denot</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see ale.xtext.ale.impl.OADenotImpl
+     * @see ale.xtext.ale.impl.AlePackageImpl#getOADenot()
+     * @generated
+     */
+    EClass OA_DENOT = eINSTANCE.getOADenot();
+
+    /**
+     * The meta object literal for the '<em><b>Exp</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference OA_DENOT__EXP = eINSTANCE.getOADenot_Exp();
 
     /**
      * The meta object literal for the '{@link ale.xtext.ale.impl.SelfRefImpl <em>Self Ref</em>}' class.
@@ -5202,6 +5318,24 @@ public interface AlePackage extends EPackage
      * @generated
      */
     EReference SEQUENCE_TYPE_T__SUB_TYPE = eINSTANCE.getSequenceTypeT_SubType();
+
+    /**
+     * The meta object literal for the '{@link ale.xtext.ale.impl.ClassTypeTImpl <em>Class Type T</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see ale.xtext.ale.impl.ClassTypeTImpl
+     * @see ale.xtext.ale.impl.AlePackageImpl#getClassTypeT()
+     * @generated
+     */
+    EClass CLASS_TYPE_T = eINSTANCE.getClassTypeT();
+
+    /**
+     * The meta object literal for the '<em><b>Clazz</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CLASS_TYPE_T__CLAZZ = eINSTANCE.getClassTypeT_Clazz();
 
   }
 

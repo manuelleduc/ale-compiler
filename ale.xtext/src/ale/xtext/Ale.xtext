@@ -72,12 +72,8 @@ VarAssign returns Statement:
 	{VarAssign} type=Type name=ID '=' value=Expression;
 
 Expression returns Expression:
-	ChaindedCall;
-	
-ChaindedCall returns Expression:
-	ImpliesOperation
-	=>(({ChainedCall.left=current} '.' | {ChainedCallArrow.left=current} '->') right=ImpliesOperation)*
-; 
+	ImpliesOperation;
+
 
 ImpliesOperation returns Expression:
 	BooleanOperation
@@ -107,24 +103,31 @@ MultOperation returns Expression:
 	{DivOperation.left=current} '/') right=AddOperation)*;
 
 AddOperation returns Expression:
-	InfixOperation
+	ChaindedCall
 	=> (({AddOperation.left=current} '+' |
-	{SubOperation.left=current} '-') right=InfixOperation)*;
+	{SubOperation.left=current} '-') right=ChaindedCall)*;
 
 Symbol:
 	VarAssign | Field | Param;
+
+ChaindedCall returns Expression:
+	InfixOperation
+	=>(({ChainedCall.left=current} '.' | {ChainedCallArrow.left=current} '->') right=InfixOperation)*
+; 
 
 InfixOperation returns Expression:
 	{NotInfixOperation} 'not' expression=Expression |
 	{NegInfixOperation} '-' expression=Expression |
 	{ConstructorOperation} 'new' name=ID '(' ')' |
-	{OperationCallOperation} name=ID ('(' (parameters+=ParamCall (',' parameters+=ParamCall)*)? ')') ;
+	{OperationCallOperation} name=ID ('(' (parameters+=ParamCall (',' parameters+=ParamCall)*)? ')') |
+	AtomicLiteral ;
 
 ParamCall:
 	(lambda=ID '|')? expression=Expression;
 
 AtomicLiteral returns Expression:
 	('(' Expression ')') |
+	{OADenot} '$' '[' exp=Expression ']' |
 	{SelfRef} 'self' |
 	{SuperRef} 'super' |
 	{StringLiteral} value=STRING |
@@ -186,5 +189,6 @@ TypeSystem:
 //	{ShortType} 'Short' |
 	{StringTypeT} 'String' |
 	{NullTypeT} 'nulltype' |
-	{SequenceTypeT} 'Sequence' subType=TypeSystem
+	{SequenceTypeT} 'Sequence' subType=TypeSystem |
+	{ClassTypeT} 'class' clazz=[Class]
 ;

@@ -2,8 +2,5 @@
 <typeInfoHistroy>
 <typeInfo handle="=ale.compiler/src&lt;ale.compiler{AleCompiler.java[AleCompiler" modifiers="1" timestamp="1491513701000"/>
 <typeInfo handle="=ale.xtext/\/opt\/java\/jdk1.8.0_51\/jre\/lib\/rt.jar&lt;java.lang(Void.class[Void" modifiers="49" timestamp="1433817478000"/>
-<typeInfo handle="=ale.xtext/src-gen&lt;ale.xtext.ale{Statement.java[Statement" modifiers="513" timestamp="1491513764000"/>
-<typeInfo handle="=fr.inria.diverse.objectalgebragenerator/xtend-gen&lt;fr.inria.diverse.objectalgebragenerator{GenerateAlgebra.java[GenerateAlgebra" modifiers="1" timestamp="1491488394000"/>
-<typeInfo handle="=ale.xtext/src-gen&lt;ale.xtext.ale{OpenClass.java[OpenClass" modifiers="513" timestamp="1491513764000"/>
-<typeInfo handle="=ale.xtext/src-gen&lt;ale.xtext.ale{Expression.java[Expression" modifiers="513" timestamp="1491513764000"/>
+<typeInfo handle="=fr.inria.diverse.objectalgebragenerator/xtend-gen&lt;fr.inria.diverse.objectalgebragenerator{GenerateAlgebra.java[GenerateAlgebra" modifiers="1" timestamp="1491551382000"/>
 </typeInfoHistroy>

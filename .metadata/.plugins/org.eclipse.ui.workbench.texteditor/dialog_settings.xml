@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="No" key="selection"/>
+		<item value="nstanceof " key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="true" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="Noy"/>
-			<item value="NotInfixOperation"/>
-			<item value="NotInfixOperationImpl"/>
-			<item value="SequenceType"/>
-			<item value="expT"/>
-			<item value="TypeSystem"/>
-			<item value="Type"/>
-			<item value=" Not"/>
+			<item value="nstanceof "/>
+			<item value=" instanceof "/>
+			<item value="error²²"/>
+			<item value="AtomicLiteral"/>
+			<item value="Chai"/>
+			<item value="&apos;.&apos;"/>
+			<item value="ChaindedCall"/>
+			<item value="=&gt;"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&apos;&apos;&apos;__TODO__&apos;&apos;&apos;"/>

@@ -14,6 +14,7 @@ import ale.xtext.ale.BooleanTypeT;
 import ale.xtext.ale.BooleanXorOperation;
 import ale.xtext.ale.ChainedCall;
 import ale.xtext.ale.ChainedCallArrow;
+import ale.xtext.ale.ClassTypeT;
 import ale.xtext.ale.CompareGEOperation;
 import ale.xtext.ale.CompareGOperation;
 import ale.xtext.ale.CompareLEOperation;
@@ -41,6 +42,7 @@ import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
 import ale.xtext.ale.NullTypeT;
+import ale.xtext.ale.OADenot;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -153,8 +155,6 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.WHILE_STATEMENT: return createWhileStatement();
       case AlePackage.FOR_LOOP: return createForLoop();
       case AlePackage.VAR_ASSIGN: return createVarAssign();
-      case AlePackage.CHAINED_CALL: return createChainedCall();
-      case AlePackage.CHAINED_CALL_ARROW: return createChainedCallArrow();
       case AlePackage.IMPLIES_OPERATION: return createImpliesOperation();
       case AlePackage.BOOLEAN_OR_OPERATION: return createBooleanOrOperation();
       case AlePackage.BOOLEAN_AND_OPERATION: return createBooleanAndOperation();
@@ -169,10 +169,13 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.DIV_OPERATION: return createDivOperation();
       case AlePackage.ADD_OPERATION: return createAddOperation();
       case AlePackage.SUB_OPERATION: return createSubOperation();
+      case AlePackage.CHAINED_CALL: return createChainedCall();
+      case AlePackage.CHAINED_CALL_ARROW: return createChainedCallArrow();
       case AlePackage.NOT_INFIX_OPERATION: return createNotInfixOperation();
       case AlePackage.NEG_INFIX_OPERATION: return createNegInfixOperation();
       case AlePackage.CONSTRUCTOR_OPERATION: return createConstructorOperation();
       case AlePackage.OPERATION_CALL_OPERATION: return createOperationCallOperation();
+      case AlePackage.OA_DENOT: return createOADenot();
       case AlePackage.SELF_REF: return createSelfRef();
       case AlePackage.SUPER_REF: return createSuperRef();
       case AlePackage.STRING_LITERAL: return createStringLiteral();
@@ -193,6 +196,7 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.STRING_TYPE_T: return createStringTypeT();
       case AlePackage.NULL_TYPE_T: return createNullTypeT();
       case AlePackage.SEQUENCE_TYPE_T: return createSequenceTypeT();
+      case AlePackage.CLASS_TYPE_T: return createClassTypeT();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -467,28 +471,6 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ChainedCall createChainedCall()
-  {
-    ChainedCallImpl chainedCall = new ChainedCallImpl();
-    return chainedCall;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ChainedCallArrow createChainedCallArrow()
-  {
-    ChainedCallArrowImpl chainedCallArrow = new ChainedCallArrowImpl();
-    return chainedCallArrow;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public ImpliesOperation createImpliesOperation()
   {
     ImpliesOperationImpl impliesOperation = new ImpliesOperationImpl();
@@ -643,6 +625,28 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public ChainedCall createChainedCall()
+  {
+    ChainedCallImpl chainedCall = new ChainedCallImpl();
+    return chainedCall;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ChainedCallArrow createChainedCallArrow()
+  {
+    ChainedCallArrowImpl chainedCallArrow = new ChainedCallArrowImpl();
+    return chainedCallArrow;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public NotInfixOperation createNotInfixOperation()
   {
     NotInfixOperationImpl notInfixOperation = new NotInfixOperationImpl();
@@ -680,6 +684,17 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     OperationCallOperationImpl operationCallOperation = new OperationCallOperationImpl();
     return operationCallOperation;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OADenot createOADenot()
+  {
+    OADenotImpl oaDenot = new OADenotImpl();
+    return oaDenot;
   }
 
   /**
@@ -900,6 +915,17 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     SequenceTypeTImpl sequenceTypeT = new SequenceTypeTImpl();
     return sequenceTypeT;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ClassTypeT createClassTypeT()
+  {
+    ClassTypeTImpl classTypeT = new ClassTypeTImpl();
+    return classTypeT;
   }
 
   /**

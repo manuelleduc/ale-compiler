@@ -57,6 +57,7 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.ETypedElement
+import ale.xtext.ale.OADenot
 
 class GenerateAlgebra {
 
@@ -97,6 +98,41 @@ class GenerateAlgebra {
 		package «epackage.name».algebra.impl.operation;
 		public class «clazz.EPackage.name.toFirstUpper»«clazz.name.toFirstUpper»Operation implements «clazz.operationInterfacePath(filenameDsl)» { 
 					
+					
+			private class EListCollector<T> implements java.util.stream.Collector<T, org.eclipse.emf.common.util.EList<T>, org.eclipse.emf.common.util.EList<T>> {
+		
+				@Override
+				public java.util.function.Supplier<org.eclipse.emf.common.util.EList<T>> supplier() {
+					return org.eclipse.emf.common.util.BasicEList::new;
+				}
+		
+				@Override
+				public java.util.function.BiConsumer<org.eclipse.emf.common.util.EList<T>, T> accumulator() {
+					return (a, b) -> a.add(b);
+				}
+		
+				@Override
+				public java.util.function.BinaryOperator<org.eclipse.emf.common.util.EList<T>> combiner() {
+					return (a, b) -> {
+						a.addAll(b);
+						return a;
+					};
+				}
+		
+				@Override
+				public java.util.function.Function<org.eclipse.emf.common.util.EList<T>, org.eclipse.emf.common.util.EList<T>> finisher() {
+					return java.util.function.Function.identity();
+				}
+		
+				@Override
+				public java.util.Set<java.util.stream.Collector.Characteristics> characteristics() {
+					java.util.HashSet<java.util.stream.Collector.Characteristics> hashSet = new java.util.HashSet<>();
+					hashSet.add(java.util.stream.Collector.Characteristics.UNORDERED);
+					return hashSet;
+				}
+		
+			}
+				
 			private final «clazz.javaFullPath» self;
 			private final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(filenameDsl)»«ENDFOR» algebra;
 			
@@ -154,7 +190,7 @@ class GenerateAlgebra {
 	def dispatch String printExpression(CompareLOperation exp) '''«exp.left.printExpression» < «exp.right.printExpression»'''
 	def dispatch String printExpression(CompareNEOperation exp) '''«exp.left.printExpression» != «exp.right.printExpression»'''
 	def dispatch String printExpression(DivOperation exp) '''«exp.left.printExpression» / «exp.right.printExpression»'''
-	def dispatch String printExpression(EqualityOperation exp) '''Objects.equals(«exp.left.printExpression», «exp.right.printExpression»)'''
+	def dispatch String printExpression(EqualityOperation exp) '''java.util.Objects.equals(«exp.left.printExpression», «exp.right.printExpression»)'''
 	def dispatch String printExpression(ImpliesOperation exp) '''!«exp.left.printExpression» || «exp.right.printExpression»'''
 	def dispatch String printExpression(IntLiteral exp) '''«exp.value»'''
 	def dispatch String printExpression(IntRange exp) '''__TODO IntRange__'''
@@ -163,11 +199,27 @@ class GenerateAlgebra {
 	def dispatch String printExpression(NotInfixOperation exp) '''!«exp.expression.printExpression»'''
 	def dispatch String printExpression(NullLiteral exp) '''null'''
 	def dispatch String printExpression(OperationCallOperation exp) {
-		if(exp.name == 'println') exp.name='System.out.println';
-		'''«exp.name»(«FOR param: exp.parameters SEPARATOR ',' »«IF param.lambda!= null»«param.lambda» -> «ENDIF»«param.expression.printExpression»«ENDFOR»)''' // TODO deal with lambdas !
+		if(exp.eContainer instanceof ChainedCallArrow) {
+			return switch(exp.name) {
+				case 'select': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»).collect(new EListCollector<>())'''
+				case  'reject': '''stream().filter(«exp.parameters.head.lambda» -> !(«exp.parameters.head.expression.printExpression»)).collect(new EListCollector<>())'''
+				case 'collect': '''stream().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»).collect(new EListCollector<>())'''
+				case  'any': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»).findAny().orElse(null)''' 
+				case 'exists' : '''stream().stream().findAny().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»).orElse(false)'''
+				case  'forAll': '''stream().stream().allMatch(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression»)'''
+				case 'isUnique' : '''__TODO__'''
+				case 'one' : '''__TODO__'''
+				case 'sortedBy': '''__TODO__''' 
+				case  'closure':'''__TODO__'''
+			}
+		} else {
+			if(exp.name == 'println') exp.name='System.out.println';
+			'''«exp.name»(«FOR param: exp.parameters SEPARATOR ',' »«IF param.lambda!= null»«param.lambda» -> «ENDIF»«param.expression.printExpression»«ENDFOR»)''' // TODO deal with lambdas !
+		}
 	}
 	def dispatch String printExpression(OrderedSetDecl exp) '''__TODO OrderSetDecl__'''
 	def dispatch String printExpression(RealLiteral exp) '''«exp.value»'''
+	def dispatch String printExpression(OADenot exp) '''algebra.$(«exp.exp.printExpression»)'''
 	def dispatch String printExpression(SelfRef exp) '''self''' // TODO: probably more smart than that!! aka delegation
 	def dispatch String printExpression(SequenceDecl exp) '''__TODO SequenceDECL__'''
 	def dispatch String printExpression(StringLiteral exp) '''"«exp.value»"'''

@@ -240,24 +240,6 @@ public interface AleFactory extends EFactory
   VarAssign createVarAssign();
 
   /**
-   * Returns a new object of class '<em>Chained Call</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Chained Call</em>'.
-   * @generated
-   */
-  ChainedCall createChainedCall();
-
-  /**
-   * Returns a new object of class '<em>Chained Call Arrow</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Chained Call Arrow</em>'.
-   * @generated
-   */
-  ChainedCallArrow createChainedCallArrow();
-
-  /**
    * Returns a new object of class '<em>Implies Operation</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -384,6 +366,24 @@ public interface AleFactory extends EFactory
   SubOperation createSubOperation();
 
   /**
+   * Returns a new object of class '<em>Chained Call</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Chained Call</em>'.
+   * @generated
+   */
+  ChainedCall createChainedCall();
+
+  /**
+   * Returns a new object of class '<em>Chained Call Arrow</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Chained Call Arrow</em>'.
+   * @generated
+   */
+  ChainedCallArrow createChainedCallArrow();
+
+  /**
    * Returns a new object of class '<em>Not Infix Operation</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -418,6 +418,15 @@ public interface AleFactory extends EFactory
    * @generated
    */
   OperationCallOperation createOperationCallOperation();
+
+  /**
+   * Returns a new object of class '<em>OA Denot</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>OA Denot</em>'.
+   * @generated
+   */
+  OADenot createOADenot();
 
   /**
    * Returns a new object of class '<em>Self Ref</em>'.
@@ -598,6 +607,15 @@ public interface AleFactory extends EFactory
    * @generated
    */
   SequenceTypeT createSequenceTypeT();
+
+  /**
+   * Returns a new object of class '<em>Class Type T</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Class Type T</em>'.
+   * @generated
+   */
+  ClassTypeT createClassTypeT();
 
   /**
    * Returns the package supported by this factory.

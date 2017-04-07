@@ -1,0 +1,265 @@
+import ale.xtext.ale.AleFactory
+import ale.xtext.ale.AlePackage
+import ale.xtext.ale.BooleanLiteral
+import ale.xtext.ale.BooleanOrOperation
+import ale.xtext.ale.BooleanTypeT
+import ale.xtext.ale.Class
+import ale.xtext.ale.DefMethod
+import ale.xtext.ale.EqualityOperation
+import ale.xtext.ale.ForLoop
+import ale.xtext.ale.IntLiteral
+import ale.xtext.ale.IntRange
+import ale.xtext.ale.LiteralType
+import ale.xtext.ale.NewClass
+import ale.xtext.ale.NotInfixOperation
+import ale.xtext.ale.NullLiteral
+import ale.xtext.ale.OpenClass
+import ale.xtext.ale.OverrideMethod
+import ale.xtext.ale.RealLiteral
+import ale.xtext.ale.ReturnStatement
+import ale.xtext.ale.Root
+import ale.xtext.ale.SequenceTypeT
+import ale.xtext.ale.Statement
+import ale.xtext.ale.StringLiteral
+import ale.xtext.ale.Type
+import ale.xtext.ale.TypeSystem
+import ale.xtext.ale.VarAssign
+import java.util.List
+
+system ale.xtext.AleType
+
+auxiliary {
+	superClasses(Class openClass, List<Class> existing)
+	imported(Root root, List<Root> roots)
+}
+
+judgments {
+	type |- Statement statement : output TypeSystem
+		error "cannot type statement " + statement
+		source statement
+	staticType |= Type type : output TypeSystem
+		error "cannot type type " + type
+		source type
+}
+
+auxiliary superClasses(Class openClass, List<Class> existing) {
+	if(openClass.superClass != null) {
+		for(c: openClass.superClass) {
+			if(!existing.contains(c)) {
+				existing.add(c)
+				superClasses(c, existing)
+			}
+		}
+	}
+}
+
+auxiliary imported(Root root, List<Root> roots) {
+	if(root.imports != null) {
+		for(i: root.imports) {
+			if(!roots.contains(i.ref)) {
+				roots.add(i.ref)
+				imported(i.ref, roots)
+			}
+		}
+	}
+}
+
+axiom BooleanLiteral
+	G |- BooleanLiteral bool: AleFactory::eINSTANCE.createBooleanTypeT
+
+
+axiom StringLiteral
+	G |- StringLiteral bool: AleFactory::eINSTANCE.createStringTypeT
+	
+axiom IntLiteral
+	G |- IntLiteral bool: AleFactory::eINSTANCE.createIntTypeT
+	
+axiom RealLiteral
+	G |- RealLiteral bool: AleFactory::eINSTANCE.createRealTypeT
+	
+axiom NullLiteralt
+	G |- NullLiteral bool: AleFactory::eINSTANCE.createNullTypeT
+
+rule IntRangeLiteral
+	G |- IntRange bool: TypeSystem x
+from {
+	
+	var SequenceTypeT t = AleFactory::eINSTANCE.createSequenceTypeT
+	t.subType = AleFactory::eINSTANCE.createIntTypeT
+	x = t
+}
+	
+
+rule ReturnStatement
+	G |- ReturnStatement returnStatement: TypeSystem typeRet
+from {
+	G |-  returnStatement.returned : typeRet
+	// TODO: check conformance with methode type
+}
+
+
+rule NotInfixOperationRule
+	G |- NotInfixOperation nio : BooleanTypeT nioT
+//	error nio.expression + " is not a boolean expression"
+//		source nio.eContainer
+from {
+	G |- nio.expression : nioT
+}
+
+rule BooleanOrOperation
+	G |- BooleanOrOperation boo : AleFactory.eINSTANCE.createBooleanTypeT
+from {
+	G |- boo.left : var TypeSystem leftT
+	G |- boo.right : var TypeSystem rightT
+	(leftT instanceof BooleanTypeT && rightT instanceof BooleanTypeT)
+}
+
+rule LiteralType
+	G |= LiteralType litType: TypeSystem typeLit
+from {
+	{
+		(litType.lit == 'Boolean')
+		typeLit = AleFactory.eINSTANCE.createBooleanTypeT		
+	}
+	or
+	{
+		(litType.lit == 'Real')
+		typeLit = AleFactory.eINSTANCE.createRealTypeT
+	}
+	or
+	{
+		(litType.lit == 'Int')
+		typeLit = AleFactory.eINSTANCE.createIntTypeT
+	}	
+	or
+	{
+		(litType.lit == 'String')
+		typeLit = AleFactory.eINSTANCE.createStringTypeT
+	}
+		
+}
+
+rule EqualityOperation
+	G |- EqualityOperation eOp : AleFactory.eINSTANCE.createBooleanTypeT
+from {
+	G |- eOp.left : var TypeSystem tl
+	G |- eOp.right: var TypeSystem tr
+	(tl.eClass == tr.eClass)
+}
+
+rule VarAssign
+	G |- VarAssign varAssign: TypeSystem varType
+from {
+	G |- varAssign.value: var TypeSystem valueType
+	G |= varAssign.getType : var TypeSystem typeType
+	(valueType.eClass == typeType.eClass)
+	varType = valueType // TODO : replace with subtyping ??
+}
+
+rule ForLoop
+	G |- ForLoop fl : TypeSystem flt
+from {
+	G |- fl.collection : var TypeSystem colT
+
+	{
+		(colT instanceof SequenceTypeT)
+//		flt = (flct as SequenceTypeT).subType
+	}
+}
+
+checkrule NoCyclicOpenClassHierarchy for
+	OpenClass clazz
+from {
+	val ext = newArrayList()
+	superClasses(clazz, ext)
+	if(ext.contains(clazz)) {
+		fail
+			error "Cyclic dependency"
+			source clazz
+			feature AlePackage::eINSTANCE.class_SuperClass
+		
+	}
+}
+
+checkrule defMethodDoesNotAlreadyExists for
+	DefMethod method
+from {
+	val classes = newArrayList()
+	superClasses(method.eContainer as Class, classes)
+	if(!classes.filter[c | !c.methods.filter[name == method.name].^empty].^empty) {
+		fail
+			error "Method already defined"
+			source method
+			feature AlePackage::eINSTANCE.method_Name
+	}
+}
+
+checkrule overrideMethodDoesMustExists for
+	OverrideMethod method
+from {
+	val classes = newArrayList()
+	superClasses(method.eContainer as Class, classes)
+	if(classes.filter[c | !c.methods.filter[name == method.name].^empty].^empty) {
+		fail
+			error "Overrided method does not exist in parents"
+			source method
+			feature AlePackage::eINSTANCE.method_Name
+	}
+}
+
+checkrule NoCyclicBehaviorImport for 
+	Root root
+from {
+	val imports = newArrayList()
+	imported(root, imports)
+	if(imports.contains(root)) {
+		fail
+			error "Cyclic dependency"
+			source root
+			feature AlePackage::eINSTANCE.root_Name
+	}
+}
+
+checkrule NoCyclicNewClassHierarchy for
+	NewClass clazz
+from {
+	val ext = newArrayList()
+	superClasses(clazz, ext)
+	if(ext.contains(clazz)) {
+		fail
+			error "Cyclic dependency"
+			source clazz
+			feature AlePackage::eINSTANCE.class_SuperClass
+	}
+}
+
+checkrule CheckClassNames for
+	Root root
+from {
+	for(x: root.classes.groupBy[name].filter[p1, p2| p2.length > 1].values.flatten) {
+		fail
+			error "Duplicated name"
+			source x
+			feature AlePackage::eINSTANCE.class_Name
+	}
+}
+
+
+// TODO: take in account imported classes once available
+checkrule CheckFieldName for
+	Class clazz
+from {
+	for(x: clazz.fields.groupBy[name].filter[p1, p2|p2.length>1].values.flatten) {
+		fail
+			error "Duplicated name"
+			source x
+			feature AlePackage::eINSTANCE.field_Name
+	}
+}
+
+
+checkrule CheckStateme for
+	Statement statement
+from {
+	empty |- statement : var TypeSystem type
+}
