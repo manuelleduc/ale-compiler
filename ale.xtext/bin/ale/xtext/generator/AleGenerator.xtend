@@ -4,12 +4,15 @@
 package ale.xtext.generator
 
 import ale.xtext.AleType
-import ale.xtext.ale.Root
+import ale.xtext.ale.Statement
 import com.google.inject.Inject
+import it.xsemantics.runtime.RuleApplicationTrace
+import it.xsemantics.runtime.TraceUtils
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import ale.xtext.ale.Root
 
 /**
  * Generates code from your model files on save.
@@ -17,14 +20,21 @@ import org.eclipse.xtext.generator.IGeneratorContext
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class AleGenerator extends AbstractGenerator {
-	
+
 	@Inject AleType semantics
+	
+	@Inject extension TraceUtils
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		fsa.generateFile('debug.txt', '' + 
-			resource.allContents
-				.filter(typeof(Root))
-				.map[name]
-				.join(', '))
+		fsa.generateFile('debug'+resource.allContents.filter(typeof(Root)).head.name+'.txt', '' + resource.allContents.filter(typeof(Statement)).map [ e |
+			val typeTrace = new RuleApplicationTrace()
+			val type = semantics.type(null, typeTrace, e)
+			'''
+			«e» -> «type.value» «type.ruleFailedException»
+			«typeTrace.traceAsString»
+			'''
+			
+
+		].join(System.lineSeparator + '------------------------' + System.lineSeparator))
 	}
 }

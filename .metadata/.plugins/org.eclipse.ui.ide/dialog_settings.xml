@@ -116,7 +116,7 @@
 	</list>
 	<section name="CleanDialogSettings">
 		<item value="563" key="DIALOG_WIDTH"/>
-		<item value="true" key="TOGGLE_SELECTED"/>
+		<item value="false" key="TOGGLE_SELECTED"/>
 		<item value="413" key="DIALOG_HEIGHT"/>
 		<item value="1357" key="DIALOG_X_ORIGIN"/>
 		<item value="387" key="DIALOG_Y_ORIGIN"/>
@@ -134,20 +134,26 @@
 		</list>
 	</section>
 	<section name="NewWizardAction">
-		<item value="org.eclipse.xtext.xtext.ui.wizard.project.NewXtextProjectWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<item value="org.eclipse.jdt.ui.wizards.JavaProjectWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
-			<item value="org.eclipse.xtext.projectwiz"/>
-			<item value="org.eclipse.xtext.projectwiz/org.eclipse.xtext.project.Examples"/>
+			<item value="org.eclipse.emf.codegen.ecore.ui.wizardCategory"/>
+			<item value="org.gemoc.xdsmlframework.category"/>
+			<item value="org.gemoc.xdsmlframework.category/org.gemoc.xdsmlframework.fragment.category"/>
+			<item value="org.eclipse.jdt.ui.java"/>
+			<item value="org.eclipse.fx.ide"/>
+			<item value="it.xsemantics.dsl.wizards.category"/>
+			<item value="org.eclipse.xtend.ide.wizards"/>
 			<item value="org.eclipse.ui.Examples"/>
-			<item value="org.eclipse.ui.Examples/org.eclipse.xtext.ui.Examples"/>
+			<item value="org.eclipse.ui.Examples/it.xsemantics.ui.Examples"/>
+			<item value="org.eclipse.ui.Examples/org.eclipse.xtend.ui.Examples"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog">
 		<item value="false" key="FilterByLocation"/>
 		<item value="true" key="ShowStatusLine"/>
-		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0A;&lt;History&gt;&#x0A;&lt;historyRootNode&gt;&#x0A;&lt;infoNode path=&quot;/ale.xtext/src/ale/xtext/typing/ale.xsemantics&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/dsl.xtext/src/dsl/xtext/Dsl.xtext&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/org.example.smalljava/src/org/example/smalljava/SmallJava.xtext&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/ale.xtext/model/generated/Ale.ecore&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/ale.xtext/src/ale/xtext/Ale.xtext&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/fluffy-umbrella-compiler/src/fr/mleduc/mt/compiler/DSLCompiler.java&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/fluffy-umbrella-compiler.ui/src/fluffyumbrellacompiler/ui/popup/actions/XaqlCompile.java&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;/historyRootNode&gt;&#x0A;&lt;/History&gt;" key="History"/>
+		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0A;&lt;History&gt;&#x0A;&lt;historyRootNode&gt;&#x0A;&lt;infoNode path=&quot;/dsl.xtext/src/dsl/xtext/Dsl.xtext&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/ale.xtext/model/generated/Ale.ecore&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/dsl.xtext/src/dsl/xtext/generator/DslGenerator.xtend&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/ale.compiler/src/ale/compiler/GenerateOperation.xtend&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/fr.inria.diverse.objectalgebragenerator/src/fr/inria/diverse/objectalgebragenerator/GenerateAlgebra.xtend&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/fr.inria.diverse.objectalgebragenerator/xtend-gen/fr/inria/diverse/objectalgebragenerator/GenerateAlgebra.java&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/ale.compiler/src/ale/compiler/AleCompiler.java&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/ale.xtext/src/ale/xtext/typing/ale.xsemantics&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;infoNode path=&quot;/ale.xtext/src/ale/xtext/Ale.xtext&quot; type=&quot;1&quot;/&gt;&#x0A;&lt;/historyRootNode&gt;&#x0A;&lt;/History&gt;" key="History"/>
 		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0A;&lt;workingSet workingSetName=&quot;&quot;/&gt;" key="WorkingSet"/>
-		<item value="false" key="ShowDerived"/>
+		<item value="true" key="ShowDerived"/>
 		<section name="DialogBoundsSettings">
 			<item value="600" key="DIALOG_WIDTH"/>
 			<item value="1|Cantarell|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>

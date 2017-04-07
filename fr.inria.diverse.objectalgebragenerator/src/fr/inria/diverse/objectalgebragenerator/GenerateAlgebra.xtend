@@ -154,7 +154,7 @@ class GenerateAlgebra {
 	def dispatch String printExpression(CompareLOperation exp) '''«exp.left.printExpression» < «exp.right.printExpression»'''
 	def dispatch String printExpression(CompareNEOperation exp) '''«exp.left.printExpression» != «exp.right.printExpression»'''
 	def dispatch String printExpression(DivOperation exp) '''«exp.left.printExpression» / «exp.right.printExpression»'''
-	def dispatch String printExpression(EqualityOperation exp) '''«exp.left.printExpression» == «exp.right.printExpression»'''
+	def dispatch String printExpression(EqualityOperation exp) '''Objects.equals(«exp.left.printExpression», «exp.right.printExpression»)'''
 	def dispatch String printExpression(ImpliesOperation exp) '''!«exp.left.printExpression» || «exp.right.printExpression»'''
 	def dispatch String printExpression(IntLiteral exp) '''«exp.value»'''
 	def dispatch String printExpression(IntRange exp) '''__TODO IntRange__'''

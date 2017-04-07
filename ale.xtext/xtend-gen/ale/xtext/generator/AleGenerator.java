@@ -5,15 +5,23 @@ package ale.xtext.generator;
 
 import ale.xtext.AleType;
 import ale.xtext.ale.Root;
+import ale.xtext.ale.Statement;
+import ale.xtext.ale.TypeSystem;
 import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
+import it.xsemantics.runtime.Result;
+import it.xsemantics.runtime.RuleApplicationTrace;
+import it.xsemantics.runtime.RuleFailedException;
+import it.xsemantics.runtime.TraceUtils;
 import java.util.Iterator;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
@@ -27,16 +35,48 @@ public class AleGenerator extends AbstractGenerator {
   @Inject
   private AleType semantics;
   
+  @Inject
+  @Extension
+  private TraceUtils _traceUtils;
+  
   @Override
   public void doGenerate(final Resource resource, final IFileSystemAccess2 fsa, final IGeneratorContext context) {
     TreeIterator<EObject> _allContents = resource.getAllContents();
     Iterator<Root> _filter = Iterators.<Root>filter(_allContents, Root.class);
-    final Function1<Root, String> _function = (Root it) -> {
-      return it.getName();
+    Root _head = IteratorExtensions.<Root>head(_filter);
+    String _name = _head.getName();
+    String _plus = ("debug" + _name);
+    String _plus_1 = (_plus + ".txt");
+    TreeIterator<EObject> _allContents_1 = resource.getAllContents();
+    Iterator<Statement> _filter_1 = Iterators.<Statement>filter(_allContents_1, Statement.class);
+    final Function1<Statement, String> _function = (Statement e) -> {
+      String _xblockexpression = null;
+      {
+        final RuleApplicationTrace typeTrace = new RuleApplicationTrace();
+        final Result<TypeSystem> type = this.semantics.type(null, typeTrace, e);
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append(e, "");
+        _builder.append(" -> ");
+        TypeSystem _value = type.getValue();
+        _builder.append(_value, "");
+        _builder.append(" ");
+        RuleFailedException _ruleFailedException = type.getRuleFailedException();
+        _builder.append(_ruleFailedException, "");
+        _builder.newLineIfNotEmpty();
+        String _traceAsString = this._traceUtils.traceAsString(typeTrace);
+        _builder.append(_traceAsString, "");
+        _builder.newLineIfNotEmpty();
+        _xblockexpression = _builder.toString();
+      }
+      return _xblockexpression;
     };
-    Iterator<String> _map = IteratorExtensions.<Root, String>map(_filter, _function);
-    String _join = IteratorExtensions.join(_map, ", ");
-    String _plus = ("" + _join);
-    fsa.generateFile("debug.txt", _plus);
+    Iterator<String> _map = IteratorExtensions.<Statement, String>map(_filter_1, _function);
+    String _lineSeparator = System.lineSeparator();
+    String _plus_2 = (_lineSeparator + "------------------------");
+    String _lineSeparator_1 = System.lineSeparator();
+    String _plus_3 = (_plus_2 + _lineSeparator_1);
+    String _join = IteratorExtensions.join(_map, _plus_3);
+    String _plus_4 = ("" + _join);
+    fsa.generateFile(_plus_1, _plus_4);
   }
 }

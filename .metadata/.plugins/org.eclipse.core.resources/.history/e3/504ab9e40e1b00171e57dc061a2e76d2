@@ -1,0 +1,192 @@
+import ale.xtext.ale.AleFactory
+import ale.xtext.ale.AlePackage
+import ale.xtext.ale.BooleanLiteral
+import ale.xtext.ale.BooleanType
+import ale.xtext.ale.Class
+import ale.xtext.ale.DefMethod
+import ale.xtext.ale.IntLiteral
+import ale.xtext.ale.IntRange
+import ale.xtext.ale.NewClass
+import ale.xtext.ale.NotInfixOperation
+import ale.xtext.ale.NullLiteral
+import ale.xtext.ale.OpenClass
+import ale.xtext.ale.OverrideMethod
+import ale.xtext.ale.RealLiteral
+import ale.xtext.ale.ReturnStatement
+import ale.xtext.ale.Root
+import ale.xtext.ale.SequenceType
+import ale.xtext.ale.Statement
+import ale.xtext.ale.StringLiteral
+import ale.xtext.ale.TypeSystem
+import java.util.List
+
+system ale.xtext.AleType
+
+auxiliary {
+	superClasses(Class openClass, List<Class> existing)
+	imported(Root root, List<Root> roots)
+}
+
+judgments {
+	type |- Statement statement : output TypeSystem
+		error "cannot type " + statement
+		source statement
+}
+
+auxiliary superClasses(Class openClass, List<Class> existing) {
+	if(openClass.superClass != null) {
+		for(c: openClass.superClass) {
+			if(!existing.contains(c)) {
+				existing.add(c)
+				superClasses(c, existing)
+			}
+		}
+	}
+}
+
+auxiliary imported(Root root, List<Root> roots) {
+	if(root.imports != null) {
+		for(i: root.imports) {
+			if(!roots.contains(i.ref)) {
+				roots.add(i.ref)
+				imported(i.ref, roots)
+			}
+		}
+	}
+}
+
+axiom BooleanLiteral
+	G |- BooleanLiteral bool: AleFactory::eINSTANCE.createBooleanType
+
+
+axiom StringLiteral
+	G |- StringLiteral bool: AleFactory::eINSTANCE.createStringType
+	
+axiom IntLiteral
+	G |- IntLiteral bool: AleFactory::eINSTANCE.createIntType
+	
+axiom RealLiteral
+	G |- RealLiteral bool: AleFactory::eINSTANCE.createRealType
+	
+axiom NullLiteralt
+	G |- NullLiteral bool: AleFactory::eINSTANCE.createNullType
+
+rule IntRangeLiteral
+	G |- IntRange bool: TypeSystem x
+from {
+	
+	var SequenceType t = AleFactory::eINSTANCE.createSequenceType
+	t.subType = AleFactory::eINSTANCE.createIntType
+	x = t
+}
+	
+
+rule ReturnStatement
+	G |- ReturnStatement returnStatement: TypeSystem typeRet
+from {
+	G |-  returnStatement.returned : typeRet
+	// TODO: check conformance with methode type
+}
+
+
+rule NotInfixOperationRule
+	G |- NotInfixOperation nio : TypeSystem nioT
+from {
+	G |- nio.expression : var TypeSystem x
+	
+	{
+		(x instanceof BooleanType)
+		nioT = AleFactory::eINSTANCE.createBooleanType	
+	}
+}
+
+
+checkrule NoCyclicOpenClassHierarchy for
+	OpenClass clazz
+from {
+	val ext = newArrayList()
+	superClasses(clazz, ext)
+	if(ext.contains(clazz)) {
+		fail
+			error "Cyclic dependency"
+			source clazz
+			feature AlePackage::eINSTANCE.class_SuperClass
+		
+	}
+}
+
+checkrule defMethodDoesNotAlreadyExists for
+	DefMethod method
+from {
+	val classes = newArrayList()
+	superClasses(method.eContainer as Class, classes)
+	if(!classes.filter[c | !c.methods.filter[name == method.name].^empty].^empty) {
+		fail
+			error "Method already defined"
+			source method
+			feature AlePackage::eINSTANCE.method_Name
+	}
+}
+
+checkrule overrideMethodDoesMustExists for
+	OverrideMethod method
+from {
+	val classes = newArrayList()
+	superClasses(method.eContainer as Class, classes)
+	if(classes.filter[c | !c.methods.filter[name == method.name].^empty].^empty) {
+		fail
+			error "Overrided method does not exist in parents"
+			source method
+			feature AlePackage::eINSTANCE.method_Name
+	}
+}
+
+checkrule NoCyclicBehaviorImport for 
+	Root root
+from {
+	val imports = newArrayList()
+	imported(root, imports)
+	if(imports.contains(root)) {
+		fail
+			error "Cyclic dependency"
+			source root
+			feature AlePackage::eINSTANCE.root_Name
+	}
+}
+
+checkrule NoCyclicNewClassHierarchy for
+	NewClass clazz
+from {
+	val ext = newArrayList()
+	superClasses(clazz, ext)
+	if(ext.contains(clazz)) {
+		fail
+			error "Cyclic dependency"
+			source clazz
+			feature AlePackage::eINSTANCE.class_SuperClass
+	}
+}
+
+checkrule CheckClassNames for
+	Root root
+from {
+	for(x: root.classes.groupBy[name].filter[p1, p2| p2.length > 1].values.flatten) {
+		fail
+			error "Duplicated name"
+			source x
+			feature AlePackage::eINSTANCE.class_Name
+	}
+}
+
+
+// TODO: take in account imported classes once available
+checkrule CheckFieldName for
+	Class clazz
+from {
+	for(x: clazz.fields.groupBy[name].filter[p1, p2|p2.length>1].values.flatten) {
+		fail
+			error "Duplicated name"
+			source x
+			feature AlePackage::eINSTANCE.field_Name
+	}
+}

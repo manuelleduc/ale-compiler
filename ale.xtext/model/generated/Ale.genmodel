@@ -52,6 +52,7 @@
     <genClasses ecoreClass="Ale.ecore#//LiteralType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//LiteralType/lit"/>
     </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//TypeSystem"/>
     <genClasses ecoreClass="Ale.ecore#//OpenClass"/>
     <genClasses ecoreClass="Ale.ecore#//NewClass"/>
     <genClasses ecoreClass="Ale.ecore#//ReturnStatement">
@@ -80,6 +81,14 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//VarAssign/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//VarAssign/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//VarAssign/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//ChainedCall">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ChainedCall/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ChainedCall/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//ChainedCallArrow">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ChainedCallArrow/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ChainedCallArrow/right"/>
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//ImpliesOperation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ImpliesOperation/left"/>
@@ -151,14 +160,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//OperationCallOperation/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//OperationCallOperation/parameters"/>
     </genClasses>
-    <genClasses ecoreClass="Ale.ecore#//ChainedCall">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ChainedCall/left"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ChainedCall/right"/>
-    </genClasses>
-    <genClasses ecoreClass="Ale.ecore#//ChainedCallArrow">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ChainedCallArrow/left"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ChainedCallArrow/right"/>
-    </genClasses>
     <genClasses ecoreClass="Ale.ecore#//SelfRef"/>
     <genClasses ecoreClass="Ale.ecore#//SuperRef"/>
     <genClasses ecoreClass="Ale.ecore#//StringLiteral">
@@ -195,6 +196,14 @@
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//OrderedSetType">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//OrderedSetType/subType"/>
+    </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//BooleanTypeT"/>
+    <genClasses ecoreClass="Ale.ecore#//RealTypeT"/>
+    <genClasses ecoreClass="Ale.ecore#//IntTypeT"/>
+    <genClasses ecoreClass="Ale.ecore#//StringTypeT"/>
+    <genClasses ecoreClass="Ale.ecore#//NullTypeT"/>
+    <genClasses ecoreClass="Ale.ecore#//SequenceTypeT">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//SequenceTypeT/subType"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

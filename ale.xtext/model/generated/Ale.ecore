@@ -57,6 +57,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="LiteralType" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TypeSystem"/>
   <eClassifiers xsi:type="ecore:EClass" name="OpenClass" eSuperTypes="#//Class"/>
   <eClassifiers xsi:type="ecore:EClass" name="NewClass" eSuperTypes="#//Class"/>
   <eClassifiers xsi:type="ecore:EClass" name="ReturnStatement" eSuperTypes="#//Statement">
@@ -95,6 +96,18 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ChainedCall" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ChainedCallArrow" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ImpliesOperation" eSuperTypes="#//Expression">
@@ -198,18 +211,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//ParamCall" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ChainedCall" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ChainedCallArrow" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expression"
-        containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelfRef" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="SuperRef" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="StringLiteral" eSuperTypes="#//Expression">
@@ -251,6 +252,15 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OrderedSetType" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subType" eType="#//Type"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanTypeT" eSuperTypes="#//TypeSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RealTypeT" eSuperTypes="#//TypeSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IntTypeT" eSuperTypes="#//TypeSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StringTypeT" eSuperTypes="#//TypeSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NullTypeT" eSuperTypes="#//TypeSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceTypeT" eSuperTypes="#//TypeSystem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subType" eType="#//TypeSystem"
         containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

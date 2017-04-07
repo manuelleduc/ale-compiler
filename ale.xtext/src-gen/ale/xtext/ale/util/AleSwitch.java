@@ -9,6 +9,7 @@ import ale.xtext.ale.Block;
 import ale.xtext.ale.BooleanAndOperation;
 import ale.xtext.ale.BooleanLiteral;
 import ale.xtext.ale.BooleanOrOperation;
+import ale.xtext.ale.BooleanTypeT;
 import ale.xtext.ale.BooleanXorOperation;
 import ale.xtext.ale.ChainedCall;
 import ale.xtext.ale.ChainedCallArrow;
@@ -29,6 +30,7 @@ import ale.xtext.ale.ImpliesOperation;
 import ale.xtext.ale.Import;
 import ale.xtext.ale.IntLiteral;
 import ale.xtext.ale.IntRange;
+import ale.xtext.ale.IntTypeT;
 import ale.xtext.ale.LetStatement;
 import ale.xtext.ale.LiteralType;
 import ale.xtext.ale.Method;
@@ -37,6 +39,7 @@ import ale.xtext.ale.NegInfixOperation;
 import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
+import ale.xtext.ale.NullTypeT;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -46,17 +49,21 @@ import ale.xtext.ale.OverrideMethod;
 import ale.xtext.ale.Param;
 import ale.xtext.ale.ParamCall;
 import ale.xtext.ale.RealLiteral;
+import ale.xtext.ale.RealTypeT;
 import ale.xtext.ale.ReturnStatement;
 import ale.xtext.ale.Root;
 import ale.xtext.ale.SelfRef;
 import ale.xtext.ale.SequenceDecl;
 import ale.xtext.ale.SequenceType;
+import ale.xtext.ale.SequenceTypeT;
 import ale.xtext.ale.Statement;
 import ale.xtext.ale.StringLiteral;
+import ale.xtext.ale.StringTypeT;
 import ale.xtext.ale.SubOperation;
 import ale.xtext.ale.SuperRef;
 import ale.xtext.ale.Symbol;
 import ale.xtext.ale.Type;
+import ale.xtext.ale.TypeSystem;
 import ale.xtext.ale.VarAssign;
 import ale.xtext.ale.VarRef;
 import ale.xtext.ale.WhileStatement;
@@ -242,6 +249,13 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AlePackage.TYPE_SYSTEM:
+      {
+        TypeSystem typeSystem = (TypeSystem)theEObject;
+        T result = caseTypeSystem(typeSystem);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AlePackage.OPEN_CLASS:
       {
         OpenClass openClass = (OpenClass)theEObject;
@@ -309,6 +323,26 @@ public class AleSwitch<T> extends Switch<T>
         T result = caseVarAssign(varAssign);
         if (result == null) result = caseStatement(varAssign);
         if (result == null) result = caseSymbol(varAssign);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.CHAINED_CALL:
+      {
+        ChainedCall chainedCall = (ChainedCall)theEObject;
+        T result = caseChainedCall(chainedCall);
+        if (result == null) result = caseExpression(chainedCall);
+        if (result == null) result = caseStatement(chainedCall);
+        if (result == null) result = caseSymbol(chainedCall);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.CHAINED_CALL_ARROW:
+      {
+        ChainedCallArrow chainedCallArrow = (ChainedCallArrow)theEObject;
+        T result = caseChainedCallArrow(chainedCallArrow);
+        if (result == null) result = caseExpression(chainedCallArrow);
+        if (result == null) result = caseStatement(chainedCallArrow);
+        if (result == null) result = caseSymbol(chainedCallArrow);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -492,26 +526,6 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AlePackage.CHAINED_CALL:
-      {
-        ChainedCall chainedCall = (ChainedCall)theEObject;
-        T result = caseChainedCall(chainedCall);
-        if (result == null) result = caseExpression(chainedCall);
-        if (result == null) result = caseStatement(chainedCall);
-        if (result == null) result = caseSymbol(chainedCall);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AlePackage.CHAINED_CALL_ARROW:
-      {
-        ChainedCallArrow chainedCallArrow = (ChainedCallArrow)theEObject;
-        T result = caseChainedCallArrow(chainedCallArrow);
-        if (result == null) result = caseExpression(chainedCallArrow);
-        if (result == null) result = caseStatement(chainedCallArrow);
-        if (result == null) result = caseSymbol(chainedCallArrow);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AlePackage.SELF_REF:
       {
         SelfRef selfRef = (SelfRef)theEObject;
@@ -643,6 +657,54 @@ public class AleSwitch<T> extends Switch<T>
         OrderedSetType orderedSetType = (OrderedSetType)theEObject;
         T result = caseOrderedSetType(orderedSetType);
         if (result == null) result = caseType(orderedSetType);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.BOOLEAN_TYPE_T:
+      {
+        BooleanTypeT booleanTypeT = (BooleanTypeT)theEObject;
+        T result = caseBooleanTypeT(booleanTypeT);
+        if (result == null) result = caseTypeSystem(booleanTypeT);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.REAL_TYPE_T:
+      {
+        RealTypeT realTypeT = (RealTypeT)theEObject;
+        T result = caseRealTypeT(realTypeT);
+        if (result == null) result = caseTypeSystem(realTypeT);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.INT_TYPE_T:
+      {
+        IntTypeT intTypeT = (IntTypeT)theEObject;
+        T result = caseIntTypeT(intTypeT);
+        if (result == null) result = caseTypeSystem(intTypeT);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.STRING_TYPE_T:
+      {
+        StringTypeT stringTypeT = (StringTypeT)theEObject;
+        T result = caseStringTypeT(stringTypeT);
+        if (result == null) result = caseTypeSystem(stringTypeT);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.NULL_TYPE_T:
+      {
+        NullTypeT nullTypeT = (NullTypeT)theEObject;
+        T result = caseNullTypeT(nullTypeT);
+        if (result == null) result = caseTypeSystem(nullTypeT);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.SEQUENCE_TYPE_T:
+      {
+        SequenceTypeT sequenceTypeT = (SequenceTypeT)theEObject;
+        T result = caseSequenceTypeT(sequenceTypeT);
+        if (result == null) result = caseTypeSystem(sequenceTypeT);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -891,6 +953,22 @@ public class AleSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Type System</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Type System</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTypeSystem(TypeSystem object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Open Class</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1014,6 +1092,38 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseVarAssign(VarAssign object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Chained Call</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Chained Call</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseChainedCall(ChainedCall object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Chained Call Arrow</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Chained Call Arrow</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseChainedCallArrow(ChainedCallArrow object)
   {
     return null;
   }
@@ -1307,38 +1417,6 @@ public class AleSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Chained Call</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Chained Call</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseChainedCall(ChainedCall object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Chained Call Arrow</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Chained Call Arrow</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseChainedCallArrow(ChainedCallArrow object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Self Ref</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1558,6 +1636,102 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseOrderedSetType(OrderedSetType object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Boolean Type T</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Boolean Type T</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseBooleanTypeT(BooleanTypeT object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Real Type T</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Real Type T</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRealTypeT(RealTypeT object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Int Type T</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Int Type T</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseIntTypeT(IntTypeT object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>String Type T</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>String Type T</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseStringTypeT(StringTypeT object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Null Type T</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Null Type T</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNullTypeT(NullTypeT object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Sequence Type T</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Sequence Type T</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSequenceTypeT(SequenceTypeT object)
   {
     return null;
   }

@@ -25,3 +25,8 @@
 1491483254016	Rename local variable 'dynamicModelPackage'
 1491483535113	Extract local variable 'generateAlgebra'
 1491486963457	Rename local variable 'openClass'
+1491490178969	Rename local variable 'resolveType2'
+1491491055782	Extract local variable 'eType'
+1491492292412	Extract local variable 'eeList'
+1491493386384	Extract local variable 'flatMap'
+1491494047804	Extract local variable 'eeList'

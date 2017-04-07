@@ -10,6 +10,7 @@ import ale.xtext.ale.Block;
 import ale.xtext.ale.BooleanAndOperation;
 import ale.xtext.ale.BooleanLiteral;
 import ale.xtext.ale.BooleanOrOperation;
+import ale.xtext.ale.BooleanTypeT;
 import ale.xtext.ale.BooleanXorOperation;
 import ale.xtext.ale.ChainedCall;
 import ale.xtext.ale.ChainedCallArrow;
@@ -30,6 +31,7 @@ import ale.xtext.ale.ImpliesOperation;
 import ale.xtext.ale.Import;
 import ale.xtext.ale.IntLiteral;
 import ale.xtext.ale.IntRange;
+import ale.xtext.ale.IntTypeT;
 import ale.xtext.ale.LetStatement;
 import ale.xtext.ale.LiteralType;
 import ale.xtext.ale.Method;
@@ -38,6 +40,7 @@ import ale.xtext.ale.NegInfixOperation;
 import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
+import ale.xtext.ale.NullTypeT;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -47,17 +50,21 @@ import ale.xtext.ale.OverrideMethod;
 import ale.xtext.ale.Param;
 import ale.xtext.ale.ParamCall;
 import ale.xtext.ale.RealLiteral;
+import ale.xtext.ale.RealTypeT;
 import ale.xtext.ale.ReturnStatement;
 import ale.xtext.ale.Root;
 import ale.xtext.ale.SelfRef;
 import ale.xtext.ale.SequenceDecl;
 import ale.xtext.ale.SequenceType;
+import ale.xtext.ale.SequenceTypeT;
 import ale.xtext.ale.Statement;
 import ale.xtext.ale.StringLiteral;
+import ale.xtext.ale.StringTypeT;
 import ale.xtext.ale.SubOperation;
 import ale.xtext.ale.SuperRef;
 import ale.xtext.ale.Symbol;
 import ale.xtext.ale.Type;
+import ale.xtext.ale.TypeSystem;
 import ale.xtext.ale.VarAssign;
 import ale.xtext.ale.VarRef;
 import ale.xtext.ale.WhileStatement;
@@ -137,6 +144,7 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.PARAM: return createParam();
       case AlePackage.TYPE: return createType();
       case AlePackage.LITERAL_TYPE: return createLiteralType();
+      case AlePackage.TYPE_SYSTEM: return createTypeSystem();
       case AlePackage.OPEN_CLASS: return createOpenClass();
       case AlePackage.NEW_CLASS: return createNewClass();
       case AlePackage.RETURN_STATEMENT: return createReturnStatement();
@@ -145,6 +153,8 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.WHILE_STATEMENT: return createWhileStatement();
       case AlePackage.FOR_LOOP: return createForLoop();
       case AlePackage.VAR_ASSIGN: return createVarAssign();
+      case AlePackage.CHAINED_CALL: return createChainedCall();
+      case AlePackage.CHAINED_CALL_ARROW: return createChainedCallArrow();
       case AlePackage.IMPLIES_OPERATION: return createImpliesOperation();
       case AlePackage.BOOLEAN_OR_OPERATION: return createBooleanOrOperation();
       case AlePackage.BOOLEAN_AND_OPERATION: return createBooleanAndOperation();
@@ -163,8 +173,6 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.NEG_INFIX_OPERATION: return createNegInfixOperation();
       case AlePackage.CONSTRUCTOR_OPERATION: return createConstructorOperation();
       case AlePackage.OPERATION_CALL_OPERATION: return createOperationCallOperation();
-      case AlePackage.CHAINED_CALL: return createChainedCall();
-      case AlePackage.CHAINED_CALL_ARROW: return createChainedCallArrow();
       case AlePackage.SELF_REF: return createSelfRef();
       case AlePackage.SUPER_REF: return createSuperRef();
       case AlePackage.STRING_LITERAL: return createStringLiteral();
@@ -179,6 +187,12 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.OUT_OF_SCOPE_TYPE: return createOutOfScopeType();
       case AlePackage.SEQUENCE_TYPE: return createSequenceType();
       case AlePackage.ORDERED_SET_TYPE: return createOrderedSetType();
+      case AlePackage.BOOLEAN_TYPE_T: return createBooleanTypeT();
+      case AlePackage.REAL_TYPE_T: return createRealTypeT();
+      case AlePackage.INT_TYPE_T: return createIntTypeT();
+      case AlePackage.STRING_TYPE_T: return createStringTypeT();
+      case AlePackage.NULL_TYPE_T: return createNullTypeT();
+      case AlePackage.SEQUENCE_TYPE_T: return createSequenceTypeT();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -354,6 +368,17 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public TypeSystem createTypeSystem()
+  {
+    TypeSystemImpl typeSystem = new TypeSystemImpl();
+    return typeSystem;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public OpenClass createOpenClass()
   {
     OpenClassImpl openClass = new OpenClassImpl();
@@ -435,6 +460,28 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     VarAssignImpl varAssign = new VarAssignImpl();
     return varAssign;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ChainedCall createChainedCall()
+  {
+    ChainedCallImpl chainedCall = new ChainedCallImpl();
+    return chainedCall;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ChainedCallArrow createChainedCallArrow()
+  {
+    ChainedCallArrowImpl chainedCallArrow = new ChainedCallArrowImpl();
+    return chainedCallArrow;
   }
 
   /**
@@ -640,28 +687,6 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ChainedCall createChainedCall()
-  {
-    ChainedCallImpl chainedCall = new ChainedCallImpl();
-    return chainedCall;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ChainedCallArrow createChainedCallArrow()
-  {
-    ChainedCallArrowImpl chainedCallArrow = new ChainedCallArrowImpl();
-    return chainedCallArrow;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public SelfRef createSelfRef()
   {
     SelfRefImpl selfRef = new SelfRefImpl();
@@ -809,6 +834,72 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     OrderedSetTypeImpl orderedSetType = new OrderedSetTypeImpl();
     return orderedSetType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public BooleanTypeT createBooleanTypeT()
+  {
+    BooleanTypeTImpl booleanTypeT = new BooleanTypeTImpl();
+    return booleanTypeT;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RealTypeT createRealTypeT()
+  {
+    RealTypeTImpl realTypeT = new RealTypeTImpl();
+    return realTypeT;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public IntTypeT createIntTypeT()
+  {
+    IntTypeTImpl intTypeT = new IntTypeTImpl();
+    return intTypeT;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StringTypeT createStringTypeT()
+  {
+    StringTypeTImpl stringTypeT = new StringTypeTImpl();
+    return stringTypeT;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NullTypeT createNullTypeT()
+  {
+    NullTypeTImpl nullTypeT = new NullTypeTImpl();
+    return nullTypeT;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SequenceTypeT createSequenceTypeT()
+  {
+    SequenceTypeTImpl sequenceTypeT = new SequenceTypeTImpl();
+    return sequenceTypeT;
   }
 
   /**

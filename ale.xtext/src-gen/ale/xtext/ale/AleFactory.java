@@ -159,6 +159,15 @@ public interface AleFactory extends EFactory
   LiteralType createLiteralType();
 
   /**
+   * Returns a new object of class '<em>Type System</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Type System</em>'.
+   * @generated
+   */
+  TypeSystem createTypeSystem();
+
+  /**
    * Returns a new object of class '<em>Open Class</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -229,6 +238,24 @@ public interface AleFactory extends EFactory
    * @generated
    */
   VarAssign createVarAssign();
+
+  /**
+   * Returns a new object of class '<em>Chained Call</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Chained Call</em>'.
+   * @generated
+   */
+  ChainedCall createChainedCall();
+
+  /**
+   * Returns a new object of class '<em>Chained Call Arrow</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Chained Call Arrow</em>'.
+   * @generated
+   */
+  ChainedCallArrow createChainedCallArrow();
 
   /**
    * Returns a new object of class '<em>Implies Operation</em>'.
@@ -393,24 +420,6 @@ public interface AleFactory extends EFactory
   OperationCallOperation createOperationCallOperation();
 
   /**
-   * Returns a new object of class '<em>Chained Call</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Chained Call</em>'.
-   * @generated
-   */
-  ChainedCall createChainedCall();
-
-  /**
-   * Returns a new object of class '<em>Chained Call Arrow</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Chained Call Arrow</em>'.
-   * @generated
-   */
-  ChainedCallArrow createChainedCallArrow();
-
-  /**
    * Returns a new object of class '<em>Self Ref</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -535,6 +544,60 @@ public interface AleFactory extends EFactory
    * @generated
    */
   OrderedSetType createOrderedSetType();
+
+  /**
+   * Returns a new object of class '<em>Boolean Type T</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Boolean Type T</em>'.
+   * @generated
+   */
+  BooleanTypeT createBooleanTypeT();
+
+  /**
+   * Returns a new object of class '<em>Real Type T</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Real Type T</em>'.
+   * @generated
+   */
+  RealTypeT createRealTypeT();
+
+  /**
+   * Returns a new object of class '<em>Int Type T</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Int Type T</em>'.
+   * @generated
+   */
+  IntTypeT createIntTypeT();
+
+  /**
+   * Returns a new object of class '<em>String Type T</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>String Type T</em>'.
+   * @generated
+   */
+  StringTypeT createStringTypeT();
+
+  /**
+   * Returns a new object of class '<em>Null Type T</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Null Type T</em>'.
+   * @generated
+   */
+  NullTypeT createNullTypeT();
+
+  /**
+   * Returns a new object of class '<em>Sequence Type T</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Sequence Type T</em>'.
+   * @generated
+   */
+  SequenceTypeT createSequenceTypeT();
 
   /**
    * Returns the package supported by this factory.

@@ -10,6 +10,7 @@ import ale.xtext.ale.Block;
 import ale.xtext.ale.BooleanAndOperation;
 import ale.xtext.ale.BooleanLiteral;
 import ale.xtext.ale.BooleanOrOperation;
+import ale.xtext.ale.BooleanTypeT;
 import ale.xtext.ale.BooleanXorOperation;
 import ale.xtext.ale.ChainedCall;
 import ale.xtext.ale.ChainedCallArrow;
@@ -30,6 +31,7 @@ import ale.xtext.ale.ImpliesOperation;
 import ale.xtext.ale.Import;
 import ale.xtext.ale.IntLiteral;
 import ale.xtext.ale.IntRange;
+import ale.xtext.ale.IntTypeT;
 import ale.xtext.ale.LetStatement;
 import ale.xtext.ale.LiteralType;
 import ale.xtext.ale.Method;
@@ -38,6 +40,7 @@ import ale.xtext.ale.NegInfixOperation;
 import ale.xtext.ale.NewClass;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
+import ale.xtext.ale.NullTypeT;
 import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OrderedSetDecl;
@@ -47,17 +50,21 @@ import ale.xtext.ale.OverrideMethod;
 import ale.xtext.ale.Param;
 import ale.xtext.ale.ParamCall;
 import ale.xtext.ale.RealLiteral;
+import ale.xtext.ale.RealTypeT;
 import ale.xtext.ale.ReturnStatement;
 import ale.xtext.ale.Root;
 import ale.xtext.ale.SelfRef;
 import ale.xtext.ale.SequenceDecl;
 import ale.xtext.ale.SequenceType;
+import ale.xtext.ale.SequenceTypeT;
 import ale.xtext.ale.Statement;
 import ale.xtext.ale.StringLiteral;
+import ale.xtext.ale.StringTypeT;
 import ale.xtext.ale.SubOperation;
 import ale.xtext.ale.SuperRef;
 import ale.xtext.ale.Symbol;
 import ale.xtext.ale.Type;
+import ale.xtext.ale.TypeSystem;
 import ale.xtext.ale.VarAssign;
 import ale.xtext.ale.VarRef;
 import ale.xtext.ale.WhileStatement;
@@ -187,6 +194,13 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass typeSystemEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass openClassEClass = null;
 
   /**
@@ -237,6 +251,20 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * @generated
    */
   private EClass varAssignEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass chainedCallEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass chainedCallArrowEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -369,20 +397,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass chainedCallEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass chainedCallArrowEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   private EClass selfRefEClass = null;
 
   /**
@@ -475,6 +489,48 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * @generated
    */
   private EClass orderedSetTypeEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass booleanTypeTEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass realTypeTEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass intTypeTEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass stringTypeTEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass nullTypeTEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass sequenceTypeTEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -914,6 +970,16 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getTypeSystem()
+  {
+    return typeSystemEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getOpenClass()
   {
     return openClassEClass;
@@ -1137,6 +1203,66 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
   public EReference getVarAssign_Value()
   {
     return (EReference)varAssignEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getChainedCall()
+  {
+    return chainedCallEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getChainedCall_Left()
+  {
+    return (EReference)chainedCallEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getChainedCall_Right()
+  {
+    return (EReference)chainedCallEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getChainedCallArrow()
+  {
+    return chainedCallArrowEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getChainedCallArrow_Left()
+  {
+    return (EReference)chainedCallArrowEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getChainedCallArrow_Right()
+  {
+    return (EReference)chainedCallArrowEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1664,66 +1790,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getChainedCall()
-  {
-    return chainedCallEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getChainedCall_Left()
-  {
-    return (EReference)chainedCallEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getChainedCall_Right()
-  {
-    return (EReference)chainedCallEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getChainedCallArrow()
-  {
-    return chainedCallArrowEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getChainedCallArrow_Left()
-  {
-    return (EReference)chainedCallArrowEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getChainedCallArrow_Right()
-  {
-    return (EReference)chainedCallArrowEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getSelfRef()
   {
     return selfRefEClass;
@@ -1984,6 +2050,76 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getBooleanTypeT()
+  {
+    return booleanTypeTEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getRealTypeT()
+  {
+    return realTypeTEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getIntTypeT()
+  {
+    return intTypeTEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStringTypeT()
+  {
+    return stringTypeTEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNullTypeT()
+  {
+    return nullTypeTEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getSequenceTypeT()
+  {
+    return sequenceTypeTEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSequenceTypeT_SubType()
+  {
+    return (EReference)sequenceTypeTEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public AleFactory getAleFactory()
   {
     return (AleFactory)getEFactoryInstance();
@@ -2061,6 +2197,8 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     literalTypeEClass = createEClass(LITERAL_TYPE);
     createEAttribute(literalTypeEClass, LITERAL_TYPE__LIT);
 
+    typeSystemEClass = createEClass(TYPE_SYSTEM);
+
     openClassEClass = createEClass(OPEN_CLASS);
 
     newClassEClass = createEClass(NEW_CLASS);
@@ -2091,6 +2229,14 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     createEReference(varAssignEClass, VAR_ASSIGN__TYPE);
     createEAttribute(varAssignEClass, VAR_ASSIGN__NAME);
     createEReference(varAssignEClass, VAR_ASSIGN__VALUE);
+
+    chainedCallEClass = createEClass(CHAINED_CALL);
+    createEReference(chainedCallEClass, CHAINED_CALL__LEFT);
+    createEReference(chainedCallEClass, CHAINED_CALL__RIGHT);
+
+    chainedCallArrowEClass = createEClass(CHAINED_CALL_ARROW);
+    createEReference(chainedCallArrowEClass, CHAINED_CALL_ARROW__LEFT);
+    createEReference(chainedCallArrowEClass, CHAINED_CALL_ARROW__RIGHT);
 
     impliesOperationEClass = createEClass(IMPLIES_OPERATION);
     createEReference(impliesOperationEClass, IMPLIES_OPERATION__LEFT);
@@ -2162,14 +2308,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     createEAttribute(operationCallOperationEClass, OPERATION_CALL_OPERATION__NAME);
     createEReference(operationCallOperationEClass, OPERATION_CALL_OPERATION__PARAMETERS);
 
-    chainedCallEClass = createEClass(CHAINED_CALL);
-    createEReference(chainedCallEClass, CHAINED_CALL__LEFT);
-    createEReference(chainedCallEClass, CHAINED_CALL__RIGHT);
-
-    chainedCallArrowEClass = createEClass(CHAINED_CALL_ARROW);
-    createEReference(chainedCallArrowEClass, CHAINED_CALL_ARROW__LEFT);
-    createEReference(chainedCallArrowEClass, CHAINED_CALL_ARROW__RIGHT);
-
     selfRefEClass = createEClass(SELF_REF);
 
     superRefEClass = createEClass(SUPER_REF);
@@ -2209,6 +2347,19 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
 
     orderedSetTypeEClass = createEClass(ORDERED_SET_TYPE);
     createEReference(orderedSetTypeEClass, ORDERED_SET_TYPE__SUB_TYPE);
+
+    booleanTypeTEClass = createEClass(BOOLEAN_TYPE_T);
+
+    realTypeTEClass = createEClass(REAL_TYPE_T);
+
+    intTypeTEClass = createEClass(INT_TYPE_T);
+
+    stringTypeTEClass = createEClass(STRING_TYPE_T);
+
+    nullTypeTEClass = createEClass(NULL_TYPE_T);
+
+    sequenceTypeTEClass = createEClass(SEQUENCE_TYPE_T);
+    createEReference(sequenceTypeTEClass, SEQUENCE_TYPE_T__SUB_TYPE);
   }
 
   /**
@@ -2255,6 +2406,8 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     whileStatementEClass.getESuperTypes().add(this.getStatement());
     forLoopEClass.getESuperTypes().add(this.getStatement());
     varAssignEClass.getESuperTypes().add(this.getStatement());
+    chainedCallEClass.getESuperTypes().add(this.getExpression());
+    chainedCallArrowEClass.getESuperTypes().add(this.getExpression());
     impliesOperationEClass.getESuperTypes().add(this.getExpression());
     booleanOrOperationEClass.getESuperTypes().add(this.getExpression());
     booleanAndOperationEClass.getESuperTypes().add(this.getExpression());
@@ -2273,8 +2426,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     negInfixOperationEClass.getESuperTypes().add(this.getExpression());
     constructorOperationEClass.getESuperTypes().add(this.getExpression());
     operationCallOperationEClass.getESuperTypes().add(this.getExpression());
-    chainedCallEClass.getESuperTypes().add(this.getExpression());
-    chainedCallArrowEClass.getESuperTypes().add(this.getExpression());
     selfRefEClass.getESuperTypes().add(this.getExpression());
     superRefEClass.getESuperTypes().add(this.getExpression());
     stringLiteralEClass.getESuperTypes().add(this.getExpression());
@@ -2289,6 +2440,12 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     outOfScopeTypeEClass.getESuperTypes().add(this.getType());
     sequenceTypeEClass.getESuperTypes().add(this.getType());
     orderedSetTypeEClass.getESuperTypes().add(this.getType());
+    booleanTypeTEClass.getESuperTypes().add(this.getTypeSystem());
+    realTypeTEClass.getESuperTypes().add(this.getTypeSystem());
+    intTypeTEClass.getESuperTypes().add(this.getTypeSystem());
+    stringTypeTEClass.getESuperTypes().add(this.getTypeSystem());
+    nullTypeTEClass.getESuperTypes().add(this.getTypeSystem());
+    sequenceTypeTEClass.getESuperTypes().add(this.getTypeSystem());
 
     // Initialize classes and features; add operations and parameters
     initEClass(rootEClass, Root.class, "Root", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2343,6 +2500,8 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEClass(literalTypeEClass, LiteralType.class, "LiteralType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getLiteralType_Lit(), ecorePackage.getEString(), "lit", null, 0, 1, LiteralType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(typeSystemEClass, TypeSystem.class, "TypeSystem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
     initEClass(openClassEClass, OpenClass.class, "OpenClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(newClassEClass, NewClass.class, "NewClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2373,6 +2532,14 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEReference(getVarAssign_Type(), this.getType(), null, "type", null, 0, 1, VarAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getVarAssign_Name(), ecorePackage.getEString(), "name", null, 0, 1, VarAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getVarAssign_Value(), this.getExpression(), null, "value", null, 0, 1, VarAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(chainedCallEClass, ChainedCall.class, "ChainedCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getChainedCall_Left(), this.getExpression(), null, "left", null, 0, 1, ChainedCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getChainedCall_Right(), this.getExpression(), null, "right", null, 0, 1, ChainedCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(chainedCallArrowEClass, ChainedCallArrow.class, "ChainedCallArrow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getChainedCallArrow_Left(), this.getExpression(), null, "left", null, 0, 1, ChainedCallArrow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getChainedCallArrow_Right(), this.getExpression(), null, "right", null, 0, 1, ChainedCallArrow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(impliesOperationEClass, ImpliesOperation.class, "ImpliesOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getImpliesOperation_Left(), this.getExpression(), null, "left", null, 0, 1, ImpliesOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2444,14 +2611,6 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEAttribute(getOperationCallOperation_Name(), ecorePackage.getEString(), "name", null, 0, 1, OperationCallOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getOperationCallOperation_Parameters(), this.getParamCall(), null, "parameters", null, 0, -1, OperationCallOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(chainedCallEClass, ChainedCall.class, "ChainedCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getChainedCall_Left(), this.getExpression(), null, "left", null, 0, 1, ChainedCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getChainedCall_Right(), this.getExpression(), null, "right", null, 0, 1, ChainedCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(chainedCallArrowEClass, ChainedCallArrow.class, "ChainedCallArrow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getChainedCallArrow_Left(), this.getExpression(), null, "left", null, 0, 1, ChainedCallArrow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getChainedCallArrow_Right(), this.getExpression(), null, "right", null, 0, 1, ChainedCallArrow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(selfRefEClass, SelfRef.class, "SelfRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(superRefEClass, SuperRef.class, "SuperRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2491,6 +2650,19 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
 
     initEClass(orderedSetTypeEClass, OrderedSetType.class, "OrderedSetType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getOrderedSetType_SubType(), this.getType(), null, "subType", null, 0, 1, OrderedSetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(booleanTypeTEClass, BooleanTypeT.class, "BooleanTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(realTypeTEClass, RealTypeT.class, "RealTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(intTypeTEClass, IntTypeT.class, "IntTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(stringTypeTEClass, StringTypeT.class, "StringTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(nullTypeTEClass, NullTypeT.class, "NullTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(sequenceTypeTEClass, SequenceTypeT.class, "SequenceTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getSequenceTypeT_SubType(), this.getTypeSystem(), null, "subType", null, 0, 1, SequenceTypeT.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

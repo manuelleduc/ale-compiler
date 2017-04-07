@@ -72,7 +72,12 @@ VarAssign returns Statement:
 	{VarAssign} type=Type name=ID '=' value=Expression;
 
 Expression returns Expression:
-	ImpliesOperation;
+	ChaindedCall;
+	
+ChaindedCall returns Expression:
+	ImpliesOperation
+	=>(({ChainedCall.left=current} '.' | {ChainedCallArrow.left=current} '->') right=ImpliesOperation)*
+; 
 
 ImpliesOperation returns Expression:
 	BooleanOperation
@@ -113,9 +118,7 @@ InfixOperation returns Expression:
 	{NotInfixOperation} 'not' expression=Expression |
 	{NegInfixOperation} '-' expression=Expression |
 	{ConstructorOperation} 'new' name=ID '(' ')' |
-	{OperationCallOperation} name=ID ('(' (parameters+=ParamCall (',' parameters+=ParamCall)*)? ')') |
-	AtomicLiteral ({ChainedCall.left=current} '.' right=Expression | {ChainedCallArrow.left=current} '->'
-	right=Expression)?;
+	{OperationCallOperation} name=ID ('(' (parameters+=ParamCall (',' parameters+=ParamCall)*)? ')') ;
 
 ParamCall:
 	(lambda=ID '|')? expression=Expression;
@@ -149,7 +152,15 @@ Type:
 //	refType=[Class];
 
 LiteralType:
-	lit=('Boolean' | 'Byte' | 'Char' | 'Double' | 'Float' | 'Int' | 'Long' | 'Short' | 'String');
+	lit=('Boolean' | 
+	
+//	'Byte' | 'Char' | 'Double' | 'Float' | 
+//	'Long' | 'Short' |
+	
+	
+	'Real' | 
+	'Int' | 
+	'String');
 
 Qualified:
 	ID ('.' ID)*;
@@ -162,3 +173,18 @@ terminal BOOLEAN:
 
 terminal NULL:
 	'null';
+	
+// Type system
+TypeSystem:
+	{BooleanTypeT} 'Boolean' | 
+//	{ByteType} 'Byte' | 
+//	{CharTYpe}'Char' | 
+	{RealTypeT} 'Real' | 
+//	{FloatType} 'Float' | 
+	{IntTypeT}'Int' | 
+//	{LongType} 'Long' | 
+//	{ShortType} 'Short' |
+	{StringTypeT} 'String' |
+	{NullTypeT} 'nulltype' |
+	{SequenceTypeT} 'Sequence' subType=TypeSystem
+;
