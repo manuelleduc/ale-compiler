@@ -1,0 +1,13 @@
+package dsl.xtext.validation;
+
+import dsl.xtext.validation.DslValidator;
+import org.eclipse.emf.ecore.EObject;
+
+public class DslBehaviorValidator {
+
+	
+(EObject object, DslValidator validator) {
+	  throw new UnsupportedOperationException("TODO: auto-generated method stub");
+	}
+
+}

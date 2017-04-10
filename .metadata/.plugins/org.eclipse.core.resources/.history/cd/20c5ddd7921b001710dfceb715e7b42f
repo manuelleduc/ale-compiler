@@ -1,0 +1,18 @@
+package ale.compiler;
+
+import java.net.URI;
+
+import org.eclipse.core.resources.IProject;
+
+public class AleTypeCheck {
+
+	public AleTypeCheck(URI dslUri) {
+		this.dslUri = dslUri;
+	}
+
+	public void check(IProject project) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

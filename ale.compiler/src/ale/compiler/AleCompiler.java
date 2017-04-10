@@ -157,7 +157,6 @@ public class AleCompiler {
 			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
 			return resSet.getPackageRegistry().getEPackage(syntax.getValue());
 		}).filter(x -> x != null).collect(Collectors.toList());
-//		this.models.addAll(this.syntaxes);
 
 		final String fileNameDsl = this.filenamedsl.substring(0, this.filenamedsl.length()-4);
 		final String projectName = "test";

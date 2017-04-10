@@ -32,6 +32,9 @@ Workflow {
 			name = "dsl.xtext.Dsl"
 			fileExtensions = "dsl"
 			referencedResource = "platform:/resource/ale.xtext/model/generated/Ale.genmodel"
+		 	fragment = scoping.ImportNamespacesScopingFragment2 {}
+			fragment = exporting.QualifiedNamesFragment2 {}
+			fragment = builder.BuilderIntegrationFragment2 {}
 			
 			serializer = {
 				generateStub = false

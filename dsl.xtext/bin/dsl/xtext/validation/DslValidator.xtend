@@ -79,6 +79,7 @@ class DslValidator extends DslTypeValidator {
 				error("ale file reference cannot be resolved", b, DslPackage.Literals.SYNTAX__VALUE, BEHAVIOR_NOT_FOUND)
 			}
 			resource2.contents.head as Root
+//			b.value
 		].toList
 		
 		

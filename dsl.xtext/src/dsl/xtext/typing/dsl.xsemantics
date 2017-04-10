@@ -357,6 +357,8 @@ from {
 	dsl.behaviours.forEach[b | 
 		var URI createURI = URI.createURI(b.value);
 		var  Resource resource2 = resourceSet2.getResource(createURI, true);
-		(resource2.contents.head as Root).classes.forEach[c |empty |> c  : var TypeSystem tmps ]				
+		val root = (resource2.contents.head as Root)
+//		val root = b.value
+		root.classes.forEach[c |empty |> c  : var TypeSystem tmps ]				
 	]
 }

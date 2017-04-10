@@ -1,0 +1,36 @@
+package dsl.xtext.validation;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.eclipse.emf.ecore.EPackage;
+
+import ale.xtext.ale.Root;
+
+public class DslBehaviorValidator {
+
+	private List<Root> root;
+	private DslValidator validator;
+	private List<EPackage> syntaxes;
+
+	DslBehaviorValidator(List<Root> roots, List<EPackage> syntaxes, Dsl dsl, DslValidator validator) {
+		this.root = root;
+		this.syntaxes = syntaxes;
+		this.validator = validator;
+	}
+
+	void validate() {
+		this.oneClassPerOpenClass();
+	}
+
+	private void oneClassPerOpenClass() {
+		Map<String, Long> collect = root.stream().flatMap(r -> r.getClasses().stream()).collect(Collectors.groupingBy(x -> x.getName(), Collectors.counting()));
+		collect.entrySet().forEach(e -> {
+			if(e.getValue() > 1) {
+				this.validator.errorB("Cannot reference two classes with the same name", this.ro);
+			}
+		});
+	}
+
+}

@@ -132,41 +132,6 @@ public abstract class AbstractDslUiModule extends DefaultUiModule {
 		binder.bind(InternalDslLexer.class).toProvider(LexerProvider.create(InternalDslLexer.class));
 	}
 	
-	// contributed by org.eclipse.xtext.xtext.generator.exporting.QualifiedNamesFragment2
-	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
-		return FQNPrefixMatcher.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.exporting.QualifiedNamesFragment2
-	public Class<? extends IDependentElementsCalculator> bindIDependentElementsCalculator() {
-		return DefaultDependentElementsCalculator.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public void configureIResourceDescriptionsBuilderScope(Binder binder) {
-		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.NAMED_BUILDER_SCOPE)).to(CurrentDescriptions.ResourceSetAware.class);
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public Class<? extends IXtextEditorCallback> bindIXtextEditorCallback() {
-		return NatureAddingEditorCallback.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public Class<? extends IContextualOutputConfigurationProvider> bindIContextualOutputConfigurationProvider() {
-		return EclipseOutputConfigurationProvider.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public void configureIResourceDescriptionsPersisted(Binder binder) {
-		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS)).to(IBuilderState.class);
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	public Class<? extends DocumentBasedDirtyResource> bindDocumentBasedDirtyResource() {
-		return PersistentDataAwareDirtyResource.class;
-	}
-	
 	// contributed by org.eclipse.xtext.xtext.generator.generator.GeneratorFragment2
 	public Class<? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant() {
 		return BuilderParticipant.class;
@@ -275,6 +240,41 @@ public abstract class AbstractDslUiModule extends DefaultUiModule {
 	// contributed by org.eclipse.xtext.xtext.generator.ui.compare.CompareFragment2
 	public Class<? extends IViewerCreator> bindIViewerCreator() {
 		return DefaultViewerCreator.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.exporting.QualifiedNamesFragment2
+	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
+		return FQNPrefixMatcher.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.exporting.QualifiedNamesFragment2
+	public Class<? extends IDependentElementsCalculator> bindIDependentElementsCalculator() {
+		return DefaultDependentElementsCalculator.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
+	public void configureIResourceDescriptionsBuilderScope(Binder binder) {
+		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.NAMED_BUILDER_SCOPE)).to(CurrentDescriptions.ResourceSetAware.class);
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
+	public Class<? extends IXtextEditorCallback> bindIXtextEditorCallback() {
+		return NatureAddingEditorCallback.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
+	public Class<? extends IContextualOutputConfigurationProvider> bindIContextualOutputConfigurationProvider() {
+		return EclipseOutputConfigurationProvider.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
+	public void configureIResourceDescriptionsPersisted(Binder binder) {
+		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS)).to(IBuilderState.class);
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
+	public Class<? extends DocumentBasedDirtyResource> bindDocumentBasedDirtyResource() {
+		return PersistentDataAwareDirtyResource.class;
 	}
 	
 }

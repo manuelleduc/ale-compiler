@@ -1,0 +1,11 @@
+package ale.compiler;
+
+import java.net.URI;
+
+public class AleTypeCheck {
+
+	public AleTypeCheck(URI dslUri) {
+		// TODO Auto-generated constructor stub
+	}
+
+}

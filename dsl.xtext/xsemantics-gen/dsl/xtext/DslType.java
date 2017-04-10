@@ -520,7 +520,8 @@ public class DslType extends XsemanticsRuntimeSystem {
       Resource resource2 = resourceSet2.getResource(createURI, true);
       EList<EObject> _contents = resource2.getContents();
       EObject _head = IterableExtensions.<EObject>head(_contents);
-      EList<AleClass> _classes = ((Root) _head).getClasses();
+      final Root root = ((Root) _head);
+      EList<AleClass> _classes = root.getClasses();
       final Consumer<AleClass> _function_1 = (AleClass c) -> {
         /* empty |> c : var TypeSystem tmps */
         TypeSystem tmps = null;

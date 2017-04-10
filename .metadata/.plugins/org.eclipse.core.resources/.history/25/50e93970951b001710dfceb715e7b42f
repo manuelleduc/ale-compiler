@@ -1,0 +1,21 @@
+package dsl.xtext.validation;
+
+import java.awt.List;
+
+import ale.xtext.ale.Root;
+
+public class DslBehaviorValidator {
+
+	private List<Root> root;
+	private DslValidator validator;
+	
+	DslBehaviorValidator(List<Root> object, DslValidator validator) {
+	  this.root = root;
+	  this.validator = validator;
+	}
+	
+	void validate() {
+		
+	}
+
+}
