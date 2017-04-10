@@ -1,9 +1,0 @@
-grammar dsl.xtext.Dsl with org.eclipse.xtext.common.Terminals
-
-generate dsl "http://www.xtext.dsl/Dsl"
-
-Model:
-	greetings+=Greeting*;
-	
-Greeting:
-	'Hello' name=ID '!';

@@ -1,7 +1,0 @@
-package fluffyumbrellacompiler.ui.popup.actions;
-
-import org.eclipse.ui.IObjectActionDelegate;
-
-public class AleTypecheck implements IObjectActionDelegate {
-
-}

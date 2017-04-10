@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename package &apos;fr.inria.diverse.objectalgebragenerator&apos; to &apos;ale.java.algebra.generator&apos;&#x0A;- Original project: &apos;ale.java.algebra.generator&apos;&#x0A;- Original element: &apos;ale.java.algebra.generator/src/fr.inria.diverse.objectalgebragenerator&apos;&#x0A;- Renamed element: &apos;ale.java.algebra.generator/src/ale.java.algebra.generator&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;fr.inria.diverse.objectalgebragenerator&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src&lt;fr.inria.diverse.objectalgebragenerator" name="ale.java.algebra.generator" qualified="false" references="true" stamp="1491408491682" textual="false" version="1.0"/>
-</session>
