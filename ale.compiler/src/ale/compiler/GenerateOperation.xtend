@@ -7,12 +7,13 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
 import ale.xtext.ale.AleClass
+import java.util.List
 
 class GenerateOperation {
 
-	def generate(EClass clazz, IProject project, String dslName, AleClass behavior, EPackage ePackage) {
+	def generate(EClass clazz, IProject project, String dslName, AleClass behavior, EPackage ePackage, List<EPackage> dependencies) {
 
-		val fileContent = new GenerateAlgebra().generateOperation(clazz,  dslName, behavior, ePackage)
+		val fileContent = new GenerateAlgebra().generateOperation(clazz,  dslName, behavior, ePackage, dependencies)
 
 		val directoryAlgebra = project.getLocation().append("src").append(dslName).append("algebra").append(
 			"operation").append(clazz.EPackage.name);

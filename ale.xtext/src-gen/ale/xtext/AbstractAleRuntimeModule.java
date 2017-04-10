@@ -141,6 +141,11 @@ public abstract class AbstractAleRuntimeModule extends DefaultRuntimeModule {
 		return AleValidator.class;
 	}
 	
+	// contributed by org.eclipse.xtext.xtext.generator.generator.GeneratorFragment2
+	public Class<? extends IGenerator2> bindIGenerator2() {
+		return AleGenerator.class;
+	}
+	
 	// contributed by org.eclipse.xtext.xtext.generator.scoping.ImportNamespacesScopingFragment2
 	public Class<? extends IScopeProvider> bindIScopeProvider() {
 		return AleScopeProvider.class;
@@ -184,11 +189,6 @@ public abstract class AbstractAleRuntimeModule extends DefaultRuntimeModule {
 	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
 	public void configureIResourceDescriptionsPersisted(Binder binder) {
 		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS)).to(ResourceSetBasedResourceDescriptions.class);
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.generator.GeneratorFragment2
-	public Class<? extends IGenerator2> bindIGenerator2() {
-		return AleGenerator.class;
 	}
 	
 }

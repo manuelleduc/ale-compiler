@@ -31,7 +31,10 @@ Workflow {
 		language = StandardLanguage {
 			name = "ale.xtext.Ale"
 			fileExtensions = "ale"
-
+			
+		    fragment = scoping.ImportNamespacesScopingFragment2 {}
+			fragment = exporting.QualifiedNamesFragment2 {}
+			fragment = builder.BuilderIntegrationFragment2 {}
 			serializer = {
 				generateStub = false
 			}

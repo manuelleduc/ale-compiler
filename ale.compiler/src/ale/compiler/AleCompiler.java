@@ -156,7 +156,8 @@ public class AleCompiler {
 				EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
 			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
 			return resSet.getPackageRegistry().getEPackage(syntax.getValue());
-		}).collect(Collectors.toList());
+		}).filter(x -> x != null).collect(Collectors.toList());
+//		this.models.addAll(this.syntaxes);
 
 		final String fileNameDsl = this.filenamedsl.substring(0, this.filenamedsl.length()-4);
 		final String projectName = "test";
@@ -173,21 +174,21 @@ public class AleCompiler {
 			this.proceedToGeneration(genModel);
 
 			this.syntaxes.forEach(ePackage -> {
-				this.generateAlgebra(ePackage, project);
+				this.generateAlgebra(ePackage, null, project);
 			});
 		}
 
-		this.generateAlgebra(rootPackage, project);
+		this.generateAlgebra(rootPackage, this.syntaxes, project);
 
-		final List<EClass> listAllClasses = new GenerateAlgebra().getListAllClasses(rootPackage);
+		final List<EClass> listAllClasses = new GenerateAlgebra().getListAllClasses(rootPackage, this.syntaxes);
 		listAllClasses.forEach(clazz -> {
 			final ale.xtext.ale.AleClass openClass = lookupClass(resourceSet, behaviors, clazz.getName());
-			new GenerateOperation().generate(clazz, project, fileNameDsl, openClass, rootPackage);
+			new GenerateOperation().generate(clazz, project, fileNameDsl, openClass, rootPackage, this.syntaxes);
 		});
 
-		this.generateConcreteAlgebra(rootPackage, project, fileNameDsl);
+		this.generateConcreteAlgebra(rootPackage, this.syntaxes, project, fileNameDsl);
 
-		this.generateConcreteOperations(rootPackage, behaviors, project, fileNameDsl, resourceSet);
+		this.generateConcreteOperations(rootPackage, this.syntaxes, behaviors, project, fileNameDsl, resourceSet);
 
 	}
 
@@ -211,20 +212,20 @@ public class AleCompiler {
 		return (Root) resource2.getContents().get(0);
 	}
 
-	private void generateConcreteOperations(final EPackage rootPackage, final EList<Behavior> behaviors,
+	private void generateConcreteOperations(final EPackage rootPackage, final List<EPackage> dependencies, final EList<Behavior> behaviors,
 			final IProject project, final String filenameDsl, final XtextResourceSet resourceSet) {
-		final Graph<EClass> res = new GenerateAlgebra().buildGraph(rootPackage);
+		final Graph<EClass> res = new GenerateAlgebra().buildGraph(rootPackage, dependencies);
 		res.nodes.forEach(entry -> {
 			final ale.xtext.ale.AleClass openClass = lookupClass(resourceSet, behaviors, entry.elem.getName());
-			generateConceteOperation(entry, project, rootPackage, filenameDsl, openClass);
+			generateConceteOperation(entry, project, rootPackage, filenameDsl, openClass, dependencies);
 		});
 
 	}
 
 	private void generateConceteOperation(final GraphNode<EClass> entry, final IProject project,
-			final EPackage ePackage, final String fileNameDsl, final ale.xtext.ale.AleClass openClass) {
+			final EPackage ePackage, final String fileNameDsl, final ale.xtext.ale.AleClass openClass, List<EPackage> deppendencies) {
 		boolean overloaded = openClass != null && openClass.getFields().size()>0 && !((EPackage)entry.elem.eContainer()).getName().equals(((Root)openClass.eContainer() ).getName());
-		final String fileContent = new GenerateAlgebra().processConcreteOperation(entry, ePackage, fileNameDsl,
+		final String fileContent = new GenerateAlgebra().processConcreteOperation(entry, ePackage, deppendencies, fileNameDsl,
 				openClass, overloaded);
 		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra")
 				.append("impl").append("operation");
@@ -247,8 +248,8 @@ public class AleCompiler {
 		}
 	}
 
-	private void generateConcreteAlgebra(final EPackage ePackage, final IProject project, final String filenameDsl) {
-		final String fileContent = new GenerateAlgebra().processConcreteAlgebra(ePackage, filenameDsl);
+	private void generateConcreteAlgebra(final EPackage ePackage, final List<EPackage> dependencies, final IProject project, final String filenameDsl) {
+		final String fileContent = new GenerateAlgebra().processConcreteAlgebra(ePackage, dependencies, filenameDsl);
 		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra")
 				.append("impl");
 		directoryAlgebra.toFile().mkdirs();
@@ -480,8 +481,8 @@ public class AleCompiler {
 
 	}
 
-	private void generateAlgebra(final EPackage ePackage, final IProject project) {
-		final String fileContent = new GenerateAlgebra().processAlgebra(ePackage);
+	private void generateAlgebra(final EPackage ePackage, List<EPackage> otherPackages, final IProject project) {
+		final String fileContent = new GenerateAlgebra().processAlgebra(ePackage, otherPackages);
 		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra");
 		directoryAlgebra.toFile().mkdirs();
 		final IPath fileJavaAlgebra = directoryAlgebra

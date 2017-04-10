@@ -5,6 +5,7 @@ import fr.inria.diverse.objectalgebragenerator.GenerateAlgebra;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EClass;
@@ -14,9 +15,9 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
 public class GenerateOperation {
-  public void generate(final EClass clazz, final IProject project, final String dslName, final AleClass behavior, final EPackage ePackage) {
+  public void generate(final EClass clazz, final IProject project, final String dslName, final AleClass behavior, final EPackage ePackage, final List<EPackage> dependencies) {
     GenerateAlgebra _generateAlgebra = new GenerateAlgebra();
-    final String fileContent = _generateAlgebra.generateOperation(clazz, dslName, behavior, ePackage);
+    final String fileContent = _generateAlgebra.generateOperation(clazz, dslName, behavior, ePackage, dependencies);
     IPath _location = project.getLocation();
     IPath _append = _location.append("src");
     IPath _append_1 = _append.append(dslName);
