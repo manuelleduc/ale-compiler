@@ -1,0 +1,158 @@
+grammar ale.xtext.Ale with org.eclipse.xtext.common.Terminals
+
+generate ale "http://www.xtext.ale/Ale"
+
+Root returns Root:
+	'behavior' name=Qualified ';'
+	imports+=Import*
+	classes+=Class*;
+
+Import:
+	'import' ref=[Root] 'as' name=ID ';';
+
+Class returns Class:
+	OpenClass | NewClass;
+
+Tag:
+	'@' ID;
+
+OpenClass returns Class:
+	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=[Class|Qualified] (',' superClass+=[Class|Qualified])*)? ('{'
+	fields+=Field*
+	methods+=Method*
+	'}');
+
+NewClass returns Class:
+	{NewClass} 'class' name=ID ('extends' superClass+=[Class|Qualified] (',' superClass+=[Class|Qualified])*)? ('{'
+	fields+=Field*
+	methods+=Method*
+	'}');
+
+Field returns Field:
+	type=Type name=ID ';';
+
+Method:
+	DefMethod | OverrideMethod;
+
+DefMethod:
+	tags+=Tag* 'def' (type=Type | 'void') name=ID ('(' (params+=Param (',' params+=Param)*)? ')') block=Block;
+
+OverrideMethod:
+	tags+=Tag* 'override' type=Type name=ID ('(' (params+=Param (',' params+=Param)*)? ')') block=Block;
+
+Statement returns Statement:
+	VarAssign ';' |
+	ForLoop |
+	IfStatement |
+	WhileStatement |
+	LetStatement ';' |
+	Expression ';';
+
+LetStatement returns Statement:
+	{LetStatement} 'let' bindings+=VarAssign (',' bindings+=VarAssign)* 'in' block=(Expression | LetStatement);
+
+IfStatement returns Statement:
+	{IfStatement} 'if' '(' condition=Expression ')' thenBranch=Block ('else' elseBranch=Block)?;
+
+WhileStatement returns Statement:
+	{WhileStatement} 'while' '(' condition=Expression ')' whileBlock=Block;
+
+ForLoop returns Statement:
+	{ForLoop} 'for' '(' name=ID 'in' collection=Expression ')' block=Block;
+
+Block:
+	{Block} '{' body+=Statement* '}';
+
+VarAssign returns Statement:
+	{VarAssign} type=Type name=ID '=' value=Expression;
+
+Expression returns Expression:
+	ImpliesOperation;
+
+ImpliesOperation returns Expression:
+	BooleanOperation
+	=> (({ImpliesOperation.left=current} 'implies') right=BooleanOperation)*;
+
+BooleanOperation returns Expression:
+	CompareOperation
+	=> (({BooleanOrOperation.left=current} 'or' |
+	{BooleanAndOperation.left=current} 'and' |
+	{BooleanXorOperation.left=current} 'xor') right=CompareOperation)*;
+
+CompareOperation returns Expression:
+	EqualityOperation
+	=> (({CompareLEOperation.left=current} '<=' |
+	{CompareGEOperation.left=current} '>=' |
+	{CompareNEOperation.left=current} '!=' | //('!=' | '<>') |
+	{CompareLOperation.left=current} '<' |
+	{CompareGOperation.left=current} '>') right=EqualityOperation)*;
+
+EqualityOperation returns Expression:
+	MultOperation
+	=> (({EqualityOperation.left=current}) op='==' right=MultOperation)*;
+
+MultOperation returns Expression:
+	AddOperation
+	=> (({MultOperation.left=current} '*' |
+	{DivOperation.left=current} '/') right=AddOperation)*;
+
+AddOperation returns Expression:
+	InfixOperation
+	=> (({AddOperation.left=current} '+' |
+	{SubOperation.left=current} '-') right=InfixOperation)*;
+
+Symbol:
+	VarAssign | Field | Param;
+
+InfixOperation returns Expression:
+	{NotInfixOperation} 'not' expression=Expression |
+	{NegInfixOperation} '-' expression=Expression |
+	{OperationCallOperation} name=ID ('(' (parameters+=ParamCall (',' parameters+=ParamCall)*)? ')') |
+	AtomicLiteral ({ChainedCall.left=current} '.' right=Expression | {ChainedCallArrow.left=current} '->'
+	right=Expression)?;
+
+ParamCall:
+	(lambda=ID '|')? expression=Expression;
+
+AtomicLiteral returns Expression:
+	('(' Expression ')') |
+	{SelfRef} 'self' |
+	{SuperRef} 'super' |
+	{StringLiteral} STRING |
+	{IntLiteral} INT |
+	{RealLiteral} REAL |
+	{BooleanLiteral} BOOLEAN |
+	{NullLiteral} NULL |
+	{IntRange} '[' start=Expression '.' '.' stop=Expression ']' |
+	{SequenceDecl} 'Sequence' '{' (expressions+=Expression (',' expressions+=Expression)*)? '}' |
+	{OrderedSetDecl} 'OrderedSet' '{' (expressions+=Expression (',' expressions+=Expression)*)? '}' |
+	{VarRef} value=ID;
+
+Param:
+	type=Type name=ID;
+
+Type:
+	LiteralType |
+//	ClassType |
+	{OutOfScopeType} externalClass=ID |
+	{SequenceType} 'Sequence' '(' subType=Type ')' |
+	{OrderedSetType} 'OrderedSet' '(' subType=Type ')';
+
+	// TODO: Type pipe ?
+//ClassType:
+//	refType=[Class];
+
+LiteralType:
+	lit=('Boolean' | 'Byte' | 'Char' | 'Double' | 'Float' | 'Int' | 'Long' | 'Short' | 'String');
+
+Qualified:
+	ID ('.' ID)*;
+
+terminal REAL:
+	('0'..'9')+ '.' ('0'..'9')+;
+
+terminal BOOLEAN:
+	'true' | 'false';
+
+terminal NULL:
+	'null';
