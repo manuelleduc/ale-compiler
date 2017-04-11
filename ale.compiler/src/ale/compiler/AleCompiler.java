@@ -39,8 +39,10 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import com.google.inject.Injector;
 
 import ale.xtext.AleStandaloneSetup;
+import ale.xtext.ale.AleClass;
 import ale.xtext.ale.Field;
 import ale.xtext.ale.LiteralType;
+import ale.xtext.ale.OpenClass;
 import ale.xtext.ale.OrderedSetType;
 import ale.xtext.ale.OutOfScopeType;
 import ale.xtext.ale.Root;
@@ -67,11 +69,11 @@ public class AleCompiler {
 	private final java.net.URI dslURI;
 	private List<EPackage> syntaxes;
 	private List<EPackage> models;
-	private String filenamedsl;
+	private final String filenamedsl;
 
-	public AleCompiler(final java.net.URI uri, String filenamedsl) {
+	public AleCompiler(final java.net.URI uri, final String filenamedsl) {
 		this.dslURI = uri;
-		this.filenamedsl =  filenamedsl;
+		this.filenamedsl = filenamedsl;
 	}
 
 	private GenModel saveGenModel(final ResourceSetImpl resSet, final String languageName, final EPackage rootPackage,
@@ -151,44 +153,63 @@ public class AleCompiler {
 				.collect(Collectors.toList());
 
 		final EList<Behavior> behaviors = model.getBehaviours();
+		initModels(resSet, model);
+
+		final EPackage rootPackage = initRootPackage();
+		final List<Root> roots = behaviors.stream().map(b -> convertBehviorToRoot(resourceSet, b))
+				.collect(Collectors.toList());
+
+		final List<AleClass> allAleClasses = roots.stream().flatMap(r -> r.getClasses().stream())
+				.collect(Collectors.toList());
+
+		generateRequiredAlgebraInterfaces(project, resSet, resourceSet, behaviors, rootPackage, roots);
+
+		this.generateAlgebraInterface(rootPackage, this.syntaxes, project);
+
+		final List<EClass> listAllClasses = new GenerateAlgebra().getListAllClasses(rootPackage, this.syntaxes);
+		listAllClasses.forEach(clazz -> {
+			final ale.xtext.ale.AleClass openClass = lookupClass(resourceSet, behaviors, clazz.getName());
+			new GenerateOperationInterface().generate(clazz, project, openClass, rootPackage, this.syntaxes,
+					allAleClasses);
+		});
+
+		this.generateConcreteAlgebra(rootPackage, this.syntaxes, project, allAleClasses);
+
+		this.generateConcreteOperations(rootPackage, this.syntaxes, behaviors, project, resourceSet, allAleClasses);
+
+	}
+
+	private void initModels(final ResourceSetImpl resSet, final DSL model) {
 		this.models = model.getSyntaxes().stream().map(syntax -> {
 			if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI))
 				EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
 			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
 			return resSet.getPackageRegistry().getEPackage(syntax.getValue());
 		}).filter(x -> x != null).collect(Collectors.toList());
+	}
 
-		final String fileNameDsl = this.filenamedsl.substring(0, this.filenamedsl.length()-4);
-		final String projectName = "test";
-
+	private EPackage initRootPackage() {
+		final String fileNameDsl = this.filenamedsl.substring(0, this.filenamedsl.length() - 4);
 		final EPackage rootPackage = EcoreFactory.eINSTANCE.createEPackage();
 		rootPackage.setName(fileNameDsl.replaceAll("\\.", ""));
 		rootPackage.setNsPrefix(fileNameDsl);
 		rootPackage.setNsURI("http://" + fileNameDsl);
-		final List<Root> roots = behaviors.stream().map(b -> convertBehviorToRoot(resourceSet, b))
-				.collect(Collectors.toList());
+		return rootPackage;
+	}
+
+	private void generateRequiredAlgebraInterfaces(final IProject project, final ResourceSetImpl resSet,
+			final XtextResourceSet resourceSet, final EList<Behavior> behaviors, final EPackage rootPackage,
+			final List<Root> roots) throws IOException {
 		for (final Root root : roots) {
+			final String projectName = "test";
 			this.generateDynamicModel(projectName, resSet, root, rootPackage, resourceSet, behaviors);
 			final GenModel genModel = this.saveGenModel(resSet, root.getName(), rootPackage, projectName);
 			this.proceedToGeneration(genModel);
 
 			this.syntaxes.forEach(ePackage -> {
-				this.generateAlgebra(ePackage, null, project);
+				this.generateAlgebraInterface(ePackage, null, project);
 			});
 		}
-
-		this.generateAlgebra(rootPackage, this.syntaxes, project);
-
-		final List<EClass> listAllClasses = new GenerateAlgebra().getListAllClasses(rootPackage, this.syntaxes);
-		listAllClasses.forEach(clazz -> {
-			final ale.xtext.ale.AleClass openClass = lookupClass(resourceSet, behaviors, clazz.getName());
-			new GenerateOperation().generate(clazz, project, fileNameDsl, openClass, rootPackage, this.syntaxes);
-		});
-
-		this.generateConcreteAlgebra(rootPackage, this.syntaxes, project, fileNameDsl);
-
-		this.generateConcreteOperations(rootPackage, this.syntaxes, behaviors, project, fileNameDsl, resourceSet);
-
 	}
 
 	private ale.xtext.ale.AleClass lookupClass(final XtextResourceSet resourceSet, final EList<Behavior> behaviors,
@@ -196,7 +217,8 @@ public class AleCompiler {
 		final ale.xtext.ale.AleClass clazz = behaviors.stream().map(b -> convertBehviorToRoot(resourceSet, b))
 				.flatMap(b -> b.getClasses().stream()).filter(b -> {
 					final String name2 = b.getName();
-					return name2.equals(className);
+					return name2.equals(className) || className.endsWith("_Aspect")
+							&& name2.equals(className.substring(0, className.length() - "_Aspect".length()));
 				}).findFirst().orElse(null);
 		return clazz;
 	}
@@ -211,31 +233,38 @@ public class AleCompiler {
 		return (Root) resource2.getContents().get(0);
 	}
 
-	private void generateConcreteOperations(final EPackage rootPackage, final List<EPackage> dependencies, final EList<Behavior> behaviors,
-			final IProject project, final String filenameDsl, final XtextResourceSet resourceSet) {
+	private void generateConcreteOperations(final EPackage rootPackage, final List<EPackage> dependencies,
+			final EList<Behavior> behaviors, final IProject project, final XtextResourceSet resourceSet,
+			List<AleClass> allAleClasses) {
 		final Graph<EClass> res = new GenerateAlgebra().buildGraph(rootPackage, dependencies);
 		res.nodes.forEach(entry -> {
 			final ale.xtext.ale.AleClass openClass = lookupClass(resourceSet, behaviors, entry.elem.getName());
-			generateConceteOperation(entry, project, rootPackage, filenameDsl, openClass, dependencies);
+			generateConceteOperation(entry, project, rootPackage, openClass, dependencies, allAleClasses);
 		});
 
 	}
 
 	private void generateConceteOperation(final GraphNode<EClass> entry, final IProject project,
-			final EPackage ePackage, final String fileNameDsl, final ale.xtext.ale.AleClass openClass, List<EPackage> deppendencies) {
-		boolean overloaded = openClass != null && openClass.getFields().size()>0 && !((EPackage)entry.elem.eContainer()).getName().equals(((Root)openClass.eContainer() ).getName());
-		final String fileContent = new GenerateAlgebra().processConcreteOperation(entry, ePackage, deppendencies, fileNameDsl,
-				openClass, overloaded);
-		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra")
-				.append("impl").append("operation");
+			final EPackage ePackage, final ale.xtext.ale.AleClass openClass, final List<EPackage> deppendencies,
+			List<AleClass> allAleClasses) {
+		final boolean overloaded = openClass != null && openClass.getFields().size() > 0
+				&& !((EPackage) entry.elem.eContainer()).getName().equals(((Root) openClass.eContainer()).getName());
+		final String fileContent = new GenerateAlgebra().processConcreteOperation(entry, ePackage, deppendencies,
+				openClass, overloaded, allAleClasses);
+
+		final String packageName = entry.elem.getEPackage().getName();
+		final String aleName;
+		if (openClass != null) {
+			aleName = ((Root) openClass.eContainer()).getName();
+		} else {
+			aleName = "$default";
+		}
+
+		final IPath directoryAlgebra = project.getLocation().append("src").append(packageName).append(aleName)
+				.append("algebra").append("impl").append("operation");
 		directoryAlgebra.toFile().mkdirs();
 
-		final EClass rootType = entry.elem;
-		final String ePackageName = rootType.getEPackage().getName().substring(0, 1).toUpperCase()
-				+ rootType.getEPackage().getName().substring(1);
-		final String rootTypeName = rootType.getName().substring(0, 1).toUpperCase() + rootType.getName().substring(1);
-		// String typeName = entry.getValue()
-		final IPath fileJavaAlgebra = directoryAlgebra.append(ePackageName + rootTypeName + "Operation")
+		final IPath fileJavaAlgebra = directoryAlgebra.append(toFirstUpper(packageName) + toFirstUpper(aleName)+ entry.elem.getName() + "Operation")
 				.addFileExtension("java");
 
 		try {
@@ -247,8 +276,9 @@ public class AleCompiler {
 		}
 	}
 
-	private void generateConcreteAlgebra(final EPackage ePackage, final List<EPackage> dependencies, final IProject project, final String filenameDsl) {
-		final String fileContent = new GenerateAlgebra().processConcreteAlgebra(ePackage, dependencies, filenameDsl);
+	private void generateConcreteAlgebra(final EPackage ePackage, final List<EPackage> dependencies,
+			final IProject project, List<AleClass> allAleClasses) {
+		final String fileContent = new GenerateAlgebra().processConcreteAlgebra(ePackage, dependencies, allAleClasses);
 		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra")
 				.append("impl");
 		directoryAlgebra.toFile().mkdirs();
@@ -293,20 +323,24 @@ public class AleCompiler {
 				clazzList.put(extendedClass, attributes);
 			}
 		});
-		
-		Map<ale.xtext.ale.AleClass, EClass> mapClassEClass = new HashMap<>();
+
+		final Map<ale.xtext.ale.AleClass, EClass> mapClassEClass = new HashMap<>();
 
 		// in a first step we reference all classes
 		clazzList.entrySet().stream().forEach(entry -> {
 			final ale.xtext.ale.AleClass fromClazz = entry.getKey();
 			final EClass clazz = EcoreFactory.eINSTANCE.createEClass();
-			clazz.setName(fromClazz.getName());
+			if (fromClazz instanceof OpenClass) {
+				clazz.setName(fromClazz.getName() + "_Aspect");
+			} else {
+				clazz.setName(fromClazz.getName());
+			}
 			final EClass superClazz = this.getClassFromName(fromClazz.getName());
 
 			if (superClazz != null) {
 				clazz.getESuperTypes().add(superClazz);
 			}
-			
+
 			mapClassEClass.put(fromClazz, clazz);
 			rootPackage.getEClassifiers().add(clazz);
 		});
@@ -322,24 +356,24 @@ public class AleCompiler {
 				if (resolveType instanceof EDataType) {
 					final EAttribute createEAttribute = EcoreFactory.eINSTANCE.createEAttribute();
 					createEAttribute.setName(variableDecl.getName());
-					if(variableDecl.getType() instanceof SequenceType) {
-//						createEAttribute.setTransient(true);
-//						createEAttribute.setUpperBound(-1);
+					if (variableDecl.getType() instanceof SequenceType) {
+						// createEAttribute.setTransient(true);
+						// createEAttribute.setUpperBound(-1);
 						createEAttribute.setEGenericType(typedElem.getEGenericType());
 					} else {
-						createEAttribute.setEType(resolveType);						
+						createEAttribute.setEType(resolveType);
 					}
-//					if (typedElem.getEGenericType() != null) {
-//						createEAttribute.setEGenericType(typedElem.getEGenericType());
-//					}
+					// if (typedElem.getEGenericType() != null) {
+					// createEAttribute.setEGenericType(typedElem.getEGenericType());
+					// }
 					clazz.getEAttributes().add(createEAttribute);
 				} else {
 					final EReference ref = EcoreFactory.eINSTANCE.createEReference();
 					ref.setName(variableDecl.getName());
 					ref.setEType(resolveType);
-//					if (typedElem.getEGenericType() != null) {
-//						ref.setEGenericType(typedElem.getEGenericType());
-//					}
+					// if (typedElem.getEGenericType() != null) {
+					// ref.setEGenericType(typedElem.getEGenericType());
+					// }
 					// ref.setEGenericType(variableDecl.getType().getEGenericType());
 					// // attr.setE
 					//
@@ -380,27 +414,27 @@ public class AleCompiler {
 			case "boolean":
 				primitiveType = EcorePackage.eINSTANCE.getEBoolean();
 				break;
-//			case "byte":
-//				primitiveType = EcorePackage.eINSTANCE.getEByte();
-//				break;
-//			case "char":
-//				primitiveType = EcorePackage.eINSTANCE.getEChar();
-//				break;
-//			case "short":
-//				primitiveType = EcorePackage.eINSTANCE.getEShort();
-//				break;
+			// case "byte":
+			// primitiveType = EcorePackage.eINSTANCE.getEByte();
+			// break;
+			// case "char":
+			// primitiveType = EcorePackage.eINSTANCE.getEChar();
+			// break;
+			// case "short":
+			// primitiveType = EcorePackage.eINSTANCE.getEShort();
+			// break;
 			case "int":
 				primitiveType = EcorePackage.eINSTANCE.getEInt();
 				break;
-//			case "long":
-//				primitiveType = EcorePackage.eINSTANCE.getELong();
-//				break;
+			// case "long":
+			// primitiveType = EcorePackage.eINSTANCE.getELong();
+			// break;
 			case "real":
 				primitiveType = EcorePackage.eINSTANCE.getEFloat();
 				break;
-//			case "double":
-//				primitiveType = EcorePackage.eINSTANCE.getEDouble();
-//				break;
+			// case "double":
+			// primitiveType = EcorePackage.eINSTANCE.getEDouble();
+			// break;
 			case "void":
 				primitiveType = null;
 				break;
@@ -418,8 +452,8 @@ public class AleCompiler {
 		if (type instanceof SequenceType) {
 			final EAttribute ret = EcoreFactory.eINSTANCE.createEAttribute();
 			ret.setName("tmp");
-//			EDataType eeList = EcorePackage.eINSTANCE.getEEList();
-//			ret.setEType(eeList);
+			// EDataType eeList = EcorePackage.eINSTANCE.getEEList();
+			// ret.setEType(eeList);
 
 			final SequenceType seqType = (SequenceType) type;
 
@@ -429,12 +463,12 @@ public class AleCompiler {
 					.getEType();
 			etypeArgument.setEClassifier(eType);
 			collect.add(etypeArgument);
-			EDataType eeList = EcorePackage.eINSTANCE.getEEList();
+			final EDataType eeList = EcorePackage.eINSTANCE.getEEList();
 			ret.setEType(eeList);
 			ret.getEGenericType().setEClassifier(eeList);
 			ret.getEGenericType().getETypeArguments().addAll(collect);
-//			ret.setTransient(true);
-//			ret.setUpperBound(-1);
+			// ret.setTransient(true);
+			// ret.setUpperBound(-1);
 			return ret;
 		}
 		if (type instanceof OutOfScopeType) {
@@ -480,13 +514,13 @@ public class AleCompiler {
 
 	}
 
-	private void generateAlgebra(final EPackage ePackage, List<EPackage> otherPackages, final IProject project) {
-		final String fileContent = new GenerateAlgebra().processAlgebra(ePackage, otherPackages);
-		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra");
+	private void generateAlgebraInterface(final EPackage ePackage, final List<EPackage> otherPackages,
+			final IProject project) {
+		final String fileContent = new GenerateAlgebra().generateAlgebraInterface(ePackage, otherPackages);
+		final String name = ePackage.getName();
+		final IPath directoryAlgebra = project.getLocation().append("src").append(name).append("algebra");
 		directoryAlgebra.toFile().mkdirs();
-		final IPath fileJavaAlgebra = directoryAlgebra
-				.append(ePackage.getName().substring(0, 1).toUpperCase() + ePackage.getName().substring(1) + "Algebra")
-				.addFileExtension("java");
+		final IPath fileJavaAlgebra = directoryAlgebra.append(toFirstUpper(name) + "Algebra").addFileExtension("java");
 
 		try {
 			final FileWriter fileWriter = new FileWriter(fileJavaAlgebra.toFile());
@@ -495,6 +529,10 @@ public class AleCompiler {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String toFirstUpper(final String string) {
+		return string.substring(0, 1).toUpperCase() + string.substring(1);
 	}
 
 }

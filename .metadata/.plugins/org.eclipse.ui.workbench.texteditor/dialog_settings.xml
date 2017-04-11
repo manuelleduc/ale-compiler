@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="syntaxes" key="selection"/>
+		<item value="dslName" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="true" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="dslName"/>
+			<item value=".getV"/>
+			<item value=".value"/>
 			<item value="syntaxes"/>
 			<item value="models"/>
 			<item value="frag"/>
 			<item value="dele"/>
 			<item value=", List&lt;EPack"/>
-			<item value="(EPack"/>
-			<item value="def EC"/>
-			<item value="ePackage"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&apos;&apos;&apos;__TODO__&apos;&apos;&apos;"/>
