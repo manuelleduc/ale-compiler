@@ -59,8 +59,6 @@ import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.ETypedElement
 
-//import ale.xtext.ale.OADenot
-
 class GenerateAlgebra {
 
 	public def List<EClass> getListAllClasses(EPackage ePackage, List<EPackage> dependencies) {
@@ -100,7 +98,7 @@ class GenerateAlgebra {
 
 	def String processConcreteOperation(GraphNode<EClass> entry, EPackage epackage, List<EPackage> dependencies, AleClass behaviorClass, Boolean overloaded, List<AleClass> allAleClasses) {
 		val clazz = entry.elem
-		val graph = buildGraph(epackage, null)
+		val graph = buildGraph(epackage, dependencies)
 		
 		val packageName = entry.elem.EPackage.name
 		val aleName = if (behaviorClass != null) (behaviorClass.eContainer as Root).name else "$default"
@@ -147,17 +145,18 @@ class GenerateAlgebra {
 			}
 				
 			private final «clazz.javaFullPath» self;
-			private final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR» algebra;
+			«IF aleName != "$default"»private final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR» algebra;«ENDIF»
 			«IF behaviorClass != null && behaviorClass.superClass != null»
 			«FOR sc: behaviorClass.superClass.map[cl | cl.getEClass(epackage, dependencies)].filter[x | x != null]»
 «««			// delegate«sc.name»
-			private final «sc.EPackage.name.toFirstUpper»«sc.name.toFirstUpper»Operation(final «sc.javaFullPath» delegate«sc.name.toFirstUpper»
+			private final «sc.EPackage.name.toFirstUpper»«sc.name.toFirstUpper»Operation;
+«««			(final «sc.javaFullPath» delegate«sc.name.toFirstUpper»
 			«ENDFOR»
 			«ENDIF»
 			
-			public «className»(final «clazz.javaFullPath» self, final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR» algebra) {
+			public «className»(final «clazz.javaFullPath» self, «IF aleName == "$default"»Object«ELSE»final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR»«ENDIF» algebra) {
 				this.self = self;
-				this.algebra = algebra;
+				«IF aleName != "$default"»this.algebra = algebra;«ENDIF»
 			}
 			
 			

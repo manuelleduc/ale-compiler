@@ -149,22 +149,29 @@ public class AleCompiler {
 		final Resource resource = resourceSet.getResource(URI.createURI(this.dslURI.toString()), true);
 		final DSL model = (DSL) resource.getContents().get(0);
 
-		this.syntaxes = model.getSyntaxes().stream().map((final Syntax stx) -> load(stx, resSet))
-				.collect(Collectors.toList());
-
 		final EList<Behavior> behaviors = model.getBehaviours();
 		initModels(resSet, model);
 
 		final EPackage rootPackage = initRootPackage();
+
+		final List<EPackage> tmp = model.getSyntaxes().stream().map((final Syntax stx) -> load(stx, resSet))
+				.collect(Collectors.toList());
+
+		this.syntaxes = new ArrayList<>(new GenerateAlgebra().getListAllClasses(rootPackage, tmp).stream()
+				.map(e -> e.getEPackage()).collect(Collectors.toSet()));
+
 		final List<Root> roots = behaviors.stream().map(b -> convertBehviorToRoot(resourceSet, b))
 				.collect(Collectors.toList());
 
 		final List<AleClass> allAleClasses = roots.stream().flatMap(r -> r.getClasses().stream())
 				.collect(Collectors.toList());
 
-		generateRequiredAlgebraInterfaces(project, resSet, resourceSet, behaviors, rootPackage, roots);
+		generateRequiredAlgebraInterfaces(project, resSet, resourceSet, behaviors, rootPackage, roots, this.syntaxes);
 
 		this.generateAlgebraInterface(rootPackage, this.syntaxes, project);
+		for (EPackage ePackage : this.syntaxes) {
+			this.generateAlgebraInterface(ePackage, new ArrayList<>(), project);
+		}
 
 		final List<EClass> listAllClasses = new GenerateAlgebra().getListAllClasses(rootPackage, this.syntaxes);
 		listAllClasses.forEach(clazz -> {
@@ -199,12 +206,17 @@ public class AleCompiler {
 
 	private void generateRequiredAlgebraInterfaces(final IProject project, final ResourceSetImpl resSet,
 			final XtextResourceSet resourceSet, final EList<Behavior> behaviors, final EPackage rootPackage,
-			final List<Root> roots) throws IOException {
+			final List<Root> roots, final List<EPackage> dependencies) throws IOException {
 		for (final Root root : roots) {
 			final String projectName = "test";
-			this.generateDynamicModel(projectName, resSet, root, rootPackage, resourceSet, behaviors);
+			this.generateDynamicModel(projectName, resSet, root, rootPackage, resourceSet, behaviors, dependencies);
 			final GenModel genModel = this.saveGenModel(resSet, root.getName(), rootPackage, projectName);
 			this.proceedToGeneration(genModel);
+
+			for (final EPackage ePackage : dependencies) {
+				final GenModel genModel2 = this.saveGenModel(resSet, ePackage.getName(), ePackage, projectName);
+				this.proceedToGeneration(genModel2);
+			}
 
 			this.syntaxes.forEach(ePackage -> {
 				this.generateAlgebraInterface(ePackage, null, project);
@@ -235,7 +247,7 @@ public class AleCompiler {
 
 	private void generateConcreteOperations(final EPackage rootPackage, final List<EPackage> dependencies,
 			final EList<Behavior> behaviors, final IProject project, final XtextResourceSet resourceSet,
-			List<AleClass> allAleClasses) {
+			final List<AleClass> allAleClasses) {
 		final Graph<EClass> res = new GenerateAlgebra().buildGraph(rootPackage, dependencies);
 		res.nodes.forEach(entry -> {
 			final ale.xtext.ale.AleClass openClass = lookupClass(resourceSet, behaviors, entry.elem.getName());
@@ -246,7 +258,7 @@ public class AleCompiler {
 
 	private void generateConceteOperation(final GraphNode<EClass> entry, final IProject project,
 			final EPackage ePackage, final ale.xtext.ale.AleClass openClass, final List<EPackage> deppendencies,
-			List<AleClass> allAleClasses) {
+			final List<AleClass> allAleClasses) {
 		final boolean overloaded = openClass != null && openClass.getFields().size() > 0
 				&& !((EPackage) entry.elem.eContainer()).getName().equals(((Root) openClass.eContainer()).getName());
 		final String fileContent = new GenerateAlgebra().processConcreteOperation(entry, ePackage, deppendencies,
@@ -264,7 +276,8 @@ public class AleCompiler {
 				.append("algebra").append("impl").append("operation");
 		directoryAlgebra.toFile().mkdirs();
 
-		final IPath fileJavaAlgebra = directoryAlgebra.append(toFirstUpper(packageName) + toFirstUpper(aleName)+ entry.elem.getName() + "Operation")
+		final IPath fileJavaAlgebra = directoryAlgebra
+				.append(toFirstUpper(packageName) + toFirstUpper(aleName) + entry.elem.getName() + "Operation")
 				.addFileExtension("java");
 
 		try {
@@ -277,7 +290,7 @@ public class AleCompiler {
 	}
 
 	private void generateConcreteAlgebra(final EPackage ePackage, final List<EPackage> dependencies,
-			final IProject project, List<AleClass> allAleClasses) {
+			final IProject project, final List<AleClass> allAleClasses) {
 		final String fileContent = new GenerateAlgebra().processConcreteAlgebra(ePackage, dependencies, allAleClasses);
 		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra")
 				.append("impl");
@@ -306,13 +319,14 @@ public class AleCompiler {
 	 * @param behaviors
 	 * @param rootPackage
 	 * @param rootPackage
+	 * @param dependencies
 	 * @return
 	 * 
 	 * @throws IOException
 	 */
 	private void generateDynamicModel(final String projectName, final ResourceSet resSet, final Root modelBehavior,
-			final EPackage rootPackage, final XtextResourceSet resourceSet, final EList<Behavior> behaviors)
-			throws IOException {
+			final EPackage rootPackage, final XtextResourceSet resourceSet, final EList<Behavior> behaviors,
+			final List<EPackage> dependencies) throws IOException {
 		final String behaviourName = modelBehavior.getName();
 		final Map<ale.xtext.ale.AleClass, List<Field>> clazzList = new HashMap<>();
 
@@ -349,8 +363,8 @@ public class AleCompiler {
 		clazzList.entrySet().stream().forEach(entry -> {
 			final EClass clazz = mapClassEClass.get(entry.getKey());
 			entry.getValue().stream().forEach(variableDecl -> {
-				final ETypedElement typedElem = resolveType(variableDecl.getType(), resourceSet, behaviors,
-						rootPackage);
+				final ETypedElement typedElem = resolveType(variableDecl.getType(), resourceSet, behaviors, rootPackage,
+						dependencies);
 
 				final EClassifier resolveType = typedElem.getEType();
 				if (resolveType instanceof EDataType) {
@@ -401,7 +415,7 @@ public class AleCompiler {
 	}
 
 	private ETypedElement resolveType(final Type type, final XtextResourceSet resourceSet,
-			final EList<Behavior> behaviors, final EPackage ePackage) {
+			final EList<Behavior> behaviors, final EPackage ePackage, final List<EPackage> depepdencies) {
 		if (type == null)
 			return null;
 		if (type instanceof LiteralType) {
@@ -459,8 +473,8 @@ public class AleCompiler {
 
 			final List<EGenericType> collect = new ArrayList<>();
 			final EGenericType etypeArgument = EcoreFactory.eINSTANCE.createEGenericType();
-			final EClassifier eType = this.resolveType(seqType.getSubType(), resourceSet, behaviors, ePackage)
-					.getEType();
+			final EClassifier eType = this
+					.resolveType(seqType.getSubType(), resourceSet, behaviors, ePackage, depepdencies).getEType();
 			etypeArgument.setEClassifier(eType);
 			collect.add(etypeArgument);
 			final EDataType eeList = EcorePackage.eINSTANCE.getEEList();
@@ -482,7 +496,7 @@ public class AleCompiler {
 			//
 			// } else {
 			final GenerateAlgebra generateAlgebra = new GenerateAlgebra();
-			final List<EClass> allClasses = generateAlgebra.allClasses(ePackage);
+			final List<EClass> allClasses = generateAlgebra.getListAllClasses(ePackage, depepdencies);
 			final EClass tmp = allClasses.stream().filter(c -> c.getName().equals(externalClass)).findFirst()
 					.orElseGet(() -> this.syntaxes.stream().flatMap(s -> generateAlgebra.allClasses(s).stream())
 							.filter(c -> c.getName().equals(externalClass)).findFirst().orElse(null));
