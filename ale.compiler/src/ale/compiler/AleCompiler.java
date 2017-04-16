@@ -210,12 +210,20 @@ public class AleCompiler {
 			for (String superAC : openClass.getSuperClass()) {
 				String[] spl = superAC.split("\\.");
 
-				AleClass orElse = this.allAles.stream().filter(
-						allA -> allA.getName().equals(spl[1]) && ((Root) allA.eContainer()).getName().equals(spl[0]))
-						.findFirst().orElse(null);
+				AleClass orElse = this.allAles.stream().filter(allA -> {
+					boolean b;
+					if (spl.length > 1) {
+						b = allA.getName().equals(spl[1]) && ((Root) allA.eContainer()).getName().equals(spl[0]);
+					} else {
+						b = allA.getName().equals(spl[0]);
+					}
+					return b;
+				}).findFirst().orElse(null);
 				if (orElse != null) {
-					EClass newClazz = this.syntaxes.stream().flatMap(s -> generateAlgebra.allClasses(s).stream())
+					EClass newClazz = generateAlgebra.getListAllClasses(rootPackage, this.syntaxes).stream()
 							.filter(c -> c.getName().equals(orElse.getName())).findFirst().orElse(null);
+					// if(newClazz == null) newClazz =
+					// generateAlgebra.allClasses(rootPackage).
 					generateOperationInterface(project, rootPackage, allAleClasses, newClazz, orElse);
 				}
 			}
@@ -302,11 +310,17 @@ public class AleCompiler {
 			for (String superAC : openClass.getSuperClass()) {
 				String[] spl = superAC.split("\\.");
 
-				AleClass orElse = this.allAles.stream().filter(
-						allA -> allA.getName().equals(spl[1]) && ((Root) allA.eContainer()).getName().equals(spl[0]))
-						.findFirst().orElse(null);
+				AleClass orElse = this.allAles.stream().filter(allA -> {
+					boolean b;
+					if (spl.length > 1) {
+						b = allA.getName().equals(spl[1]) && ((Root) allA.eContainer()).getName().equals(spl[0]);
+					} else {
+						b = allA.getName().equals(spl[0]);
+					}
+					return b;
+				}).findFirst().orElse(null);
 				if (orElse != null) {
-					EClass newClazz = this.syntaxes.stream().flatMap(s -> generateAlgebra.allClasses(s).stream())
+					EClass newClazz = generateAlgebra.getListAllClasses(ePackage, this.syntaxes).stream()
 							.filter(c -> c.getName().equals(orElse.getName())).findFirst().orElse(null);
 					generateConcreteOperationRec(newClazz, project, ePackage, orElse, deppendencies, allAleClasses,
 							aleScope);
@@ -586,7 +600,8 @@ public class AleCompiler {
 			long count = clazzList.keySet().stream().map(x1 -> x1.getName()).filter(n -> (sc).equals(n)).count();
 			if (count > 0) {
 				final List<EClass> allClasses = new GenerateAlgebra().getListAllClasses(ePackage, dependencies);
-				EClass parent = allClasses.stream().filter(x -> x.getName().equals(sc + "_Aspect")).findFirst().get();
+				EClass parent = allClasses.stream()
+						.filter(x -> x.getName().equals(sc + "_Aspect") || x.getName().equals(sc)).findFirst().get();
 				final EAttribute ret = EcoreFactory.eINSTANCE.createEAttribute();
 				ret.setEType(parent);
 				return ret;
