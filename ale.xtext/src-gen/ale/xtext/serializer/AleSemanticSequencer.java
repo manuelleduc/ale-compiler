@@ -20,10 +20,10 @@ import ale.xtext.ale.CompareLEOperation;
 import ale.xtext.ale.CompareLOperation;
 import ale.xtext.ale.CompareNEOperation;
 import ale.xtext.ale.ConstructorOperation;
+import ale.xtext.ale.ContainmentField;
 import ale.xtext.ale.DefMethod;
 import ale.xtext.ale.DivOperation;
 import ale.xtext.ale.EqualityOperation;
-import ale.xtext.ale.Field;
 import ale.xtext.ale.ForLoop;
 import ale.xtext.ale.IfStatement;
 import ale.xtext.ale.ImpliesOperation;
@@ -48,8 +48,10 @@ import ale.xtext.ale.OutOfScopeType;
 import ale.xtext.ale.OverrideMethod;
 import ale.xtext.ale.Param;
 import ale.xtext.ale.ParamCall;
+import ale.xtext.ale.PrimitiveField;
 import ale.xtext.ale.RealLiteral;
 import ale.xtext.ale.RealTypeT;
+import ale.xtext.ale.RefField;
 import ale.xtext.ale.ReturnStatement;
 import ale.xtext.ale.Root;
 import ale.xtext.ale.SelfRef;
@@ -138,6 +140,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case AlePackage.CONSTRUCTOR_OPERATION:
 				sequence_InfixOperation(context, (ConstructorOperation) semanticObject); 
 				return; 
+			case AlePackage.CONTAINMENT_FIELD:
+				sequence_Field(context, (ContainmentField) semanticObject); 
+				return; 
 			case AlePackage.DEF_METHOD:
 				sequence_DefMethod(context, (DefMethod) semanticObject); 
 				return; 
@@ -146,9 +151,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				return; 
 			case AlePackage.EQUALITY_OPERATION:
 				sequence_EqualityOperation(context, (EqualityOperation) semanticObject); 
-				return; 
-			case AlePackage.FIELD:
-				sequence_Field(context, (Field) semanticObject); 
 				return; 
 			case AlePackage.FOR_LOOP:
 				sequence_ForLoop(context, (ForLoop) semanticObject); 
@@ -222,11 +224,17 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case AlePackage.PARAM_CALL:
 				sequence_ParamCall(context, (ParamCall) semanticObject); 
 				return; 
+			case AlePackage.PRIMITIVE_FIELD:
+				sequence_Field(context, (PrimitiveField) semanticObject); 
+				return; 
 			case AlePackage.REAL_LITERAL:
 				sequence_AtomicLiteral(context, (RealLiteral) semanticObject); 
 				return; 
 			case AlePackage.REAL_TYPE_T:
 				sequence_TypeSystem(context, (RealTypeT) semanticObject); 
+				return; 
+			case AlePackage.REF_FIELD:
+				sequence_Field(context, (RefField) semanticObject); 
 				return; 
 			case AlePackage.RETURN_STATEMENT:
 				sequence_ReturnStatement(context, (ReturnStatement) semanticObject); 
@@ -1414,13 +1422,13 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     Field returns Field
-	 *     Symbol returns Field
+	 *     Field returns ContainmentField
+	 *     Symbol returns ContainmentField
 	 *
 	 * Constraint:
 	 *     (type=Type name=ID)
 	 */
-	protected void sequence_Field(ISerializationContext context, Field semanticObject) {
+	protected void sequence_Field(ISerializationContext context, ContainmentField semanticObject) {
 		if (errorAcceptor != null) {
 			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.FIELD__TYPE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.FIELD__TYPE));
@@ -1428,8 +1436,52 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.FIELD__NAME));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getFieldAccess().getTypeTypeParserRuleCall_0_0(), semanticObject.getType());
-		feeder.accept(grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getFieldAccess().getTypeTypeParserRuleCall_2_2_0(), semanticObject.getType());
+		feeder.accept(grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_2_3_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Field returns PrimitiveField
+	 *     Symbol returns PrimitiveField
+	 *
+	 * Constraint:
+	 *     (type=Type name=ID)
+	 */
+	protected void sequence_Field(ISerializationContext context, PrimitiveField semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.FIELD__TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.FIELD__TYPE));
+			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.FIELD__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.FIELD__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getFieldAccess().getTypeTypeParserRuleCall_0_1_0(), semanticObject.getType());
+		feeder.accept(grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_0_2_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Field returns RefField
+	 *     Symbol returns RefField
+	 *
+	 * Constraint:
+	 *     (type=Type name=ID)
+	 */
+	protected void sequence_Field(ISerializationContext context, RefField semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.FIELD__TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.FIELD__TYPE));
+			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.FIELD__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.FIELD__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getFieldAccess().getTypeTypeParserRuleCall_1_2_0(), semanticObject.getType());
+		feeder.accept(grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_1_3_0(), semanticObject.getName());
 		feeder.finish();
 	}
 	
@@ -1839,7 +1891,7 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     NewClass returns NewClass
 	 *
 	 * Constraint:
-	 *     (name=ID (superClass+=[AleClass|Qualified] superClass+=[AleClass|Qualified]*)? fields+=Field* methods+=Method*)
+	 *     (name=ID (superClass+=Qualified superClass+=Qualified*)? fields+=Field* methods+=Method*)
 	 */
 	protected void sequence_NewClass(ISerializationContext context, NewClass semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1852,7 +1904,7 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     OpenClass returns OpenClass
 	 *
 	 * Constraint:
-	 *     (name=ID (superClass+=[AleClass|Qualified] superClass+=[AleClass|Qualified]*)? fields+=Field* methods+=Method*)
+	 *     (name=ID (superClass+=Qualified superClass+=Qualified*)? fields+=Field* methods+=Method*)
 	 */
 	protected void sequence_OpenClass(ISerializationContext context, OpenClass semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

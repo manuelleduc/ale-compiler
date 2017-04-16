@@ -17,19 +17,21 @@ Tag:
 	'@' ID;
 
 OpenClass returns AleClass:
-	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)? ('{'
+	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=Qualified (',' superClass+=Qualified)*)? ('{'
 	fields+=Field*
 	methods+=Method*
 	'}');
 
 NewClass returns AleClass:
-	{NewClass} 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)? ('{'
+	{NewClass} 'class' name=ID ('extends' superClass+=Qualified (',' superClass+=Qualified)*)? ('{'
 	fields+=Field*
 	methods+=Method*
 	'}');
 
 Field returns Field:
-	type=Type name=ID ';';
+	{PrimitiveField} type=Type name=ID ';' |
+	{RefField} 'ref' type=Type name=ID ';' |
+	{ContainmentField} 'cont' type=Type name=ID ';';
 
 Method:
 	DefMethod | OverrideMethod;
@@ -145,22 +147,13 @@ Param:
 
 Type:
 	LiteralType |
-//	ClassType |
 	{OutOfScopeType} externalClass=ID |
 	{SequenceType} 'Sequence' '(' subType=Type ')' |
 	{OrderedSetType} 'OrderedSet' '(' subType=Type ')';
 
-	// TODO: Type pipe ?
-//ClassType:
-//	refType=[Class];
 
 LiteralType:
 	lit=('Boolean' | 
-	
-//	'Byte' | 'Char' | 'Double' | 'Float' | 
-//	'Long' | 'Short' |
-	
-	
 	'Real' | 
 	'Int' | 
 	'String');

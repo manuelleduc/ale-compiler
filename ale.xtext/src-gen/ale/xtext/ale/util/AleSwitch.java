@@ -209,6 +209,33 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AlePackage.PRIMITIVE_FIELD:
+      {
+        PrimitiveField primitiveField = (PrimitiveField)theEObject;
+        T result = casePrimitiveField(primitiveField);
+        if (result == null) result = caseField(primitiveField);
+        if (result == null) result = caseSymbol(primitiveField);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.REF_FIELD:
+      {
+        RefField refField = (RefField)theEObject;
+        T result = caseRefField(refField);
+        if (result == null) result = caseField(refField);
+        if (result == null) result = caseSymbol(refField);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.CONTAINMENT_FIELD:
+      {
+        ContainmentField containmentField = (ContainmentField)theEObject;
+        T result = caseContainmentField(containmentField);
+        if (result == null) result = caseField(containmentField);
+        if (result == null) result = caseSymbol(containmentField);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AlePackage.RETURN_STATEMENT:
       {
         ReturnStatement returnStatement = (ReturnStatement)theEObject;
@@ -951,6 +978,54 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNewClass(NewClass object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Primitive Field</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Primitive Field</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePrimitiveField(PrimitiveField object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Ref Field</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Ref Field</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRefField(RefField object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Containment Field</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Containment Field</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseContainmentField(ContainmentField object)
   {
     return null;
   }

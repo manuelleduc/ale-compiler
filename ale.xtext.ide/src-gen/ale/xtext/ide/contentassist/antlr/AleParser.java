@@ -36,6 +36,7 @@ public class AleParser extends AbstractContentAssistParser {
 				private static final long serialVersionUID = 1L;
 				{
 					put(grammarAccess.getAleClassAccess().getAlternatives(), "rule__AleClass__Alternatives");
+					put(grammarAccess.getFieldAccess().getAlternatives(), "rule__Field__Alternatives");
 					put(grammarAccess.getMethodAccess().getAlternatives(), "rule__Method__Alternatives");
 					put(grammarAccess.getDefMethodAccess().getAlternatives_2(), "rule__DefMethod__Alternatives_2");
 					put(grammarAccess.getStatementAccess().getAlternatives(), "rule__Statement__Alternatives");
@@ -62,7 +63,9 @@ public class AleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getNewClassAccess().getGroup_3(), "rule__NewClass__Group_3__0");
 					put(grammarAccess.getNewClassAccess().getGroup_3_2(), "rule__NewClass__Group_3_2__0");
 					put(grammarAccess.getNewClassAccess().getGroup_4(), "rule__NewClass__Group_4__0");
-					put(grammarAccess.getFieldAccess().getGroup(), "rule__Field__Group__0");
+					put(grammarAccess.getFieldAccess().getGroup_0(), "rule__Field__Group_0__0");
+					put(grammarAccess.getFieldAccess().getGroup_1(), "rule__Field__Group_1__0");
+					put(grammarAccess.getFieldAccess().getGroup_2(), "rule__Field__Group_2__0");
 					put(grammarAccess.getDefMethodAccess().getGroup(), "rule__DefMethod__Group__0");
 					put(grammarAccess.getDefMethodAccess().getGroup_4(), "rule__DefMethod__Group_4__0");
 					put(grammarAccess.getDefMethodAccess().getGroup_4_1(), "rule__DefMethod__Group_4_1__0");
@@ -174,8 +177,12 @@ public class AleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getNewClassAccess().getSuperClassAssignment_3_2_1(), "rule__NewClass__SuperClassAssignment_3_2_1");
 					put(grammarAccess.getNewClassAccess().getFieldsAssignment_4_1(), "rule__NewClass__FieldsAssignment_4_1");
 					put(grammarAccess.getNewClassAccess().getMethodsAssignment_4_2(), "rule__NewClass__MethodsAssignment_4_2");
-					put(grammarAccess.getFieldAccess().getTypeAssignment_0(), "rule__Field__TypeAssignment_0");
-					put(grammarAccess.getFieldAccess().getNameAssignment_1(), "rule__Field__NameAssignment_1");
+					put(grammarAccess.getFieldAccess().getTypeAssignment_0_1(), "rule__Field__TypeAssignment_0_1");
+					put(grammarAccess.getFieldAccess().getNameAssignment_0_2(), "rule__Field__NameAssignment_0_2");
+					put(grammarAccess.getFieldAccess().getTypeAssignment_1_2(), "rule__Field__TypeAssignment_1_2");
+					put(grammarAccess.getFieldAccess().getNameAssignment_1_3(), "rule__Field__NameAssignment_1_3");
+					put(grammarAccess.getFieldAccess().getTypeAssignment_2_2(), "rule__Field__TypeAssignment_2_2");
+					put(grammarAccess.getFieldAccess().getNameAssignment_2_3(), "rule__Field__NameAssignment_2_3");
 					put(grammarAccess.getDefMethodAccess().getTagsAssignment_0(), "rule__DefMethod__TagsAssignment_0");
 					put(grammarAccess.getDefMethodAccess().getTypeAssignment_2_0(), "rule__DefMethod__TypeAssignment_2_0");
 					put(grammarAccess.getDefMethodAccess().getNameAssignment_3(), "rule__DefMethod__NameAssignment_3");

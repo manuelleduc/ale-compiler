@@ -161,13 +161,11 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
 		private final Keyword cExtendsKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		private final Assignment cSuperClassAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final CrossReference cSuperClassAleClassCrossReference_4_1_0 = (CrossReference)cSuperClassAssignment_4_1.eContents().get(0);
-		private final RuleCall cSuperClassAleClassQualifiedParserRuleCall_4_1_0_1 = (RuleCall)cSuperClassAleClassCrossReference_4_1_0.eContents().get(1);
+		private final RuleCall cSuperClassQualifiedParserRuleCall_4_1_0 = (RuleCall)cSuperClassAssignment_4_1.eContents().get(0);
 		private final Group cGroup_4_2 = (Group)cGroup_4.eContents().get(2);
 		private final Keyword cCommaKeyword_4_2_0 = (Keyword)cGroup_4_2.eContents().get(0);
 		private final Assignment cSuperClassAssignment_4_2_1 = (Assignment)cGroup_4_2.eContents().get(1);
-		private final CrossReference cSuperClassAleClassCrossReference_4_2_1_0 = (CrossReference)cSuperClassAssignment_4_2_1.eContents().get(0);
-		private final RuleCall cSuperClassAleClassQualifiedParserRuleCall_4_2_1_0_1 = (RuleCall)cSuperClassAleClassCrossReference_4_2_1_0.eContents().get(1);
+		private final RuleCall cSuperClassQualifiedParserRuleCall_4_2_1_0 = (RuleCall)cSuperClassAssignment_4_2_1.eContents().get(0);
 		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
 		private final Keyword cLeftCurlyBracketKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
 		private final Assignment cFieldsAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
@@ -177,15 +175,14 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_5_3 = (Keyword)cGroup_5.eContents().get(3);
 		
 		//OpenClass AleClass:
-		//	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (','
-		//	superClass+=[AleClass|Qualified])*)? ('{'
+		//	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=Qualified (',' superClass+=Qualified)*)? ('{'
 		//	fields+=Field*
 		//	methods+=Method*
 		//	'}')
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{OpenClass} 'open' 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)?
-		//('{' fields+=Field* methods+=Method* '}')
+		//{OpenClass} 'open' 'class' name=ID ('extends' superClass+=Qualified (',' superClass+=Qualified)*)? ('{' fields+=Field*
+		//methods+=Method* '}')
 		public Group getGroup() { return cGroup; }
 		
 		//{OpenClass}
@@ -203,35 +200,29 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_3_0() { return cNameIDTerminalRuleCall_3_0; }
 		
-		//('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)?
+		//('extends' superClass+=Qualified (',' superClass+=Qualified)*)?
 		public Group getGroup_4() { return cGroup_4; }
 		
 		//'extends'
 		public Keyword getExtendsKeyword_4_0() { return cExtendsKeyword_4_0; }
 		
-		//superClass+=[AleClass|Qualified]
+		//superClass+=Qualified
 		public Assignment getSuperClassAssignment_4_1() { return cSuperClassAssignment_4_1; }
 		
-		//[AleClass|Qualified]
-		public CrossReference getSuperClassAleClassCrossReference_4_1_0() { return cSuperClassAleClassCrossReference_4_1_0; }
-		
 		//Qualified
-		public RuleCall getSuperClassAleClassQualifiedParserRuleCall_4_1_0_1() { return cSuperClassAleClassQualifiedParserRuleCall_4_1_0_1; }
+		public RuleCall getSuperClassQualifiedParserRuleCall_4_1_0() { return cSuperClassQualifiedParserRuleCall_4_1_0; }
 		
-		//(',' superClass+=[AleClass|Qualified])*
+		//(',' superClass+=Qualified)*
 		public Group getGroup_4_2() { return cGroup_4_2; }
 		
 		//','
 		public Keyword getCommaKeyword_4_2_0() { return cCommaKeyword_4_2_0; }
 		
-		//superClass+=[AleClass|Qualified]
+		//superClass+=Qualified
 		public Assignment getSuperClassAssignment_4_2_1() { return cSuperClassAssignment_4_2_1; }
 		
-		//[AleClass|Qualified]
-		public CrossReference getSuperClassAleClassCrossReference_4_2_1_0() { return cSuperClassAleClassCrossReference_4_2_1_0; }
-		
 		//Qualified
-		public RuleCall getSuperClassAleClassQualifiedParserRuleCall_4_2_1_0_1() { return cSuperClassAleClassQualifiedParserRuleCall_4_2_1_0_1; }
+		public RuleCall getSuperClassQualifiedParserRuleCall_4_2_1_0() { return cSuperClassQualifiedParserRuleCall_4_2_1_0; }
 		
 		//('{' fields+=Field* methods+=Method* '}')
 		public Group getGroup_5() { return cGroup_5; }
@@ -264,13 +255,11 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
 		private final Keyword cExtendsKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
 		private final Assignment cSuperClassAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
-		private final CrossReference cSuperClassAleClassCrossReference_3_1_0 = (CrossReference)cSuperClassAssignment_3_1.eContents().get(0);
-		private final RuleCall cSuperClassAleClassQualifiedParserRuleCall_3_1_0_1 = (RuleCall)cSuperClassAleClassCrossReference_3_1_0.eContents().get(1);
+		private final RuleCall cSuperClassQualifiedParserRuleCall_3_1_0 = (RuleCall)cSuperClassAssignment_3_1.eContents().get(0);
 		private final Group cGroup_3_2 = (Group)cGroup_3.eContents().get(2);
 		private final Keyword cCommaKeyword_3_2_0 = (Keyword)cGroup_3_2.eContents().get(0);
 		private final Assignment cSuperClassAssignment_3_2_1 = (Assignment)cGroup_3_2.eContents().get(1);
-		private final CrossReference cSuperClassAleClassCrossReference_3_2_1_0 = (CrossReference)cSuperClassAssignment_3_2_1.eContents().get(0);
-		private final RuleCall cSuperClassAleClassQualifiedParserRuleCall_3_2_1_0_1 = (RuleCall)cSuperClassAleClassCrossReference_3_2_1_0.eContents().get(1);
+		private final RuleCall cSuperClassQualifiedParserRuleCall_3_2_1_0 = (RuleCall)cSuperClassAssignment_3_2_1.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
 		private final Keyword cLeftCurlyBracketKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		private final Assignment cFieldsAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
@@ -280,14 +269,14 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_4_3 = (Keyword)cGroup_4.eContents().get(3);
 		
 		//NewClass AleClass:
-		//	{NewClass} 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)? ('{'
+		//	{NewClass} 'class' name=ID ('extends' superClass+=Qualified (',' superClass+=Qualified)*)? ('{'
 		//	fields+=Field*
 		//	methods+=Method*
 		//	'}')
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{NewClass} 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)? ('{'
-		//fields+=Field* methods+=Method* '}')
+		//{NewClass} 'class' name=ID ('extends' superClass+=Qualified (',' superClass+=Qualified)*)? ('{' fields+=Field*
+		//methods+=Method* '}')
 		public Group getGroup() { return cGroup; }
 		
 		//{NewClass}
@@ -302,35 +291,29 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_2_0() { return cNameIDTerminalRuleCall_2_0; }
 		
-		//('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)?
+		//('extends' superClass+=Qualified (',' superClass+=Qualified)*)?
 		public Group getGroup_3() { return cGroup_3; }
 		
 		//'extends'
 		public Keyword getExtendsKeyword_3_0() { return cExtendsKeyword_3_0; }
 		
-		//superClass+=[AleClass|Qualified]
+		//superClass+=Qualified
 		public Assignment getSuperClassAssignment_3_1() { return cSuperClassAssignment_3_1; }
 		
-		//[AleClass|Qualified]
-		public CrossReference getSuperClassAleClassCrossReference_3_1_0() { return cSuperClassAleClassCrossReference_3_1_0; }
-		
 		//Qualified
-		public RuleCall getSuperClassAleClassQualifiedParserRuleCall_3_1_0_1() { return cSuperClassAleClassQualifiedParserRuleCall_3_1_0_1; }
+		public RuleCall getSuperClassQualifiedParserRuleCall_3_1_0() { return cSuperClassQualifiedParserRuleCall_3_1_0; }
 		
-		//(',' superClass+=[AleClass|Qualified])*
+		//(',' superClass+=Qualified)*
 		public Group getGroup_3_2() { return cGroup_3_2; }
 		
 		//','
 		public Keyword getCommaKeyword_3_2_0() { return cCommaKeyword_3_2_0; }
 		
-		//superClass+=[AleClass|Qualified]
+		//superClass+=Qualified
 		public Assignment getSuperClassAssignment_3_2_1() { return cSuperClassAssignment_3_2_1; }
 		
-		//[AleClass|Qualified]
-		public CrossReference getSuperClassAleClassCrossReference_3_2_1_0() { return cSuperClassAleClassCrossReference_3_2_1_0; }
-		
 		//Qualified
-		public RuleCall getSuperClassAleClassQualifiedParserRuleCall_3_2_1_0_1() { return cSuperClassAleClassQualifiedParserRuleCall_3_2_1_0_1; }
+		public RuleCall getSuperClassQualifiedParserRuleCall_3_2_1_0() { return cSuperClassQualifiedParserRuleCall_3_2_1_0; }
 		
 		//('{' fields+=Field* methods+=Method* '}')
 		public Group getGroup_4() { return cGroup_4; }
@@ -355,34 +338,108 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class FieldElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ale.xtext.Ale.Field");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cTypeAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cTypeTypeParserRuleCall_0_0 = (RuleCall)cTypeAssignment_0.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cSemicolonKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Action cPrimitiveFieldAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Assignment cTypeAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final RuleCall cTypeTypeParserRuleCall_0_1_0 = (RuleCall)cTypeAssignment_0_1.eContents().get(0);
+		private final Assignment cNameAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
+		private final RuleCall cNameIDTerminalRuleCall_0_2_0 = (RuleCall)cNameAssignment_0_2.eContents().get(0);
+		private final Keyword cSemicolonKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cRefFieldAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cRefKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cTypeAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cTypeTypeParserRuleCall_1_2_0 = (RuleCall)cTypeAssignment_1_2.eContents().get(0);
+		private final Assignment cNameAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
+		private final RuleCall cNameIDTerminalRuleCall_1_3_0 = (RuleCall)cNameAssignment_1_3.eContents().get(0);
+		private final Keyword cSemicolonKeyword_1_4 = (Keyword)cGroup_1.eContents().get(4);
+		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
+		private final Action cContainmentFieldAction_2_0 = (Action)cGroup_2.eContents().get(0);
+		private final Keyword cContKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
+		private final Assignment cTypeAssignment_2_2 = (Assignment)cGroup_2.eContents().get(2);
+		private final RuleCall cTypeTypeParserRuleCall_2_2_0 = (RuleCall)cTypeAssignment_2_2.eContents().get(0);
+		private final Assignment cNameAssignment_2_3 = (Assignment)cGroup_2.eContents().get(3);
+		private final RuleCall cNameIDTerminalRuleCall_2_3_0 = (RuleCall)cNameAssignment_2_3.eContents().get(0);
+		private final Keyword cSemicolonKeyword_2_4 = (Keyword)cGroup_2.eContents().get(4);
 		
 		//Field:
-		//	type=Type name=ID ';';
+		//	{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ';' | {ContainmentField} 'cont' type=Type
+		//	name=ID ';';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//type=Type name=ID ';'
-		public Group getGroup() { return cGroup; }
+		//{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ';' | {ContainmentField} 'cont' type=Type
+		//name=ID ';'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//{PrimitiveField} type=Type name=ID ';'
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//{PrimitiveField}
+		public Action getPrimitiveFieldAction_0_0() { return cPrimitiveFieldAction_0_0; }
 		
 		//type=Type
-		public Assignment getTypeAssignment_0() { return cTypeAssignment_0; }
+		public Assignment getTypeAssignment_0_1() { return cTypeAssignment_0_1; }
 		
 		//Type
-		public RuleCall getTypeTypeParserRuleCall_0_0() { return cTypeTypeParserRuleCall_0_0; }
+		public RuleCall getTypeTypeParserRuleCall_0_1_0() { return cTypeTypeParserRuleCall_0_1_0; }
 		
 		//name=ID
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		public Assignment getNameAssignment_0_2() { return cNameAssignment_0_2; }
 		
 		//ID
-		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
+		public RuleCall getNameIDTerminalRuleCall_0_2_0() { return cNameIDTerminalRuleCall_0_2_0; }
 		
 		//';'
-		public Keyword getSemicolonKeyword_2() { return cSemicolonKeyword_2; }
+		public Keyword getSemicolonKeyword_0_3() { return cSemicolonKeyword_0_3; }
+		
+		//{RefField} 'ref' type=Type name=ID ';'
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{RefField}
+		public Action getRefFieldAction_1_0() { return cRefFieldAction_1_0; }
+		
+		//'ref'
+		public Keyword getRefKeyword_1_1() { return cRefKeyword_1_1; }
+		
+		//type=Type
+		public Assignment getTypeAssignment_1_2() { return cTypeAssignment_1_2; }
+		
+		//Type
+		public RuleCall getTypeTypeParserRuleCall_1_2_0() { return cTypeTypeParserRuleCall_1_2_0; }
+		
+		//name=ID
+		public Assignment getNameAssignment_1_3() { return cNameAssignment_1_3; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_1_3_0() { return cNameIDTerminalRuleCall_1_3_0; }
+		
+		//';'
+		public Keyword getSemicolonKeyword_1_4() { return cSemicolonKeyword_1_4; }
+		
+		//{ContainmentField} 'cont' type=Type name=ID ';'
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//{ContainmentField}
+		public Action getContainmentFieldAction_2_0() { return cContainmentFieldAction_2_0; }
+		
+		//'cont'
+		public Keyword getContKeyword_2_1() { return cContKeyword_2_1; }
+		
+		//type=Type
+		public Assignment getTypeAssignment_2_2() { return cTypeAssignment_2_2; }
+		
+		//Type
+		public RuleCall getTypeTypeParserRuleCall_2_2_0() { return cTypeTypeParserRuleCall_2_2_0; }
+		
+		//name=ID
+		public Assignment getNameAssignment_2_3() { return cNameAssignment_2_3; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_2_3_0() { return cNameIDTerminalRuleCall_2_3_0; }
+		
+		//';'
+		public Keyword getSemicolonKeyword_2_4() { return cSemicolonKeyword_2_4; }
 	}
 	public class MethodElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ale.xtext.Ale.Method");
@@ -2427,8 +2484,7 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//OpenClass AleClass:
-	//	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (','
-	//	superClass+=[AleClass|Qualified])*)? ('{'
+	//	{OpenClass} 'open' 'class' name=ID ('extends' superClass+=Qualified (',' superClass+=Qualified)*)? ('{'
 	//	fields+=Field*
 	//	methods+=Method*
 	//	'}')
@@ -2441,7 +2497,7 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//NewClass AleClass:
-	//	{NewClass} 'class' name=ID ('extends' superClass+=[AleClass|Qualified] (',' superClass+=[AleClass|Qualified])*)? ('{'
+	//	{NewClass} 'class' name=ID ('extends' superClass+=Qualified (',' superClass+=Qualified)*)? ('{'
 	//	fields+=Field*
 	//	methods+=Method*
 	//	'}')
@@ -2454,7 +2510,8 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Field:
-	//	type=Type name=ID ';';
+	//	{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ';' | {ContainmentField} 'cont' type=Type
+	//	name=ID ';';
 	public FieldElements getFieldAccess() {
 		return pField;
 	}

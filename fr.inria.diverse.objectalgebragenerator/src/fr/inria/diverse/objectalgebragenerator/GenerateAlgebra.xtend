@@ -95,12 +95,23 @@ class GenerateAlgebra {
 			val aleName = if (aleClazz != null) (aleClazz.eContainer as Root).name else "$default"
 		'''«ecoreName».«aleName».algebra.operation.«ecoreName.toFirstUpper»«aleName.toFirstUpper»«clazz.name.toFirstUpper»Operation'''
 		}
+		
+		
+	private def AleClass resolveCrossRef(String aleClazz, List<AleClass> aleScope) {
+		val elems = aleClazz.split("\\.")
+		if(elems.size > 1) {
+		aleScope.filter[aleS | aleS.name == elems.get(1) && (aleS.eContainer as Root).name == elems.get(0)].head
+		} else if(elems.size > 0) {
+		aleScope.filter[aleS | aleS.name == elems.get(0)].head	
+		} else {
+			null
+		}
+	}
 
-	def String processConcreteOperation(GraphNode<EClass> entry, EPackage epackage, List<EPackage> dependencies, AleClass behaviorClass, Boolean overloaded, List<AleClass> allAleClasses) {
-		val clazz = entry.elem
+	def String processConcreteOperation(EClass clazz, EPackage epackage, List<EPackage> dependencies, AleClass behaviorClass, Boolean overloaded, List<AleClass> allAleClasses, List<AleClass> aleScope) {
 		val graph = buildGraph(epackage, dependencies)
 		
-		val packageName = entry.elem.EPackage.name
+		val packageName = clazz.EPackage.name
 		val aleName = if (behaviorClass != null) (behaviorClass.eContainer as Root).name else "$default"
 		
 		val className= '''«packageName.toFirstUpper»«aleName.toFirstUpper»«clazz.name.toFirstUpper»Operation'''
@@ -146,10 +157,10 @@ class GenerateAlgebra {
 				
 			private final «clazz.javaFullPath» self;
 			«IF aleName != "$default"»private final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR» algebra;«ENDIF»
-			«IF behaviorClass != null && behaviorClass.superClass != null»
-			«FOR sc: behaviorClass.superClass.map[cl | cl.getEClass(epackage, dependencies)].filter[x | x != null]»
+			«IF behaviorClass != null && !behaviorClass.superClass.empty»
+			«FOR sc: behaviorClass.superClass.map[it.resolveCrossRef(aleScope)].map[cl | cl.getEClass(epackage, dependencies)].filter[x | x != null]»
 «««			// delegate«sc.name»
-			private final «sc.EPackage.name.toFirstUpper»«sc.name.toFirstUpper»Operation;
+			private final «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation delegate«sc.name.toFirstUpper»;
 «««			(final «sc.javaFullPath» delegate«sc.name.toFirstUpper»
 			«ENDFOR»
 			«ENDIF»
@@ -157,6 +168,11 @@ class GenerateAlgebra {
 			public «className»(final «clazz.javaFullPath» self, «IF aleName == "$default"»Object«ELSE»final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR»«ENDIF» algebra) {
 				this.self = self;
 				«IF aleName != "$default"»this.algebra = algebra;«ENDIF»
+			«IF behaviorClass != null && !behaviorClass.superClass.empty»	
+				«FOR sc: behaviorClass.superClass.map[it.resolveCrossRef(aleScope)].map[cl | cl.getEClass(epackage, dependencies)].filter[x | x != null]»
+				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation(self, this);
+				«ENDFOR»
+				«ENDIF»
 			}
 			
 			

@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="? ex" key="selection"/>
+		<item value="allDirectPackages" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="true" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="? ex"/>
-			<item value=", List&lt;EPackage&gt;"/>
-			<item value="&quot;$de"/>
-			<item value="operationInterfacePath("/>
-			<item value="em.operationInterfacePath("/>
-			<item value="operationInterfacePath"/>
-			<item value="behaviorClass"/>
-			<item value="&quot;$default&quot;"/>
+			<item value="allDirectPackages"/>
+			<item value="allMethods"/>
+			<item value="entry"/>
+			<item value="generateAlgebra"/>
+			<item value="this.syntaxes.stream()"/>
+			<item value="this.syntaxes.stream().flatMap"/>
+			<item value="this.syntaxes"/>
+			<item value="this.allAles"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&apos;&apos;&apos;__TODO__&apos;&apos;&apos;"/>

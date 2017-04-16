@@ -186,6 +186,33 @@ public interface AleFactory extends EFactory
   NewClass createNewClass();
 
   /**
+   * Returns a new object of class '<em>Primitive Field</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Primitive Field</em>'.
+   * @generated
+   */
+  PrimitiveField createPrimitiveField();
+
+  /**
+   * Returns a new object of class '<em>Ref Field</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Ref Field</em>'.
+   * @generated
+   */
+  RefField createRefField();
+
+  /**
+   * Returns a new object of class '<em>Containment Field</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Containment Field</em>'.
+   * @generated
+   */
+  ContainmentField createContainmentField();
+
+  /**
    * Returns a new object of class '<em>Return Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

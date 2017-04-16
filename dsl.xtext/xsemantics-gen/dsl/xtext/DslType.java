@@ -64,7 +64,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -244,7 +243,7 @@ public class DslType extends XsemanticsRuntimeSystem {
       /* fail error "Cyclic dependency" source clazz feature AlePackage::eINSTANCE.aleClass_SuperClass */
       String error = "Cyclic dependency";
       EObject source = clazz;
-      EReference _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
+      EAttribute _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
       EStructuralFeature feature = _aleClass_SuperClass;
       throwForExplicitFail(error, new ErrorInformation(source, feature));
     }
@@ -395,7 +394,7 @@ public class DslType extends XsemanticsRuntimeSystem {
       /* fail error "Cyclic dependency" source clazz feature AlePackage::eINSTANCE.aleClass_SuperClass */
       String error = "Cyclic dependency";
       EObject source = clazz;
-      EReference _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
+      EAttribute _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
       EStructuralFeature feature = _aleClass_SuperClass;
       throwForExplicitFail(error, new ErrorInformation(source, feature));
     }
@@ -635,23 +634,14 @@ public class DslType extends XsemanticsRuntimeSystem {
   }
   
   protected Boolean applyAuxFunSuperClasses(final RuleApplicationTrace _trace_, final AleClass openClass, final List<AleClass> existing) throws RuleFailedException {
-    EList<AleClass> _superClass = openClass.getSuperClass();
+    EList<String> _superClass = openClass.getSuperClass();
     boolean _notEquals = (!Objects.equal(_superClass, null));
     if (_notEquals) {
-      EList<AleClass> _superClass_1 = openClass.getSuperClass();
-      for (final AleClass c : _superClass_1) {
+      EList<String> _superClass_1 = openClass.getSuperClass();
+      for (final String c : _superClass_1) {
         boolean _contains = existing.contains(c);
         boolean _not = (!_contains);
         if (_not) {
-          boolean _add = existing.add(c);
-          /* existing.add(c) */
-          if (!_add) {
-            sneakyThrowRuleFailedException("existing.add(c)");
-          }
-          /* superClasses(c, existing) */
-          if (!this.superClassesInternal(_trace_, c, existing)) {
-            sneakyThrowRuleFailedException("superClasses(c, existing)");
-          }
         }
       }
     }

@@ -17,7 +17,7 @@
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//AleClass">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//AleClass/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ale.ecore#//AleClass/superClass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//AleClass/superClass"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//AleClass/fields"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//AleClass/methods"/>
     </genClasses>
@@ -55,6 +55,9 @@
     <genClasses ecoreClass="Ale.ecore#//TypeSystem"/>
     <genClasses ecoreClass="Ale.ecore#//OpenClass"/>
     <genClasses ecoreClass="Ale.ecore#//NewClass"/>
+    <genClasses ecoreClass="Ale.ecore#//PrimitiveField"/>
+    <genClasses ecoreClass="Ale.ecore#//RefField"/>
+    <genClasses ecoreClass="Ale.ecore#//ContainmentField"/>
     <genClasses ecoreClass="Ale.ecore#//ReturnStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ReturnStatement/returned"/>
     </genClasses>

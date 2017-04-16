@@ -166,6 +166,21 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createNewClassAdapter();
       }
       @Override
+      public Adapter casePrimitiveField(PrimitiveField object)
+      {
+        return createPrimitiveFieldAdapter();
+      }
+      @Override
+      public Adapter caseRefField(RefField object)
+      {
+        return createRefFieldAdapter();
+      }
+      @Override
+      public Adapter caseContainmentField(ContainmentField object)
+      {
+        return createContainmentFieldAdapter();
+      }
+      @Override
       public Adapter caseReturnStatement(ReturnStatement object)
       {
         return createReturnStatementAdapter();
@@ -693,6 +708,51 @@ public class AleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNewClassAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.PrimitiveField <em>Primitive Field</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.PrimitiveField
+   * @generated
+   */
+  public Adapter createPrimitiveFieldAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.RefField <em>Ref Field</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.RefField
+   * @generated
+   */
+  public Adapter createRefFieldAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.ContainmentField <em>Containment Field</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.ContainmentField
+   * @generated
+   */
+  public Adapter createContainmentFieldAdapter()
   {
     return null;
   }

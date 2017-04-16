@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <typeInfoHistroy>
-<typeInfo handle="=ale.compiler/src&lt;ale.compiler{AleCompiler.java[AleCompiler" modifiers="1" timestamp="1491897367000"/>
 <typeInfo handle="=ale.xtext/\/opt\/java\/jdk1.8.0_51\/jre\/lib\/rt.jar&lt;java.lang(Void.class[Void" modifiers="49" timestamp="1433817478000"/>
 <typeInfo handle="=ale.compiler/\/home\/mleduc\/ide\/gemoc_studio_2017_03_27\/plugins\/org.eclipse.emf.common_2.12.0.v20160420-0247.jar&lt;org.eclipse.emf.common.util(EList.class[EList" modifiers="1537" timestamp="1488218438000"/>
 <typeInfo handle="=ale.compiler/\/home\/mleduc\/ide\/gemoc_studio_2017_03_27\/plugins\/org.eclipse.emf.common_2.12.0.v20160420-0247.jar&lt;org.eclipse.emf.common.util(BasicEList.class[BasicEList" modifiers="33" timestamp="1488218438000"/>
 <typeInfo handle="=ale.compiler/\/opt\/java\/jdk1.8.0_51\/jre\/lib\/rt.jar&lt;java.util.function(BiConsumer.class[BiConsumer" modifiers="1537" timestamp="1433817478000"/>
 <typeInfo handle="=ale.compiler/\/opt\/java\/jdk1.8.0_51\/jre\/lib\/rt.jar&lt;java.util.function(BinaryOperator.class[BinaryOperator" modifiers="1537" timestamp="1433817478000"/>
-<typeInfo handle="=ale.xtext/src-gen&lt;ale.xtext.ale{Param.java[Param" modifiers="513" timestamp="1491585231000"/>
+<typeInfo handle="=ale.xtext/src-gen&lt;ale.xtext.ale{Param.java[Param" modifiers="513" timestamp="1492332400000"/>
 <typeInfo handle="=ale.compiler/\/home\/mleduc\/ide\/gemoc_studio_2017_03_27\/plugins\/org.eclipse.emf.codegen.ecore_2.12.0.v20160526-0356.jar&lt;org.eclipse.emf.codegen.ecore.genmodel.impl(GenTypedElementImpl.class[GenTypedElementImpl" modifiers="1057" timestamp="1488218438000"/>
-<typeInfo handle="=fr.inria.diverse.objectalgebragenerator/xtend-gen&lt;fr.inria.diverse.objectalgebragenerator{GenerateAlgebra.java[GenerateAlgebra" modifiers="1" timestamp="1491897791000"/>
+<typeInfo handle="=ale.compiler/\/home\/mleduc\/ide\/gemoc_studio_2017_03_27\/plugins\/org.eclipse.xtext_2.10.0.v201605250459.jar&lt;org.eclipse.xtext.resource(XtextResourceSet.class[XtextResourceSet" modifiers="33" timestamp="1488218468000"/>
+<typeInfo handle="=fr.inria.diverse.objectalgebragenerator/xtend-gen&lt;fr.inria.diverse.objectalgebragenerator{GenerateAlgebra.java[GenerateAlgebra" modifiers="1" timestamp="1491985554000"/>
+<typeInfo handle="=ale.compiler/src&lt;ale.compiler{AleCompiler.java[AleCompiler" modifiers="1" timestamp="1491984930000"/>
 </typeInfoHistroy>

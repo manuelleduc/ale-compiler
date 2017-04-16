@@ -64,8 +64,8 @@ auxiliary superClasses(AleClass openClass, List<AleClass> existing) {
 	if(openClass.superClass != null) {
 		for(c: openClass.superClass) {
 			if(!existing.contains(c)) {
-				existing.add(c)
-				superClasses(c, existing)
+//				existing.add(c)
+//				superClasses(c, existing)
 			}
 		}
 	}

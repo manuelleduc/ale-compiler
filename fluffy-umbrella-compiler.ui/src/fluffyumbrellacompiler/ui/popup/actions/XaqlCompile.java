@@ -42,6 +42,8 @@ public class XaqlCompile implements IObjectActionDelegate {
 			new AleCompiler(this.selectedIFile.getRawLocationURI(), this.selectedIFile.getName()).compile(this.selectedIFile.getProject());
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (CoreException e) {
+			e.printStackTrace();
 		}
 	}
 

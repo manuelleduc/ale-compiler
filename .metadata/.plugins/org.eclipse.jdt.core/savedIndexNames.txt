@@ -26,10 +26,10 @@ INDEX VERSION 1.129+/home/mleduc/dev/ecore/clean-grammar/.metadata/.plugins/org.
 844073282.index
 3805490000.index
 4101314483.index
-2797978857.index
+706566770.index
 1571144124.index
 1613674141.index
-706566770.index
+2797978857.index
 4177883484.index
 1803337581.index
 480197454.index
@@ -103,5 +103,5 @@ INDEX VERSION 1.129+/home/mleduc/dev/ecore/clean-grammar/.metadata/.plugins/org.
 2254014714.index
 2348417467.index
 964089969.index
-98869456.index
 4116163548.index
+98869456.index

@@ -83,6 +83,9 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.TYPE_SYSTEM: return createTypeSystem();
       case AlePackage.OPEN_CLASS: return createOpenClass();
       case AlePackage.NEW_CLASS: return createNewClass();
+      case AlePackage.PRIMITIVE_FIELD: return createPrimitiveField();
+      case AlePackage.REF_FIELD: return createRefField();
+      case AlePackage.CONTAINMENT_FIELD: return createContainmentField();
       case AlePackage.RETURN_STATEMENT: return createReturnStatement();
       case AlePackage.LET_STATEMENT: return createLetStatement();
       case AlePackage.IF_STATEMENT: return createIfStatement();
@@ -332,6 +335,39 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     NewClassImpl newClass = new NewClassImpl();
     return newClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public PrimitiveField createPrimitiveField()
+  {
+    PrimitiveFieldImpl primitiveField = new PrimitiveFieldImpl();
+    return primitiveField;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RefField createRefField()
+  {
+    RefFieldImpl refField = new RefFieldImpl();
+    return refField;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ContainmentField createContainmentField()
+  {
+    ContainmentFieldImpl containmentField = new ContainmentFieldImpl();
+    return containmentField;
   }
 
   /**

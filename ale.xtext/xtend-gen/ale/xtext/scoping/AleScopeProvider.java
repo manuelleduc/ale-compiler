@@ -15,6 +15,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import java.util.List;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -35,7 +36,7 @@ public class AleScopeProvider extends AbstractAleScopeProvider {
   @Override
   public IScope getScope(final EObject context, final EReference reference) {
     if ((context instanceof OpenClass)) {
-      EReference _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
+      EAttribute _aleClass_SuperClass = AlePackage.eINSTANCE.getAleClass_SuperClass();
       boolean _equals = Objects.equal(reference, _aleClass_SuperClass);
       if (_equals) {
         final IScope tmp = super.getScope(context, reference);
@@ -75,7 +76,7 @@ public class AleScopeProvider extends AbstractAleScopeProvider {
       }
     }
     if ((context instanceof NewClass)) {
-      EReference _aleClass_SuperClass_1 = AlePackage.eINSTANCE.getAleClass_SuperClass();
+      EAttribute _aleClass_SuperClass_1 = AlePackage.eINSTANCE.getAleClass_SuperClass();
       boolean _equals_1 = Objects.equal(reference, _aleClass_SuperClass_1);
       if (_equals_1) {
         final IScope tmp_1 = super.getScope(context, reference);
