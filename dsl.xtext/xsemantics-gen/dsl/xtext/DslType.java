@@ -41,6 +41,7 @@ import ale.xtext.ale.StringTypeT;
 import ale.xtext.ale.Type;
 import ale.xtext.ale.TypeSystem;
 import ale.xtext.ale.VarAssign;
+import ale.xtext.ale.VarDeclaration;
 import ale.xtext.ale.VarRef;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
@@ -116,7 +117,7 @@ public class DslType extends XsemanticsRuntimeSystem {
   
   public final static String EQUALITYOPERATION = "dsl.xtext.EqualityOperation";
   
-  public final static String VARASSIGN = "dsl.xtext.VarAssign";
+  public final static String VARDECL = "dsl.xtext.VarDecl";
   
   public final static String FORLOOP = "dsl.xtext.ForLoop";
   
@@ -1346,36 +1347,36 @@ public class DslType extends XsemanticsRuntimeSystem {
     return _createBooleanTypeT;
   }
   
-  protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VarAssign varAssign) throws RuleFailedException {
+  protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VarDeclaration varDecl) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
-    	final Result<TypeSystem> _result_ = applyRuleVarAssign(G, _subtrace_, varAssign);
+    	final Result<TypeSystem> _result_ = applyRuleVarDecl(G, _subtrace_, varDecl);
     	addToTrace(_trace_, new Provider<Object>() {
     		public Object get() {
-    			return ruleName("VarAssign") + stringRepForEnv(G) + " |- " + stringRep(varAssign) + " : " + stringRep(_result_.getFirst());
+    			return ruleName("VarDecl") + stringRepForEnv(G) + " |- " + stringRep(varDecl) + " : " + stringRep(_result_.getFirst());
     		}
     	});
     	addAsSubtrace(_trace_, _subtrace_);
     	return _result_;
-    } catch (Exception e_applyRuleVarAssign) {
-    	typeThrowException(ruleName("VarAssign") + stringRepForEnv(G) + " |- " + stringRep(varAssign) + " : " + "TypeSystem",
-    		VARASSIGN,
-    		e_applyRuleVarAssign, varAssign, new ErrorInformation[] {new ErrorInformation(varAssign)});
+    } catch (Exception e_applyRuleVarDecl) {
+    	typeThrowException(ruleName("VarDecl") + stringRepForEnv(G) + " |- " + stringRep(varDecl) + " : " + "TypeSystem",
+    		VARDECL,
+    		e_applyRuleVarDecl, varDecl, new ErrorInformation[] {new ErrorInformation(varDecl)});
     	return null;
     }
   }
   
-  protected Result<TypeSystem> applyRuleVarAssign(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VarAssign varAssign) throws RuleFailedException {
+  protected Result<TypeSystem> applyRuleVarDecl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VarDeclaration varDecl) throws RuleFailedException {
     TypeSystem varType = null; // output parameter
-    /* G |- varAssign.value: var TypeSystem valueType */
-    Expression _value = varAssign.getValue();
+    /* G |- varDecl.value: var TypeSystem valueType */
+    Expression _value = varDecl.getValue();
     TypeSystem valueType = null;
     Result<TypeSystem> result = typeInternal(G, _trace_, _value);
     checkAssignableTo(result.getFirst(), TypeSystem.class);
     valueType = (TypeSystem) result.getFirst();
     
-    /* G |= varAssign.getType : var TypeSystem typeType */
-    Type _type = varAssign.getType();
+    /* G |= varDecl.getType : var TypeSystem typeType */
+    Type _type = varDecl.getType();
     TypeSystem typeType = null;
     Result<TypeSystem> result_1 = staticTypeInternal(G, _trace_, _type);
     checkAssignableTo(result_1.getFirst(), TypeSystem.class);

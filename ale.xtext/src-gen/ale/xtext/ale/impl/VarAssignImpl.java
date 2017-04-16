@@ -5,7 +5,6 @@ package ale.xtext.ale.impl;
 
 import ale.xtext.ale.AlePackage;
 import ale.xtext.ale.Expression;
-import ale.xtext.ale.Type;
 import ale.xtext.ale.VarAssign;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -24,7 +23,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link ale.xtext.ale.impl.VarAssignImpl#getType <em>Type</em>}</li>
  *   <li>{@link ale.xtext.ale.impl.VarAssignImpl#getName <em>Name</em>}</li>
  *   <li>{@link ale.xtext.ale.impl.VarAssignImpl#getValue <em>Value</em>}</li>
  * </ul>
@@ -33,16 +31,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class VarAssignImpl extends StatementImpl implements VarAssign
 {
-  /**
-   * The cached value of the '{@link #getType() <em>Type</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getType()
-   * @generated
-   * @ordered
-   */
-  protected Type type;
-
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -92,54 +80,6 @@ public class VarAssignImpl extends StatementImpl implements VarAssign
   protected EClass eStaticClass()
   {
     return AlePackage.Literals.VAR_ASSIGN;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Type getType()
-  {
-    return type;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NotificationChain basicSetType(Type newType, NotificationChain msgs)
-  {
-    Type oldType = type;
-    type = newType;
-    if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AlePackage.VAR_ASSIGN__TYPE, oldType, newType);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setType(Type newType)
-  {
-    if (newType != type)
-    {
-      NotificationChain msgs = null;
-      if (type != null)
-        msgs = ((InternalEObject)type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AlePackage.VAR_ASSIGN__TYPE, null, msgs);
-      if (newType != null)
-        msgs = ((InternalEObject)newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AlePackage.VAR_ASSIGN__TYPE, null, msgs);
-      msgs = basicSetType(newType, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AlePackage.VAR_ASSIGN__TYPE, newType, newType));
   }
 
   /**
@@ -223,8 +163,6 @@ public class VarAssignImpl extends StatementImpl implements VarAssign
   {
     switch (featureID)
     {
-      case AlePackage.VAR_ASSIGN__TYPE:
-        return basicSetType(null, msgs);
       case AlePackage.VAR_ASSIGN__VALUE:
         return basicSetValue(null, msgs);
     }
@@ -241,8 +179,6 @@ public class VarAssignImpl extends StatementImpl implements VarAssign
   {
     switch (featureID)
     {
-      case AlePackage.VAR_ASSIGN__TYPE:
-        return getType();
       case AlePackage.VAR_ASSIGN__NAME:
         return getName();
       case AlePackage.VAR_ASSIGN__VALUE:
@@ -261,9 +197,6 @@ public class VarAssignImpl extends StatementImpl implements VarAssign
   {
     switch (featureID)
     {
-      case AlePackage.VAR_ASSIGN__TYPE:
-        setType((Type)newValue);
-        return;
       case AlePackage.VAR_ASSIGN__NAME:
         setName((String)newValue);
         return;
@@ -284,9 +217,6 @@ public class VarAssignImpl extends StatementImpl implements VarAssign
   {
     switch (featureID)
     {
-      case AlePackage.VAR_ASSIGN__TYPE:
-        setType((Type)null);
-        return;
       case AlePackage.VAR_ASSIGN__NAME:
         setName(NAME_EDEFAULT);
         return;
@@ -307,8 +237,6 @@ public class VarAssignImpl extends StatementImpl implements VarAssign
   {
     switch (featureID)
     {
-      case AlePackage.VAR_ASSIGN__TYPE:
-        return type != null;
       case AlePackage.VAR_ASSIGN__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case AlePackage.VAR_ASSIGN__VALUE:

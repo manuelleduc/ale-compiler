@@ -76,6 +76,7 @@ public class AleSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) 'Sequence' '{' expressions+=Expression
 	 *     (rule start) (ambiguity) '[' start=Expression
 	 *     (rule start) (ambiguity) 'new' name=ID
+	 *     (rule start) (ambiguity) 'newSequence' '(' type=Type
 	 *     (rule start) (ambiguity) 'not' expression=Expression
 	 *     (rule start) (ambiguity) 'self' ';' (rule start)
 	 *     (rule start) (ambiguity) 'self' (rule start)
@@ -93,6 +94,7 @@ public class AleSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) {BooleanAndOperation.left=}
 	 *     (rule start) (ambiguity) {BooleanOrOperation.left=}
 	 *     (rule start) (ambiguity) {BooleanXorOperation.left=}
+	 *     (rule start) (ambiguity) {CasttoOperation.left=}
 	 *     (rule start) (ambiguity) {ChainedCall.left=}
 	 *     (rule start) (ambiguity) {ChainedCallArrow.left=}
 	 *     (rule start) (ambiguity) {CompareGEOperation.left=}
@@ -103,6 +105,7 @@ public class AleSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) {DivOperation.left=}
 	 *     (rule start) (ambiguity) {EqualityOperation.left=}
 	 *     (rule start) (ambiguity) {ImpliesOperation.left=}
+	 *     (rule start) (ambiguity) {InstanceofOperation.left=}
 	 *     (rule start) (ambiguity) {MultOperation.left=}
 	 *     (rule start) (ambiguity) {SubOperation.left=}
 	 */
@@ -117,12 +120,14 @@ public class AleSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) '-' expression=Expression
 	 *     (rule start) (ambiguity) 'new' name=ID
+	 *     (rule start) (ambiguity) 'newSequence' '(' type=Type
 	 *     (rule start) (ambiguity) 'not' expression=Expression
 	 *     (rule start) (ambiguity) name=ID
 	 *     (rule start) (ambiguity) {AddOperation.left=}
 	 *     (rule start) (ambiguity) {BooleanAndOperation.left=}
 	 *     (rule start) (ambiguity) {BooleanOrOperation.left=}
 	 *     (rule start) (ambiguity) {BooleanXorOperation.left=}
+	 *     (rule start) (ambiguity) {CasttoOperation.left=}
 	 *     (rule start) (ambiguity) {ChainedCall.left=}
 	 *     (rule start) (ambiguity) {ChainedCallArrow.left=}
 	 *     (rule start) (ambiguity) {CompareGEOperation.left=}
@@ -133,6 +138,7 @@ public class AleSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) {DivOperation.left=}
 	 *     (rule start) (ambiguity) {EqualityOperation.left=}
 	 *     (rule start) (ambiguity) {ImpliesOperation.left=}
+	 *     (rule start) (ambiguity) {InstanceofOperation.left=}
 	 *     (rule start) (ambiguity) {MultOperation.left=}
 	 *     (rule start) (ambiguity) {SubOperation.left=}
 	 */

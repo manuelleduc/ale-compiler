@@ -281,6 +281,15 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AlePackage.VAR_DECLARATION:
+      {
+        VarDeclaration varDeclaration = (VarDeclaration)theEObject;
+        T result = caseVarDeclaration(varDeclaration);
+        if (result == null) result = caseStatement(varDeclaration);
+        if (result == null) result = caseSymbol(varDeclaration);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AlePackage.VAR_ASSIGN:
       {
         VarAssign varAssign = (VarAssign)theEObject;
@@ -380,6 +389,26 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AlePackage.INSTANCEOF_OPERATION:
+      {
+        InstanceofOperation instanceofOperation = (InstanceofOperation)theEObject;
+        T result = caseInstanceofOperation(instanceofOperation);
+        if (result == null) result = caseExpression(instanceofOperation);
+        if (result == null) result = caseStatement(instanceofOperation);
+        if (result == null) result = caseSymbol(instanceofOperation);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.CASTTO_OPERATION:
+      {
+        CasttoOperation casttoOperation = (CasttoOperation)theEObject;
+        T result = caseCasttoOperation(casttoOperation);
+        if (result == null) result = caseExpression(casttoOperation);
+        if (result == null) result = caseStatement(casttoOperation);
+        if (result == null) result = caseSymbol(casttoOperation);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AlePackage.EQUALITY_OPERATION:
       {
         EqualityOperation equalityOperation = (EqualityOperation)theEObject;
@@ -467,6 +496,16 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = caseExpression(negInfixOperation);
         if (result == null) result = caseStatement(negInfixOperation);
         if (result == null) result = caseSymbol(negInfixOperation);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AlePackage.NEW_SEQUENCE:
+      {
+        NewSequence newSequence = (NewSequence)theEObject;
+        T result = caseNewSequence(newSequence);
+        if (result == null) result = caseExpression(newSequence);
+        if (result == null) result = caseStatement(newSequence);
+        if (result == null) result = caseSymbol(newSequence);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1111,6 +1150,22 @@ public class AleSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Var Declaration</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Var Declaration</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseVarDeclaration(VarDeclaration object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Var Assign</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1271,6 +1326,38 @@ public class AleSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Instanceof Operation</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Instanceof Operation</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseInstanceofOperation(InstanceofOperation object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Castto Operation</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Castto Operation</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseCasttoOperation(CasttoOperation object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Equality Operation</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1410,6 +1497,22 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNegInfixOperation(NegInfixOperation object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>New Sequence</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>New Sequence</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNewSequence(NewSequence object)
   {
     return null;
   }

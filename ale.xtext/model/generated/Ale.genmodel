@@ -80,8 +80,12 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ForLoop/collection"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ForLoop/block"/>
     </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//VarDeclaration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//VarDeclaration/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//VarDeclaration/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//VarDeclaration/value"/>
+    </genClasses>
     <genClasses ecoreClass="Ale.ecore#//VarAssign">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//VarAssign/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//VarAssign/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//VarAssign/value"/>
     </genClasses>
@@ -121,6 +125,14 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//CompareGOperation/left"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//CompareGOperation/right"/>
     </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//InstanceofOperation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//InstanceofOperation/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//InstanceofOperation/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//CasttoOperation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//CasttoOperation/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//CasttoOperation/right"/>
+    </genClasses>
     <genClasses ecoreClass="Ale.ecore#//EqualityOperation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//EqualityOperation/left"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//EqualityOperation/op"/>
@@ -155,6 +167,9 @@
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//NegInfixOperation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//NegInfixOperation/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="Ale.ecore#//NewSequence">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//NewSequence/type"/>
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//ConstructorOperation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//ConstructorOperation/name"/>

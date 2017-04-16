@@ -71,7 +71,8 @@ Block:
 	{Block} '{' body+=Statement* '}';
 
 VarAssign returns Statement:
-	{VarAssign} type=Type name=ID '=' value=Expression;
+	{VarDeclaration} type=Type name=ID '=' value=Expression |
+	{VarAssign} name=ID '=' value=Expression;
 
 Expression returns Expression:
 	ImpliesOperation;
@@ -93,7 +94,9 @@ CompareOperation returns Expression:
 	{CompareGEOperation.left=current} '>=' |
 	{CompareNEOperation.left=current} '!=' | //('!=' | '<>') |
 	{CompareLOperation.left=current} '<' |
-	{CompareGOperation.left=current} '>') right=EqualityOperation)*;
+	{CompareGOperation.left=current} '>' |
+	{InstanceofOperation.left=current} 'instanceof' |
+	{CasttoOperation.left=current} 'castto') right=EqualityOperation)*;
 
 EqualityOperation returns Expression:
 	MultOperation
@@ -120,6 +123,7 @@ ChaindedCall returns Expression:
 InfixOperation returns Expression:
 	{NotInfixOperation} 'not' expression=Expression |
 	{NegInfixOperation} '-' expression=Expression |
+	{NewSequence} 'newSequence' '(' type=Type ')' |
 	{ConstructorOperation} 'new' name=ID '(' ')' |
 	{OperationCallOperation} name=ID ('(' (parameters+=ParamCall (',' parameters+=ParamCall)*)? ')') |
 	AtomicLiteral ;
@@ -154,8 +158,8 @@ Type:
 
 LiteralType:
 	lit=('Boolean' | 
-	'Real' | 
-	'Int' | 
+	'Float' | 
+	'Integer' | 
 	'String');
 
 Qualified:

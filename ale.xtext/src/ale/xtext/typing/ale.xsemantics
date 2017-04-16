@@ -34,6 +34,7 @@ import ale.xtext.ale.VarRef
 import ale.xtext.ale.Block
 import ale.xtext.ale.Method
 import ale.xtext.ale.OperationCallOperation
+import ale.xtext.ale.VarDeclaration
 
 system ale.xtext.AleType
 
@@ -220,11 +221,11 @@ from {
 	(tl.eClass == tr.eClass)
 }
 
-rule VarAssign
-	G |- VarAssign varAssign: TypeSystem varType
+rule VarDeclaration
+	G |- VarDeclaration varDecl: TypeSystem varType
 from {
-	G |- varAssign.value: var TypeSystem valueType
-	G |= varAssign.getType : var TypeSystem typeType
+	G |- varDecl.value: var TypeSystem valueType
+	G |= varDecl.getType : var TypeSystem typeType
 	(valueType.eClass == typeType.eClass)
 	varType = valueType // TODO : replace with subtyping ??
 }

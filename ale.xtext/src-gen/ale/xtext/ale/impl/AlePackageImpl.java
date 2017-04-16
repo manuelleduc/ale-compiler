@@ -13,6 +13,7 @@ import ale.xtext.ale.BooleanLiteral;
 import ale.xtext.ale.BooleanOrOperation;
 import ale.xtext.ale.BooleanTypeT;
 import ale.xtext.ale.BooleanXorOperation;
+import ale.xtext.ale.CasttoOperation;
 import ale.xtext.ale.ChainedCall;
 import ale.xtext.ale.ChainedCallArrow;
 import ale.xtext.ale.ClassTypeT;
@@ -32,6 +33,7 @@ import ale.xtext.ale.ForLoop;
 import ale.xtext.ale.IfStatement;
 import ale.xtext.ale.ImpliesOperation;
 import ale.xtext.ale.Import;
+import ale.xtext.ale.InstanceofOperation;
 import ale.xtext.ale.IntLiteral;
 import ale.xtext.ale.IntRange;
 import ale.xtext.ale.IntTypeT;
@@ -41,6 +43,7 @@ import ale.xtext.ale.Method;
 import ale.xtext.ale.MultOperation;
 import ale.xtext.ale.NegInfixOperation;
 import ale.xtext.ale.NewClass;
+import ale.xtext.ale.NewSequence;
 import ale.xtext.ale.NotInfixOperation;
 import ale.xtext.ale.NullLiteral;
 import ale.xtext.ale.NullTypeT;
@@ -72,6 +75,7 @@ import ale.xtext.ale.Symbol;
 import ale.xtext.ale.Type;
 import ale.xtext.ale.TypeSystem;
 import ale.xtext.ale.VarAssign;
+import ale.xtext.ale.VarDeclaration;
 import ale.xtext.ale.VarRef;
 import ale.xtext.ale.WhileStatement;
 
@@ -277,6 +281,13 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass varDeclarationEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass varAssignEClass = null;
 
   /**
@@ -347,6 +358,20 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass instanceofOperationEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass casttoOperationEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass equalityOperationEClass = null;
 
   /**
@@ -404,6 +429,13 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * @generated
    */
   private EClass negInfixOperationEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass newSequenceEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1241,6 +1273,46 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getVarDeclaration()
+  {
+    return varDeclarationEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getVarDeclaration_Type()
+  {
+    return (EReference)varDeclarationEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getVarDeclaration_Name()
+  {
+    return (EAttribute)varDeclarationEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getVarDeclaration_Value()
+  {
+    return (EReference)varDeclarationEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getVarAssign()
   {
     return varAssignEClass;
@@ -1251,19 +1323,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getVarAssign_Type()
-  {
-    return (EReference)varAssignEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EAttribute getVarAssign_Name()
   {
-    return (EAttribute)varAssignEClass.getEStructuralFeatures().get(1);
+    return (EAttribute)varAssignEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1273,7 +1335,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    */
   public EReference getVarAssign_Value()
   {
-    return (EReference)varAssignEClass.getEStructuralFeatures().get(2);
+    return (EReference)varAssignEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1551,6 +1613,66 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getInstanceofOperation()
+  {
+    return instanceofOperationEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInstanceofOperation_Left()
+  {
+    return (EReference)instanceofOperationEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInstanceofOperation_Right()
+  {
+    return (EReference)instanceofOperationEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getCasttoOperation()
+  {
+    return casttoOperationEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCasttoOperation_Left()
+  {
+    return (EReference)casttoOperationEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCasttoOperation_Right()
+  {
+    return (EReference)casttoOperationEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getEqualityOperation()
   {
     return equalityOperationEClass;
@@ -1804,6 +1926,26 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
   public EReference getNegInfixOperation_Expression()
   {
     return (EReference)negInfixOperationEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNewSequence()
+  {
+    return newSequenceEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNewSequence_Type()
+  {
+    return (EReference)newSequenceEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2342,8 +2484,12 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     createEReference(forLoopEClass, FOR_LOOP__COLLECTION);
     createEReference(forLoopEClass, FOR_LOOP__BLOCK);
 
+    varDeclarationEClass = createEClass(VAR_DECLARATION);
+    createEReference(varDeclarationEClass, VAR_DECLARATION__TYPE);
+    createEAttribute(varDeclarationEClass, VAR_DECLARATION__NAME);
+    createEReference(varDeclarationEClass, VAR_DECLARATION__VALUE);
+
     varAssignEClass = createEClass(VAR_ASSIGN);
-    createEReference(varAssignEClass, VAR_ASSIGN__TYPE);
     createEAttribute(varAssignEClass, VAR_ASSIGN__NAME);
     createEReference(varAssignEClass, VAR_ASSIGN__VALUE);
 
@@ -2383,6 +2529,14 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     createEReference(compareGOperationEClass, COMPARE_GOPERATION__LEFT);
     createEReference(compareGOperationEClass, COMPARE_GOPERATION__RIGHT);
 
+    instanceofOperationEClass = createEClass(INSTANCEOF_OPERATION);
+    createEReference(instanceofOperationEClass, INSTANCEOF_OPERATION__LEFT);
+    createEReference(instanceofOperationEClass, INSTANCEOF_OPERATION__RIGHT);
+
+    casttoOperationEClass = createEClass(CASTTO_OPERATION);
+    createEReference(casttoOperationEClass, CASTTO_OPERATION__LEFT);
+    createEReference(casttoOperationEClass, CASTTO_OPERATION__RIGHT);
+
     equalityOperationEClass = createEClass(EQUALITY_OPERATION);
     createEReference(equalityOperationEClass, EQUALITY_OPERATION__LEFT);
     createEAttribute(equalityOperationEClass, EQUALITY_OPERATION__OP);
@@ -2417,6 +2571,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
 
     negInfixOperationEClass = createEClass(NEG_INFIX_OPERATION);
     createEReference(negInfixOperationEClass, NEG_INFIX_OPERATION__EXPRESSION);
+
+    newSequenceEClass = createEClass(NEW_SEQUENCE);
+    createEReference(newSequenceEClass, NEW_SEQUENCE__TYPE);
 
     constructorOperationEClass = createEClass(CONSTRUCTOR_OPERATION);
     createEAttribute(constructorOperationEClass, CONSTRUCTOR_OPERATION__NAME);
@@ -2531,6 +2688,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     ifStatementEClass.getESuperTypes().add(this.getStatement());
     whileStatementEClass.getESuperTypes().add(this.getStatement());
     forLoopEClass.getESuperTypes().add(this.getStatement());
+    varDeclarationEClass.getESuperTypes().add(this.getStatement());
     varAssignEClass.getESuperTypes().add(this.getStatement());
     impliesOperationEClass.getESuperTypes().add(this.getExpression());
     booleanOrOperationEClass.getESuperTypes().add(this.getExpression());
@@ -2541,6 +2699,8 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     compareNEOperationEClass.getESuperTypes().add(this.getExpression());
     compareLOperationEClass.getESuperTypes().add(this.getExpression());
     compareGOperationEClass.getESuperTypes().add(this.getExpression());
+    instanceofOperationEClass.getESuperTypes().add(this.getExpression());
+    casttoOperationEClass.getESuperTypes().add(this.getExpression());
     equalityOperationEClass.getESuperTypes().add(this.getExpression());
     multOperationEClass.getESuperTypes().add(this.getExpression());
     divOperationEClass.getESuperTypes().add(this.getExpression());
@@ -2550,6 +2710,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     chainedCallArrowEClass.getESuperTypes().add(this.getExpression());
     notInfixOperationEClass.getESuperTypes().add(this.getExpression());
     negInfixOperationEClass.getESuperTypes().add(this.getExpression());
+    newSequenceEClass.getESuperTypes().add(this.getExpression());
     constructorOperationEClass.getESuperTypes().add(this.getExpression());
     operationCallOperationEClass.getESuperTypes().add(this.getExpression());
     oaDenotEClass.getESuperTypes().add(this.getExpression());
@@ -2662,8 +2823,12 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEReference(getForLoop_Collection(), this.getExpression(), null, "collection", null, 0, 1, ForLoop.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getForLoop_Block(), this.getBlock(), null, "block", null, 0, 1, ForLoop.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(varDeclarationEClass, VarDeclaration.class, "VarDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getVarDeclaration_Type(), this.getType(), null, "type", null, 0, 1, VarDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getVarDeclaration_Name(), ecorePackage.getEString(), "name", null, 0, 1, VarDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getVarDeclaration_Value(), this.getExpression(), null, "value", null, 0, 1, VarDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(varAssignEClass, VarAssign.class, "VarAssign", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getVarAssign_Type(), this.getType(), null, "type", null, 0, 1, VarAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getVarAssign_Name(), ecorePackage.getEString(), "name", null, 0, 1, VarAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getVarAssign_Value(), this.getExpression(), null, "value", null, 0, 1, VarAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2703,6 +2868,14 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEReference(getCompareGOperation_Left(), this.getExpression(), null, "left", null, 0, 1, CompareGOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCompareGOperation_Right(), this.getExpression(), null, "right", null, 0, 1, CompareGOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(instanceofOperationEClass, InstanceofOperation.class, "InstanceofOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getInstanceofOperation_Left(), this.getExpression(), null, "left", null, 0, 1, InstanceofOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getInstanceofOperation_Right(), this.getExpression(), null, "right", null, 0, 1, InstanceofOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(casttoOperationEClass, CasttoOperation.class, "CasttoOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getCasttoOperation_Left(), this.getExpression(), null, "left", null, 0, 1, CasttoOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCasttoOperation_Right(), this.getExpression(), null, "right", null, 0, 1, CasttoOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(equalityOperationEClass, EqualityOperation.class, "EqualityOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getEqualityOperation_Left(), this.getExpression(), null, "left", null, 0, 1, EqualityOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getEqualityOperation_Op(), ecorePackage.getEString(), "op", null, 0, 1, EqualityOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2737,6 +2910,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
 
     initEClass(negInfixOperationEClass, NegInfixOperation.class, "NegInfixOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNegInfixOperation_Expression(), this.getExpression(), null, "expression", null, 0, 1, NegInfixOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(newSequenceEClass, NewSequence.class, "NewSequence", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNewSequence_Type(), this.getType(), null, "type", null, 0, 1, NewSequence.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(constructorOperationEClass, ConstructorOperation.class, "ConstructorOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getConstructorOperation_Name(), ecorePackage.getEString(), "name", null, 0, 1, ConstructorOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

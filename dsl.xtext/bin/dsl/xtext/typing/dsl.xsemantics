@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.resource.XtextResourceSet
+import ale.xtext.ale.VarDeclaration
 
 system dsl.xtext.DslType
 
@@ -231,11 +232,11 @@ from {
 	(tl.eClass == tr.eClass)
 }
 
-rule VarAssign
-	G |- VarAssign varAssign: TypeSystem varType
+rule VarDecl
+	G |- VarDeclaration varDecl: TypeSystem varType
 from {
-	G |- varAssign.value: var TypeSystem valueType
-	G |= varAssign.getType : var TypeSystem typeType
+	G |- varDecl.value: var TypeSystem valueType
+	G |= varDecl.getType : var TypeSystem typeType
 	(valueType.eClass == typeType.eClass)
 	varType = valueType // TODO : replace with subtyping ??
 }

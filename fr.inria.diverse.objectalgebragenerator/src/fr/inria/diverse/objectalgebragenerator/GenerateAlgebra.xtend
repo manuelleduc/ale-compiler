@@ -58,6 +58,10 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.ETypedElement
+import ale.xtext.ale.VarDeclaration
+import ale.xtext.ale.NewSequence
+import ale.xtext.ale.InstanceofOperation
+import ale.xtext.ale.CasttoOperation
 
 class GenerateAlgebra {
 
@@ -183,9 +187,11 @@ class GenerateAlgebra {
 			public «field.type.solveStaticType(epackage, dependencies)» get«field.name.toFirstUpper»() {
 				«IF ! overloaded»return self.get«field.name.toFirstUpper»();«ELSE»return null;«ENDIF»
 			}
+			«IF !(field.type instanceof SequenceType)»
 			public void set«field.name.toFirstUpper»(«field.type.solveStaticType(epackage, dependencies)» «field.name») {
 				«IF !overloaded»self.set«field.name.toFirstUpper»(«field.name»);«ENDIF»
 			}
+			«ENDIF»
 			«ENDFOR»
 			«FOR method: behaviorClass.methods»
 			public «method.type.solveStaticType(epackage, dependencies)» «method.name»(«FOR p: method.params»«p.type.solveStaticType(epackage, dependencies)» «p.name»«ENDFOR») {
@@ -228,6 +234,10 @@ class GenerateAlgebra {
 	def dispatch String printExpression(ChainedCallArrow exp, EPackage epackage) '''«exp.left.printExpression(epackage)».«exp.right.printExpression(epackage)»'''
 	def dispatch String printExpression(CompareGEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» >= «exp.right.printExpression(epackage)»'''
 	def dispatch String printExpression(CompareGOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» > «exp.right.printExpression(epackage)»'''
+	
+	def dispatch String printExpression(InstanceofOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» instanceof «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(CasttoOperation exp, EPackage epackage) '''((«exp.right.printExpression(epackage)»)«exp.left.printExpression(epackage)»)'''
+	
 	def dispatch String printExpression(CompareLEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» <= «exp.right.printExpression(epackage)»'''
 	def dispatch String printExpression(CompareLOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» < «exp.right.printExpression(epackage)»'''
 	def dispatch String printExpression(CompareNEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» != «exp.right.printExpression(epackage)»'''
@@ -268,6 +278,7 @@ class GenerateAlgebra {
 	def dispatch String printExpression(SubOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» - «exp.right.printExpression(epackage)»'''
 	def dispatch String printExpression(SuperRef exp, EPackage epackage) '''__TODO call super__''' // TODO: has to resolve where to call!!
 	def dispatch String printExpression(VarRef exp, EPackage epackage) '''«exp.value»'''
+	def dispatch String printExpression(NewSequence exp, EPackage epackage) '''new org.eclipse.emf.common.util.BasicEList<>();'''
 	def dispatch String printExpression(ConstructorOperation exp, EPackage epackage) '''«exp.getPackageName(epackage)»Factory.eINSTANCE.create«exp.name»()'''
 	
 	def String getPackageName(ConstructorOperation co, EPackage epackage) {
@@ -304,8 +315,11 @@ class GenerateAlgebra {
 		'''return «returnStatement.returned.printExpression(ePackage)»;'''
 	}
 	
-	def dispatch String printStatement(VarAssign varAssign, EPackage ePackage, List<EPackage> dependencies) 
+	def dispatch String printStatement(VarDeclaration varAssign, EPackage ePackage, List<EPackage> dependencies) 
 		'''«varAssign.type.solveStaticType(ePackage, dependencies)» «varAssign.name» = «varAssign.value.printExpression(ePackage)»;'''
+		
+	def dispatch String printStatement(VarAssign varAssign, EPackage ePackage, List<EPackage> dependencies) 
+		'''«varAssign.name» = «varAssign.value.printExpression(ePackage)»;'''
 	
 	
 	def dispatch String printStatement(WhileStatement whileStatement, EPackage ePackage, List<EPackage> dependencies) {
@@ -386,7 +400,9 @@ class GenerateAlgebra {
 			«IF openClass != null»
 				«FOR field:openClass.fields»
 				«field.type.solveStaticType(ePackage, dependencies)» get«field.name.toFirstUpper»();
+				«IF !(field.type instanceof SequenceType)»
 				void set«field.name.toFirstUpper»(«field.type.solveStaticType(ePackage, dependencies)» «field.name»);
+				«ENDIF»
 				«ENDFOR»
 				«FOR method: openClass.methods»
 					«method.type.solveStaticType(ePackage, dependencies)» «method.name»(«FOR p: method.params»«p.type.solveStaticType(ePackage, dependencies)» «p.name»«ENDFOR»);
@@ -403,7 +419,8 @@ class GenerateAlgebra {
 		if(type instanceof OutOfScopeType) {
 			val  allClasses = buildGraph(ePackage, dependencies).nodes.map[elem];
 			val foundClazz = allClasses.filter[c | c.name == type.externalClass].head
-			return foundClazz?.javaFullPath.toString // TODO: resolve the type by scanning classes of the syntax
+			// TODO: resolve the type by scanning classes of the syntax
+			return foundClazz?.javaFullPath.toString 
 		}
 	}
 
@@ -453,7 +470,7 @@ class GenerateAlgebra {
 				«FOR clazz : graph.nodes»
 				default «clazz.elem.genericType(false)» $(final «clazz.elem.javaFullPath» «clazz.elem.name.toFirstLower») {
 					«FOR subClazz:clazz.incomings.filter[sc|!sc.elem.abstract]»
-					«IF clazz.elem.ESuperTypes.size == 1»
+					«IF subClazz.elem.ESuperTypes.size == 1»
 						if(«clazz.elem.name.toFirstLower» instanceof «subClazz.elem.javaFullPath») return «subClazz.elem.name.toFirstLower»((«subClazz.elem.javaFullPath») «clazz.elem.name.toFirstLower»);
 					«ELSE»
 						if(«clazz.elem.name.toFirstLower» instanceof «subClazz.elem.javaFullPath») return «clazz.elem.name.toFirstLower»_«subClazz.elem.name.toFirstLower»((«subClazz.elem.javaFullPath») «clazz.elem.name.toFirstLower»);

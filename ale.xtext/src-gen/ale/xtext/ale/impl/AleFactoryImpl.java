@@ -91,6 +91,7 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.IF_STATEMENT: return createIfStatement();
       case AlePackage.WHILE_STATEMENT: return createWhileStatement();
       case AlePackage.FOR_LOOP: return createForLoop();
+      case AlePackage.VAR_DECLARATION: return createVarDeclaration();
       case AlePackage.VAR_ASSIGN: return createVarAssign();
       case AlePackage.IMPLIES_OPERATION: return createImpliesOperation();
       case AlePackage.BOOLEAN_OR_OPERATION: return createBooleanOrOperation();
@@ -101,6 +102,8 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.COMPARE_NE_OPERATION: return createCompareNEOperation();
       case AlePackage.COMPARE_LOPERATION: return createCompareLOperation();
       case AlePackage.COMPARE_GOPERATION: return createCompareGOperation();
+      case AlePackage.INSTANCEOF_OPERATION: return createInstanceofOperation();
+      case AlePackage.CASTTO_OPERATION: return createCasttoOperation();
       case AlePackage.EQUALITY_OPERATION: return createEqualityOperation();
       case AlePackage.MULT_OPERATION: return createMultOperation();
       case AlePackage.DIV_OPERATION: return createDivOperation();
@@ -110,6 +113,7 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.CHAINED_CALL_ARROW: return createChainedCallArrow();
       case AlePackage.NOT_INFIX_OPERATION: return createNotInfixOperation();
       case AlePackage.NEG_INFIX_OPERATION: return createNegInfixOperation();
+      case AlePackage.NEW_SEQUENCE: return createNewSequence();
       case AlePackage.CONSTRUCTOR_OPERATION: return createConstructorOperation();
       case AlePackage.OPERATION_CALL_OPERATION: return createOperationCallOperation();
       case AlePackage.OA_DENOT: return createOADenot();
@@ -430,6 +434,17 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public VarDeclaration createVarDeclaration()
+  {
+    VarDeclarationImpl varDeclaration = new VarDeclarationImpl();
+    return varDeclaration;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public VarAssign createVarAssign()
   {
     VarAssignImpl varAssign = new VarAssignImpl();
@@ -540,6 +555,28 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public InstanceofOperation createInstanceofOperation()
+  {
+    InstanceofOperationImpl instanceofOperation = new InstanceofOperationImpl();
+    return instanceofOperation;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CasttoOperation createCasttoOperation()
+  {
+    CasttoOperationImpl casttoOperation = new CasttoOperationImpl();
+    return casttoOperation;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EqualityOperation createEqualityOperation()
   {
     EqualityOperationImpl equalityOperation = new EqualityOperationImpl();
@@ -632,6 +669,17 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     NegInfixOperationImpl negInfixOperation = new NegInfixOperationImpl();
     return negInfixOperation;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NewSequence createNewSequence()
+  {
+    NewSequenceImpl newSequence = new NewSequenceImpl();
+    return newSequence;
   }
 
   /**

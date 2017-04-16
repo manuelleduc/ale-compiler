@@ -206,6 +206,11 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createForLoopAdapter();
       }
       @Override
+      public Adapter caseVarDeclaration(VarDeclaration object)
+      {
+        return createVarDeclarationAdapter();
+      }
+      @Override
       public Adapter caseVarAssign(VarAssign object)
       {
         return createVarAssignAdapter();
@@ -256,6 +261,16 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createCompareGOperationAdapter();
       }
       @Override
+      public Adapter caseInstanceofOperation(InstanceofOperation object)
+      {
+        return createInstanceofOperationAdapter();
+      }
+      @Override
+      public Adapter caseCasttoOperation(CasttoOperation object)
+      {
+        return createCasttoOperationAdapter();
+      }
+      @Override
       public Adapter caseEqualityOperation(EqualityOperation object)
       {
         return createEqualityOperationAdapter();
@@ -299,6 +314,11 @@ public class AleAdapterFactory extends AdapterFactoryImpl
       public Adapter caseNegInfixOperation(NegInfixOperation object)
       {
         return createNegInfixOperationAdapter();
+      }
+      @Override
+      public Adapter caseNewSequence(NewSequence object)
+      {
+        return createNewSequenceAdapter();
       }
       @Override
       public Adapter caseConstructorOperation(ConstructorOperation object)
@@ -833,6 +853,21 @@ public class AleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.VarDeclaration <em>Var Declaration</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.VarDeclaration
+   * @generated
+   */
+  public Adapter createVarDeclarationAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link ale.xtext.ale.VarAssign <em>Var Assign</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -983,6 +1018,36 @@ public class AleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.InstanceofOperation <em>Instanceof Operation</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.InstanceofOperation
+   * @generated
+   */
+  public Adapter createInstanceofOperationAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.CasttoOperation <em>Castto Operation</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.CasttoOperation
+   * @generated
+   */
+  public Adapter createCasttoOperationAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link ale.xtext.ale.EqualityOperation <em>Equality Operation</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1113,6 +1178,21 @@ public class AleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNegInfixOperationAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.NewSequence <em>New Sequence</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.NewSequence
+   * @generated
+   */
+  public Adapter createNewSequenceAdapter()
   {
     return null;
   }

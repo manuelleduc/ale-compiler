@@ -258,6 +258,15 @@ public interface AleFactory extends EFactory
   ForLoop createForLoop();
 
   /**
+   * Returns a new object of class '<em>Var Declaration</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Var Declaration</em>'.
+   * @generated
+   */
+  VarDeclaration createVarDeclaration();
+
+  /**
    * Returns a new object of class '<em>Var Assign</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -348,6 +357,24 @@ public interface AleFactory extends EFactory
   CompareGOperation createCompareGOperation();
 
   /**
+   * Returns a new object of class '<em>Instanceof Operation</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Instanceof Operation</em>'.
+   * @generated
+   */
+  InstanceofOperation createInstanceofOperation();
+
+  /**
+   * Returns a new object of class '<em>Castto Operation</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Castto Operation</em>'.
+   * @generated
+   */
+  CasttoOperation createCasttoOperation();
+
+  /**
    * Returns a new object of class '<em>Equality Operation</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -427,6 +454,15 @@ public interface AleFactory extends EFactory
    * @generated
    */
   NegInfixOperation createNegInfixOperation();
+
+  /**
+   * Returns a new object of class '<em>New Sequence</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>New Sequence</em>'.
+   * @generated
+   */
+  NewSequence createNewSequence();
 
   /**
    * Returns a new object of class '<em>Constructor Operation</em>'.
