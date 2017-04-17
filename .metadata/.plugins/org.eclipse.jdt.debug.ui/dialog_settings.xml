@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="conditionHistory">
-		<item value="5" key="conditionHistoryEntryCount"/>
-		<item value="newType == null" key="conditionHistoryEntry_0"/>
-		<item value="variableDecl.getName().equals(&quot;heldTokens&quot;)" key="conditionHistoryEntry_1"/>
-		<item value="modelBehavior == null" key="conditionHistoryEntry_4"/>
-		<item value="name == null" key="conditionHistoryEntry_2"/>
-		<item value="behaviourName == null" key="conditionHistoryEntry_3"/>
+		<item value="behaviourName == null" key="conditionHistoryEntry_6"/>
+		<item value="modelBehavior == null" key="conditionHistoryEntry_7"/>
+		<item value="8" key="conditionHistoryEntryCount"/>
+		<item value="!overloaded" key="conditionHistoryEntry_0"/>
+		<item value="overloaded" key="conditionHistoryEntry_1"/>
+		<item value="variableDecl.getName().equals(&quot;heldTokens&quot;)" key="conditionHistoryEntry_4"/>
+		<item value="name == null" key="conditionHistoryEntry_5"/>
+		<item value="value == null" key="conditionHistoryEntry_2"/>
+		<item value="newType == null" key="conditionHistoryEntry_3"/>
 	</section>
 	<section name="org.eclipse.jdt.internal.debug.ui.ExpressionInformationControlCreator$ExpressionInformationControl">
 		<item value="500" key="SashWeightTree"/>
 		<item value="500" key="SashWeightDetails"/>
-		<item value="690" key="WIDTH"/>
-		<item value="236" key="HEIGHT"/>
+		<item value="678" key="WIDTH"/>
+		<item value="263" key="HEIGHT"/>
 	</section>
 	<section name="AddExceptionDialog">
 		<item value="true" key="caughtChecked"/>
