@@ -62,6 +62,10 @@ import ale.xtext.ale.VarDeclaration
 import ale.xtext.ale.NewSequence
 import ale.xtext.ale.InstanceofOperation
 import ale.xtext.ale.CasttoOperation
+import ale.xtext.ale.Method
+import ale.xtext.ale.Field
+import ale.xtext.ale.AleFactory
+import org.eclipse.emf.common.notify.AdapterFactory
 
 class GenerateAlgebra {
 
@@ -183,7 +187,7 @@ class GenerateAlgebra {
 			
 			
 			«IF behaviorClass != null»
-			«FOR field:behaviorClass.fields»
+			«FOR field:behaviorClass.flattenParentsFields(aleScope, epackage, dependencies, allAleClasses)»
 			public «field.type.solveStaticType(epackage, dependencies)» get«field.name.toFirstUpper»() {
 				«IF ! overloaded»return self.get«field.name.toFirstUpper»();«ELSE»return null;«ENDIF»
 			}
@@ -193,15 +197,119 @@ class GenerateAlgebra {
 			}
 			«ENDIF»
 			«ENDFOR»
-			«FOR method: behaviorClass.methods»
+			«FOR method: behaviorClass.flattenParentMethods(aleScope, epackage, dependencies, allAleClasses)»
 			public «method.type.solveStaticType(epackage, dependencies)» «method.name»(«FOR p: method.params»«p.type.solveStaticType(epackage, dependencies)» «p.name»«ENDFOR») {
-	 			«IF !overloaded»«method.block.printBlock(epackage, dependencies)»«ELSE» «IF method.type.solveStaticType(epackage, dependencies) != 'void'»return null;«ENDIF»«ENDIF»
+	 			«IF !overloaded»
+	 			«method.block.printBlock(epackage, dependencies)»«ELSE» «IF method.type.solveStaticType(epackage, dependencies) != 'void'»return null;«ENDIF»
+	 			«ENDIF»
 			}
 			«ENDFOR»
 			«ENDIF»
 		}
 		'''
 
+	}
+	
+	
+	def List<Field> flattenParentsFields(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+		val List<Field> ret = newArrayList()
+		ret.addAll(aleClazz.fields)
+		val listAllParents = aleClazz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)
+		for(AleClass p:listAllParents) {
+			for(Field pp: p.fields) {
+				if(!(ret.exists[f | f.name == pp.name])) {
+					ret.add(pp)
+				}
+			}
+		}
+		ret
+	}
+	
+	
+	def List<AleClass> getIndirectSuperClasses(AleClass aleClazz, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+		val ret = newArrayList()
+		val classes = this.getListAllClasses(ePackage, dependencies)
+		val aspectClasse = classes.filter[c | c.name == aleClazz.name+"_Aspect"].head
+		if(aspectClasse != null) {
+			for(EClass eClass: aspectClasse.ancestors) {
+				if(eClass.name.endsWith("_Aspect")) {
+					val clazz = eClass.findAleClass(allAleClasses)
+					if(!ret.contains(clazz)) {
+						ret.add(clazz);
+					}
+				}
+			}
+		
+		}
+		return ret
+	}
+	
+	
+	def List<AleClass> getAllSuperClasses(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+		val ret = newArrayList()
+		for(AleClass parentAC: aleClazz.getIndirectSuperClasses(ePackage, dependencies, allAleClasses).map[it.name.resolveCrossRef(aleScope)]) {
+			if(!ret.contains(parentAC)) {
+				ret.add(parentAC)
+				ret.addAll(parentAC.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses))
+			}			
+		}
+		ret
+	}
+	
+	def List<Method> flattenParentMethods(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+		val List<Method> ret = newArrayList()
+		ret.addAll(aleClazz.methods)
+		val listAllParents = aleClazz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)
+		for(AleClass parent: listAllParents) {
+			for(Method meth: parent.methods) {
+				if(!ret.exists[m | m.name == meth.name && m.params.size == meth.params.size]) {
+					ret.add(meth)
+				} 
+			}
+//			for(Field field: parent.fields) {
+//				
+//				// FIXME: hack
+//				
+//				var fieldType = field.type
+//				
+//				if(fieldType == null && field.name == "heldTokens") {
+//					fieldType = AleFactory.eINSTANCE.createSequenceType => [
+//						subType = AleFactory.eINSTANCE.createOutOfScopeType => [ externalClass = "Token" ]
+//					]
+//					
+//					 
+//				}
+//				
+//				if(fieldType == null && field.name == "running") {
+//					fieldType = AleFactory.eINSTANCE.createLiteralType => [ lit='Boolean' ]
+//				}
+//				
+//				
+//				
+//				
+//				val getMethod = AleFactory.eINSTANCE.createMethod
+//				getMethod.name = '''get«field.name.toFirstUpper»'''
+//				getMethod.type = fieldType
+//				if(!ret.exists[m | m.name == getMethod.name && m.params.size == getMethod.params.size]) {
+//					ret.add(getMethod)
+//				} 
+//				
+//				if(!(field.type instanceof SequenceType)) {
+//					val setMethod = AleFactory.eINSTANCE.createMethod
+//					setMethod.name = '''set«field.name.toFirstUpper»'''
+////					setMethod.type = null
+//					val setParam = AleFactory.eINSTANCE.createParam
+//					setParam.name = field.name
+//					setParam.type = fieldType
+//					setMethod.params.add(setParam)
+//					
+//					if(!ret.exists[m | m.name == setMethod.name && m.params.size == setMethod.params.size]) {
+//						ret.add(setMethod)
+//					} 
+//				}
+//			}
+		}
+		return ret;
 	}
 	
 	def EClass getEClass(AleClass aleClass, EPackage epackage, List<EPackage> dependencies) {
@@ -211,9 +319,11 @@ class GenerateAlgebra {
 	}
 	
 	def String printBlock(Block block, EPackage ePackage, List<EPackage> dependencies) '''
+	«IF block != null»
 	«FOR stmt: block.body»
 	«stmt.printStatement(ePackage, dependencies)»
 	«ENDFOR»
+	«ENDIF»
 	'''
 	
 	

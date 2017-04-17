@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="allDirectPackages" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value=" = null" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="true" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="allDirectPackages"/>
-			<item value="allMethods"/>
-			<item value="entry"/>
-			<item value="generateAlgebra"/>
-			<item value="this.syntaxes.stream()"/>
-			<item value="this.syntaxes.stream().flatMap"/>
-			<item value="this.syntaxes"/>
-			<item value="this.allAles"/>
+			<item value=" = null"/>
+			<item value="= null"/>
+			<item value="allAleClasses"/>
+			<item value=".type ="/>
+			<item value="ret"/>
+			<item value="null"/>
+			<item value="flattenParentMethods"/>
+			<item value=".setT"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&apos;&apos;&apos;__TODO__&apos;&apos;&apos;"/>
@@ -33,7 +33,7 @@
 		<item value="306" key="DIALOG_WIDTH"/>
 		<item value="1|Cantarell|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="486" key="DIALOG_HEIGHT"/>
-		<item value="1084" key="DIALOG_X_ORIGIN"/>
-		<item value="387" key="DIALOG_Y_ORIGIN"/>
+		<item value="1402" key="DIALOG_X_ORIGIN"/>
+		<item value="65" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
