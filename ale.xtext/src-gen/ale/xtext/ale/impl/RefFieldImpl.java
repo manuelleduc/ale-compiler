@@ -6,17 +6,47 @@ package ale.xtext.ale.impl;
 import ale.xtext.ale.AlePackage;
 import ale.xtext.ale.RefField;
 
+import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.ecore.EClass;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Ref Field</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * </p>
+ * <ul>
+ *   <li>{@link ale.xtext.ale.impl.RefFieldImpl#getReverse <em>Reverse</em>}</li>
+ * </ul>
  *
  * @generated
  */
 public class RefFieldImpl extends FieldImpl implements RefField
 {
+  /**
+   * The default value of the '{@link #getReverse() <em>Reverse</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getReverse()
+   * @generated
+   * @ordered
+   */
+  protected static final String REVERSE_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getReverse() <em>Reverse</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getReverse()
+   * @generated
+   * @ordered
+   */
+  protected String reverse = REVERSE_EDEFAULT;
+
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -36,6 +66,112 @@ public class RefFieldImpl extends FieldImpl implements RefField
   protected EClass eStaticClass()
   {
     return AlePackage.Literals.REF_FIELD;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String getReverse()
+  {
+    return reverse;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setReverse(String newReverse)
+  {
+    String oldReverse = reverse;
+    reverse = newReverse;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AlePackage.REF_FIELD__REVERSE, oldReverse, reverse));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
+    switch (featureID)
+    {
+      case AlePackage.REF_FIELD__REVERSE:
+        return getReverse();
+    }
+    return super.eGet(featureID, resolve, coreType);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
+    switch (featureID)
+    {
+      case AlePackage.REF_FIELD__REVERSE:
+        setReverse((String)newValue);
+        return;
+    }
+    super.eSet(featureID, newValue);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void eUnset(int featureID)
+  {
+    switch (featureID)
+    {
+      case AlePackage.REF_FIELD__REVERSE:
+        setReverse(REVERSE_EDEFAULT);
+        return;
+    }
+    super.eUnset(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public boolean eIsSet(int featureID)
+  {
+    switch (featureID)
+    {
+      case AlePackage.REF_FIELD__REVERSE:
+        return REVERSE_EDEFAULT == null ? reverse != null : !REVERSE_EDEFAULT.equals(reverse);
+    }
+    return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (reverse: ");
+    result.append(reverse);
+    result.append(')');
+    return result.toString();
   }
 
 } //RefFieldImpl

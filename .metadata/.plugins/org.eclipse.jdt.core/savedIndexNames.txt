@@ -20,16 +20,14 @@ INDEX VERSION 1.129+/home/mleduc/dev/ecore/clean-grammar/.metadata/.plugins/org.
 2679321201.index
 582468041.index
 1568396193.index
-481105134.index
 3907947812.index
 2829694822.index
 844073282.index
 3805490000.index
 4101314483.index
-2797978857.index
 1571144124.index
-706566770.index
 1613674141.index
+706566770.index
 4177883484.index
 1803337581.index
 480197454.index

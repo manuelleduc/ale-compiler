@@ -1634,19 +1634,10 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     Symbol returns RefField
 	 *
 	 * Constraint:
-	 *     (type=Type name=ID)
+	 *     (type=Type name=ID reverse=ID?)
 	 */
 	protected void sequence_Field(ISerializationContext context, RefField semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.FIELD__TYPE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.FIELD__TYPE));
-			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.FIELD__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.FIELD__NAME));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getFieldAccess().getTypeTypeParserRuleCall_1_2_0(), semanticObject.getType());
-		feeder.accept(grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_1_3_0(), semanticObject.getName());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

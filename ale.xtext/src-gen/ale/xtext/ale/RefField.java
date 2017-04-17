@@ -9,6 +9,12 @@ package ale.xtext.ale;
  * A representation of the model object '<em><b>Ref Field</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * </p>
+ * <ul>
+ *   <li>{@link ale.xtext.ale.RefField#getReverse <em>Reverse</em>}</li>
+ * </ul>
  *
  * @see ale.xtext.ale.AlePackage#getRefField()
  * @model
@@ -16,4 +22,30 @@ package ale.xtext.ale;
  */
 public interface RefField extends Field
 {
+  /**
+   * Returns the value of the '<em><b>Reverse</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Reverse</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Reverse</em>' attribute.
+   * @see #setReverse(String)
+   * @see ale.xtext.ale.AlePackage#getRefField_Reverse()
+   * @model
+   * @generated
+   */
+  String getReverse();
+
+  /**
+   * Sets the value of the '{@link ale.xtext.ale.RefField#getReverse <em>Reverse</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Reverse</em>' attribute.
+   * @see #getReverse()
+   * @generated
+   */
+  void setReverse(String value);
+
 } // RefField

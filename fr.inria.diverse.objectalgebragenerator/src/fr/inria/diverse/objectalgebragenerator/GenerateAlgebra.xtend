@@ -64,8 +64,38 @@ import ale.xtext.ale.InstanceofOperation
 import ale.xtext.ale.CasttoOperation
 import ale.xtext.ale.Method
 import ale.xtext.ale.Field
-import ale.xtext.ale.AleFactory
-import org.eclipse.emf.common.notify.AdapterFactory
+
+class StatementContext {
+	public val EPackage ePackage
+	public val List<EPackage> dependencies;
+	public val AleClass selfAleClass
+	public val List<AleClass> aleScope
+	public val List<AleClass> allAleClasses
+	
+	new(EPackage ePackage, List<EPackage> dependencies, AleClass selfAleClass, List<AleClass> aleScope, List<AleClass> allAleClasses) {
+		this.ePackage = ePackage
+		this.dependencies = dependencies
+		this.selfAleClass = selfAleClass
+		this.aleScope = aleScope
+		this.allAleClasses = allAleClasses
+	}
+}
+
+class ExpressionContext {
+	public val EPackage ePackage
+	public val AleClass selfAleClass
+	public val List<EPackage> dependencies
+	public val List<AleClass> aleScope
+	public val List<AleClass> allAleClasses
+	
+	new(EPackage ePackage, AleClass selfAleClass, List<AleClass> aleScope, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+		this.ePackage = ePackage
+		this.selfAleClass = selfAleClass
+		this.dependencies = dependencies
+		this.aleScope = aleScope
+		this.allAleClasses = allAleClasses
+	}
+}
 
 class GenerateAlgebra {
 
@@ -165,22 +195,16 @@ class GenerateAlgebra {
 				
 			private final «clazz.javaFullPath» self;
 			«IF aleName != "$default"»private final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR» algebra;«ENDIF»
-			«IF behaviorClass != null && !behaviorClass.superClass.empty»
-			«FOR sc: behaviorClass.superClass.map[it.resolveCrossRef(aleScope)].map[cl | cl.getEClass(epackage, dependencies)].filter[x | x != null]»
-«««			// delegate«sc.name»
+			«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c|c.getEClass(epackage, dependencies)]»
 			private final «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation delegate«sc.name.toFirstUpper»;
-«««			(final «sc.javaFullPath» delegate«sc.name.toFirstUpper»
 			«ENDFOR»
-			«ENDIF»
 			
 			public «className»(final «clazz.javaFullPath» self, «IF aleName == "$default"»Object«ELSE»final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR»«ENDIF» algebra) {
 				this.self = self;
 				«IF aleName != "$default"»this.algebra = algebra;«ENDIF»
-			«IF behaviorClass != null && !behaviorClass.superClass.empty»	
-				«FOR sc: behaviorClass.superClass.map[it.resolveCrossRef(aleScope)].map[cl | cl.getEClass(epackage, dependencies)].filter[x | x != null]»
-				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation(self, this);
+				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c|c.getEClass(epackage, dependencies)]»
+				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation(self, algebra);
 				«ENDFOR»
-				«ENDIF»
 			}
 			
 			
@@ -188,19 +212,37 @@ class GenerateAlgebra {
 			
 			«IF behaviorClass != null»
 			«FOR field:behaviorClass.flattenParentsFields(aleScope, epackage, dependencies, allAleClasses)»
-			public «field.type.solveStaticType(epackage, dependencies)» get«field.name.toFirstUpper»() {
-				«IF ! overloaded»return self.get«field.name.toFirstUpper»();«ELSE»return null;«ENDIF»
+			public «field.value.type.solveStaticType(epackage, dependencies)» get«field.value.name.toFirstUpper»() {
+				«IF !overloaded»
+				«IF field.key == behaviorClass»
+«««				return this.self.get«field.value.name.toFirstUpper»();
+				«IF field.value.type instanceof LiteralType && (field.value.type as LiteralType).lit == 'Boolean'»
+				return this.self.is«field.value.name.toFirstUpper»();
+				«ELSE»
+				return this.self.get«field.value.name.toFirstUpper»();
+				«ENDIF»
+				«ELSE»
+				return this.delegate«field.key.name.toFirstUpper».get«field.value.name.toFirstUpper»();
+				«ENDIF»
+				«ELSE»return null;
+				«ENDIF»
 			}
-			«IF !(field.type instanceof SequenceType)»
-			public void set«field.name.toFirstUpper»(«field.type.solveStaticType(epackage, dependencies)» «field.name») {
-				«IF !overloaded»self.set«field.name.toFirstUpper»(«field.name»);«ENDIF»
+			«IF !(field.value.type instanceof SequenceType)»
+			public void set«field.value.name.toFirstUpper»(«field.value.type.solveStaticType(epackage, dependencies)» «field.value.name») {
+				«IF !overloaded»
+				«IF field.key == behaviorClass» 
+				this.self.set«field.value.name.toFirstUpper»(«field.value.name»);
+				«ELSE»
+				this.delegate«field.key.name.toFirstUpper».set«field.value.name.toFirstUpper»(«field.value.name»);
+				«ENDIF»
+				«ENDIF»
 			}
 			«ENDIF»
 			«ENDFOR»
 			«FOR method: behaviorClass.flattenParentMethods(aleScope, epackage, dependencies, allAleClasses)»
-			public «method.type.solveStaticType(epackage, dependencies)» «method.name»(«FOR p: method.params»«p.type.solveStaticType(epackage, dependencies)» «p.name»«ENDFOR») {
+			public «method.value.type.solveStaticType(epackage, dependencies)» «method.value.name»(«FOR p: method.value.params»«p.type.solveStaticType(epackage, dependencies)» «p.name»«ENDFOR») {
 	 			«IF !overloaded»
-	 			«method.block.printBlock(epackage, dependencies)»«ELSE» «IF method.type.solveStaticType(epackage, dependencies) != 'void'»return null;«ENDIF»
+	 			«method.value.block.printBlock(new StatementContext(epackage, dependencies, behaviorClass, aleScope, allAleClasses))»«ELSE» «IF method.value.type.solveStaticType(epackage, dependencies) != 'void'»return null;«ENDIF»
 	 			«ENDIF»
 			}
 			«ENDFOR»
@@ -211,14 +253,14 @@ class GenerateAlgebra {
 	}
 	
 	
-	def List<Field> flattenParentsFields(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
-		val List<Field> ret = newArrayList()
-		ret.addAll(aleClazz.fields)
+	def List<Pair<AleClass,Field>> flattenParentsFields(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+		val List<Pair<AleClass,Field>> ret = newArrayList()
+		ret.addAll(aleClazz.fields.map[f | (aleClazz -> f)])
 		val listAllParents = aleClazz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)
 		for(AleClass p:listAllParents) {
 			for(Field pp: p.fields) {
-				if(!(ret.exists[f | f.name == pp.name])) {
-					ret.add(pp)
+				if(!(ret.exists[f | f.value.name == pp.name])) {
+					ret.add(p -> pp)
 				}
 			}
 		}
@@ -229,7 +271,7 @@ class GenerateAlgebra {
 	def List<AleClass> getIndirectSuperClasses(AleClass aleClazz, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
 		val ret = newArrayList()
 		val classes = this.getListAllClasses(ePackage, dependencies)
-		val aspectClasse = classes.filter[c | c.name == aleClazz.name+"_Aspect"].head
+		val aspectClasse = classes.filter[c | c != null && aleClazz != null && c.name == aleClazz.name+"_Aspect"].head
 		if(aspectClasse != null) {
 			for(EClass eClass: aspectClasse.ancestors) {
 				if(eClass.name.endsWith("_Aspect")) {
@@ -250,64 +292,28 @@ class GenerateAlgebra {
 		for(AleClass parentAC: aleClazz.getIndirectSuperClasses(ePackage, dependencies, allAleClasses).map[it.name.resolveCrossRef(aleScope)]) {
 			if(!ret.contains(parentAC)) {
 				ret.add(parentAC)
-				ret.addAll(parentAC.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses))
+				for(x : parentAC.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)) {
+					if(!ret.contains(x)) {
+						ret.add(x)
+					}
+				}
 			}			
 		}
 		ret
 	}
 	
-	def List<Method> flattenParentMethods(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
-		val List<Method> ret = newArrayList()
-		ret.addAll(aleClazz.methods)
+	def List<Pair<AleClass,Method>> flattenParentMethods(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+		val List<Pair<AleClass,Method>> ret = newArrayList()
+		for(Method sc: aleClazz.methods) {
+			ret.add(aleClazz -> sc)
+		}
 		val listAllParents = aleClazz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)
 		for(AleClass parent: listAllParents) {
 			for(Method meth: parent.methods) {
-				if(!ret.exists[m | m.name == meth.name && m.params.size == meth.params.size]) {
-					ret.add(meth)
+				if(!ret.exists[m | m.value.name == meth.name && m.value.params.size == meth.params.size]) {
+					ret.add(parent -> meth)
 				} 
 			}
-//			for(Field field: parent.fields) {
-//				
-//				// FIXME: hack
-//				
-//				var fieldType = field.type
-//				
-//				if(fieldType == null && field.name == "heldTokens") {
-//					fieldType = AleFactory.eINSTANCE.createSequenceType => [
-//						subType = AleFactory.eINSTANCE.createOutOfScopeType => [ externalClass = "Token" ]
-//					]
-//					
-//					 
-//				}
-//				
-//				if(fieldType == null && field.name == "running") {
-//					fieldType = AleFactory.eINSTANCE.createLiteralType => [ lit='Boolean' ]
-//				}
-//				
-//				
-//				
-//				
-//				val getMethod = AleFactory.eINSTANCE.createMethod
-//				getMethod.name = '''get«field.name.toFirstUpper»'''
-//				getMethod.type = fieldType
-//				if(!ret.exists[m | m.name == getMethod.name && m.params.size == getMethod.params.size]) {
-//					ret.add(getMethod)
-//				} 
-//				
-//				if(!(field.type instanceof SequenceType)) {
-//					val setMethod = AleFactory.eINSTANCE.createMethod
-//					setMethod.name = '''set«field.name.toFirstUpper»'''
-////					setMethod.type = null
-//					val setParam = AleFactory.eINSTANCE.createParam
-//					setParam.name = field.name
-//					setParam.type = fieldType
-//					setMethod.params.add(setParam)
-//					
-//					if(!ret.exists[m | m.name == setMethod.name && m.params.size == setMethod.params.size]) {
-//						ret.add(setMethod)
-//					} 
-//				}
-//			}
 		}
 		return ret;
 	}
@@ -318,57 +324,82 @@ class GenerateAlgebra {
 		return res;
 	}
 	
-	def String printBlock(Block block, EPackage ePackage, List<EPackage> dependencies) '''
+	def String printBlock(Block block, StatementContext ctx) '''
 	«IF block != null»
 	«FOR stmt: block.body»
-	«stmt.printStatement(ePackage, dependencies)»
+	«stmt.printStatement(ctx)»
 	«ENDFOR»
 	«ENDIF»
 	'''
 	
 	
-	def dispatch String printExpression(AddOperation addOperation, EPackage epackage) {
-		'''«addOperation.left.printExpression(epackage)» + «addOperation.right.printExpression(epackage)»'''
+	def dispatch String printExpression(AddOperation addOperation, ExpressionContext ctx) {
+		'''«addOperation.left.printExpression(ctx)» + «addOperation.right.printExpression(ctx)»'''
 	}
 	
-	def dispatch String printExpression(BooleanAndOperation booleanAndOperation, EPackage epackage) 
-		'''«booleanAndOperation.left.printExpression(epackage)» && «booleanAndOperation.right.printExpression(epackage)»'''
+	def dispatch String printExpression(BooleanAndOperation booleanAndOperation, ExpressionContext ctx) 
+		'''«booleanAndOperation.left.printExpression(ctx)» && «booleanAndOperation.right.printExpression(ctx)»'''
 	
-	def dispatch String printExpression(BooleanLiteral booleanLit, EPackage epackage) {
+	def dispatch String printExpression(BooleanLiteral booleanLit, ExpressionContext ctx) {
 		return booleanLit.value
 	}
 	
-	def dispatch String printExpression(BooleanOrOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» || «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(BooleanXorOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» ^ «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(ChainedCall exp, EPackage epackage) '''«exp.left.printExpression(epackage)».«exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(ChainedCallArrow exp, EPackage epackage) '''«exp.left.printExpression(epackage)».«exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(CompareGEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» >= «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(CompareGOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» > «exp.right.printExpression(epackage)»'''
+	def dispatch String printExpression(BooleanOrOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» || «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(BooleanXorOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» ^ «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(ChainedCall exp, ExpressionContext ctx) {
+		val defaultResult = '''«exp.left.printExpression(ctx)».«exp.right.printExpression(ctx)»''' 
+		if(exp.left instanceof SelfRef) {
+			if(exp.right instanceof OperationCallOperation) {
+				val opc = exp.right as OperationCallOperation
+				val method = ctx.selfAleClass.flattenParentMethods(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses).filter[it.value.name==opc.name && it.value.params.size == opc.parameters.size].head
+				if(method != null) {
+					if(method.key == ctx.selfAleClass) '''this.«exp.right.printExpression(ctx)»'''
+					else '''this.delegate«method.key.name.toFirstUpper».«exp.right.printExpression(ctx)»'''
+				} else {
+					// let's look at the fields
+					val field = ctx.selfAleClass.flattenParentsFields(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses).filter[('get'+it.value.name.toFirstUpper) == opc.name ||  ('set'+it.value.name.toFirstUpper) == opc.name].head
+					if(field != null) {
+						if(field.key == ctx.selfAleClass) '''self.«exp.right.printExpression(ctx)»'''
+						else '''this.delegate«field.key.name.toFirstUpper».«exp.right.printExpression(ctx)»'''
+					} else {
+						defaultResult
+					}
+				}
+			} else {
+				defaultResult
+			}
+		} else {
+			defaultResult
+		}
+	}
+	def dispatch String printExpression(ChainedCallArrow exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)».«exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(CompareGEOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» >= «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(CompareGOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» > «exp.right.printExpression(ctx)»'''
 	
-	def dispatch String printExpression(InstanceofOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» instanceof «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(CasttoOperation exp, EPackage epackage) '''((«exp.right.printExpression(epackage)»)«exp.left.printExpression(epackage)»)'''
+	def dispatch String printExpression(InstanceofOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» instanceof «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(CasttoOperation exp, ExpressionContext ctx) '''((«exp.right.printExpression(ctx)»)«exp.left.printExpression(ctx)»)'''
 	
-	def dispatch String printExpression(CompareLEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» <= «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(CompareLOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» < «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(CompareNEOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» != «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(DivOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» / «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(EqualityOperation exp, EPackage epackage) '''java.util.Objects.equals(«exp.left.printExpression(epackage)», «exp.right.printExpression(epackage)»)'''
-	def dispatch String printExpression(ImpliesOperation exp, EPackage epackage) '''!«exp.left.printExpression(epackage)» || «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(IntLiteral exp, EPackage epackage) '''«exp.value»'''
-	def dispatch String printExpression(IntRange exp, EPackage epackage) '''__TODO IntRange__'''
-	def dispatch String printExpression(MultOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» * «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(NegInfixOperation exp, EPackage epackage) '''-«exp.expression.printExpression(epackage)»'''
-	def dispatch String printExpression(NotInfixOperation exp, EPackage epackage) '''!«exp.expression.printExpression(epackage)»'''
-	def dispatch String printExpression(NullLiteral exp, EPackage epackage) '''null'''
-	def dispatch String printExpression(OperationCallOperation exp, EPackage epackage) {
+	def dispatch String printExpression(CompareLEOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» <= «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(CompareLOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» < «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(CompareNEOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» != «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(DivOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» / «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(EqualityOperation exp, ExpressionContext ctx) '''java.util.Objects.equals(«exp.left.printExpression(ctx)», «exp.right.printExpression(ctx)»)'''
+	def dispatch String printExpression(ImpliesOperation exp, ExpressionContext ctx) '''!«exp.left.printExpression(ctx)» || «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(IntLiteral exp, ExpressionContext ctx) '''«exp.value»'''
+	def dispatch String printExpression(IntRange exp, ExpressionContext ctx) '''__TODO IntRange__'''
+	def dispatch String printExpression(MultOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» * «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(NegInfixOperation exp, ExpressionContext ctx) '''-«exp.expression.printExpression(ctx)»'''
+	def dispatch String printExpression(NotInfixOperation exp, ExpressionContext ctx) '''!«exp.expression.printExpression(ctx)»'''
+	def dispatch String printExpression(NullLiteral exp, ExpressionContext ctx) '''null'''
+	def dispatch String printExpression(OperationCallOperation exp, ExpressionContext ctx) {
 		if(exp.eContainer instanceof ChainedCallArrow) {
 			return switch(exp.name) {
-				case 'select': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»).collect(new EListCollector<>())'''
-				case  'reject': '''stream().filter(«exp.parameters.head.lambda» -> !(«exp.parameters.head.expression.printExpression(epackage)»)).collect(new EListCollector<>())'''
-				case 'collect': '''stream().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»).collect(new EListCollector<>())'''
-				case  'any': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»).findAny().orElse(null)''' 
-				case 'exists' : '''stream().stream().findAny().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»).orElse(false)'''
-				case  'forAll': '''stream().stream().allMatch(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(epackage)»)'''
+				case 'select': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(ctx)»).collect(new EListCollector<>())'''
+				case  'reject': '''stream().filter(«exp.parameters.head.lambda» -> !(«exp.parameters.head.expression.printExpression(ctx)»)).collect(new EListCollector<>())'''
+				case 'collect': '''stream().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(ctx)»).collect(new EListCollector<>())'''
+				case  'any': '''stream().filter(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(ctx)»).findAny().orElse(null)''' 
+				case 'exists' : '''stream().stream().findAny().map(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(ctx)»).orElse(false)'''
+				case  'forAll': '''stream().stream().allMatch(«exp.parameters.head.lambda» -> «exp.parameters.head.expression.printExpression(ctx)»)'''
 				case 'isUnique' : '''__TODO__'''
 				case 'one' : '''__TODO__'''
 				case 'sortedBy': '''__TODO__''' 
@@ -376,20 +407,24 @@ class GenerateAlgebra {
 			}
 		} else {
 			if(exp.name == 'println') exp.name='System.out.println';
-			'''«exp.name»(«FOR param: exp.parameters SEPARATOR ',' »«IF param.lambda!= null»«param.lambda» -> «ENDIF»«param.expression.printExpression(epackage)»«ENDFOR»)''' // TODO deal with lambdas !
+			'''«exp.name»(«FOR param: exp.parameters SEPARATOR ',' »«IF param.lambda!= null»«param.lambda» -> «ENDIF»«param.expression.printExpression(ctx)»«ENDFOR»)''' // TODO deal with lambdas !
 		}
 	}
-	def dispatch String printExpression(OrderedSetDecl exp, EPackage epackage) '''__TODO OrderSetDecl__'''
-	def dispatch String printExpression(RealLiteral exp, EPackage epackage) '''«exp.value»'''
-	def dispatch String printExpression(OADenot exp, EPackage epackage) '''algebra.$(«exp.exp.printExpression(epackage)»)'''
-	def dispatch String printExpression(SelfRef exp, EPackage epackage) '''self''' // TODO: probably more smart than that!! aka delegation
-	def dispatch String printExpression(SequenceDecl exp, EPackage epackage) '''__TODO SequenceDECL__'''
-	def dispatch String printExpression(StringLiteral exp, EPackage epackage) '''"«exp.value»"'''
-	def dispatch String printExpression(SubOperation exp, EPackage epackage) '''«exp.left.printExpression(epackage)» - «exp.right.printExpression(epackage)»'''
-	def dispatch String printExpression(SuperRef exp, EPackage epackage) '''__TODO call super__''' // TODO: has to resolve where to call!!
-	def dispatch String printExpression(VarRef exp, EPackage epackage) '''«exp.value»'''
-	def dispatch String printExpression(NewSequence exp, EPackage epackage) '''new org.eclipse.emf.common.util.BasicEList<>();'''
-	def dispatch String printExpression(ConstructorOperation exp, EPackage epackage) '''«exp.getPackageName(epackage)»Factory.eINSTANCE.create«exp.name»()'''
+	def dispatch String printExpression(OrderedSetDecl exp, ExpressionContext ctx) '''__TODO OrderSetDecl__'''
+	def dispatch String printExpression(RealLiteral exp, ExpressionContext ctx) '''«exp.value»'''
+	def dispatch String printExpression(OADenot exp, ExpressionContext ctx) '''algebra.$(«exp.exp.printExpression(ctx)»)'''
+	def dispatch String printExpression(SelfRef exp, ExpressionContext ctx) '''self''' // TODO: probably more smart than that!! aka delegation
+	def dispatch String printExpression(SequenceDecl exp, ExpressionContext ctx) '''__TODO SequenceDECL__'''
+	def dispatch String printExpression(StringLiteral exp, ExpressionContext ctx) '''"«exp.value»"'''
+	def dispatch String printExpression(SubOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» - «exp.right.printExpression(ctx)»'''
+	def dispatch String printExpression(SuperRef exp, ExpressionContext ctx) {
+		// TODO: scan parents (so we have to know the context) and call the delegate to the first found class with the lookef for method 
+		// so cannot be done without the called methods 
+		'''__TODO call super__'''
+	} // TODO: has to resolve where to call!!
+	def dispatch String printExpression(VarRef exp, ExpressionContext ctx) '''«exp.value»'''
+	def dispatch String printExpression(NewSequence exp, ExpressionContext ctx) '''new org.eclipse.emf.common.util.BasicEList<>();'''
+	def dispatch String printExpression(ConstructorOperation exp, ExpressionContext ctx) '''«exp.getPackageName(ctx.ePackage)»Factory.eINSTANCE.create«exp.name»()'''
 	
 	def String getPackageName(ConstructorOperation co, EPackage epackage) {
 		val graph = buildGraph(epackage, null)
@@ -398,44 +433,44 @@ class GenerateAlgebra {
 		
 	}
 	
-	def dispatch String printStatement(Expression expression, EPackage ePackage, List<EPackage> dependencies) '''«expression.printExpression(ePackage)»;'''
+	def dispatch String printStatement(Expression expression, StatementContext ctx) '''«expression.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))»;'''
 	
-	def dispatch String printStatement(ForLoop forLoop, EPackage ePackage, List<EPackage> dependencies) {
+	def dispatch String printStatement(ForLoop forLoop, StatementContext ctx) {
 		'''
-		for(«forLoop.type.solveStaticType(ePackage, dependencies)» «forLoop.name»: «forLoop.collection.printExpression(ePackage)») {
-			«forLoop.block.printBlock(ePackage, dependencies)»
+		for(«forLoop.type.solveStaticType(ctx.ePackage, ctx.dependencies)» «forLoop.name»: «forLoop.collection.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))») {
+			«forLoop.block.printBlock(ctx)»
 		}
 		'''
 	}
 	
-	def dispatch String printStatement(IfStatement ifStatement, EPackage ePackage, List<EPackage> dependencies) {
-		'''if(«ifStatement.condition.printExpression(ePackage)») {
-			«ifStatement.thenBranch.printBlock(ePackage, dependencies)»
+	def dispatch String printStatement(IfStatement ifStatement, StatementContext ctx) {
+		'''if(«ifStatement.condition.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))») {
+			«ifStatement.thenBranch.printBlock(ctx)»
 		} «IF ifStatement.elseBranch != null» else {
-			«ifStatement.elseBranch.printBlock(ePackage, dependencies)»
+			«ifStatement.elseBranch.printBlock(ctx)»
 		}
 		«ENDIF»'''
 	}
 	
-	def dispatch String printStatement(LetStatement letStatement, EPackage ePackage, List<EPackage> dependencies) {
+	def dispatch String printStatement(LetStatement letStatement, StatementContext ctx) {
 		'''__TODO__'''
 	}
 	
-	def dispatch String printStatement(ReturnStatement returnStatement, EPackage ePackage, List<EPackage> dependencies) {
-		'''return «returnStatement.returned.printExpression(ePackage)»;'''
+	def dispatch String printStatement(ReturnStatement returnStatement, StatementContext ctx) {
+		'''return «returnStatement.returned.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))»;'''
 	}
 	
-	def dispatch String printStatement(VarDeclaration varAssign, EPackage ePackage, List<EPackage> dependencies) 
-		'''«varAssign.type.solveStaticType(ePackage, dependencies)» «varAssign.name» = «varAssign.value.printExpression(ePackage)»;'''
+	def dispatch String printStatement(VarDeclaration varAssign, StatementContext ctx) 
+		'''«varAssign.type.solveStaticType(ctx.ePackage, ctx.dependencies)» «varAssign.name» = «varAssign.value.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))»;'''
 		
-	def dispatch String printStatement(VarAssign varAssign, EPackage ePackage, List<EPackage> dependencies) 
-		'''«varAssign.name» = «varAssign.value.printExpression(ePackage)»;'''
+	def dispatch String printStatement(VarAssign varAssign, StatementContext ctx) 
+		'''«varAssign.name» = «varAssign.value.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))»;'''
 	
 	
-	def dispatch String printStatement(WhileStatement whileStatement, EPackage ePackage, List<EPackage> dependencies) {
+	def dispatch String printStatement(WhileStatement whileStatement, StatementContext ctx) {
 		'''
-		while(«whileStatement.condition.printExpression(ePackage)») {
-			«whileStatement.whileBlock.printBlock(ePackage, dependencies)»
+		while(«whileStatement.condition.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))») {
+			«whileStatement.whileBlock.printBlock(ctx)»
 		}
 		'''
 	}

@@ -685,9 +685,33 @@ ruleField returns [EObject current=null]
 					}
 				)
 			)
-			otherlv_8=';'
+			(
+				otherlv_8='rev'
+				{
+					newLeafNode(otherlv_8, grammarAccess.getFieldAccess().getRevKeyword_1_4_0());
+				}
+				(
+					(
+						lv_reverse_9_0=RULE_ID
+						{
+							newLeafNode(lv_reverse_9_0, grammarAccess.getFieldAccess().getReverseIDTerminalRuleCall_1_4_1_0());
+						}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getFieldRule());
+							}
+							setWithLastConsumed(
+								$current,
+								"reverse",
+								lv_reverse_9_0,
+								"org.eclipse.xtext.common.Terminals.ID");
+						}
+					)
+				)
+			)?
+			otherlv_10=';'
 			{
-				newLeafNode(otherlv_8, grammarAccess.getFieldAccess().getSemicolonKeyword_1_4());
+				newLeafNode(otherlv_10, grammarAccess.getFieldAccess().getSemicolonKeyword_1_5());
 			}
 		)
 		    |
@@ -699,16 +723,16 @@ ruleField returns [EObject current=null]
 						$current);
 				}
 			)
-			otherlv_10='cont'
+			otherlv_12='cont'
 			{
-				newLeafNode(otherlv_10, grammarAccess.getFieldAccess().getContKeyword_2_1());
+				newLeafNode(otherlv_12, grammarAccess.getFieldAccess().getContKeyword_2_1());
 			}
 			(
 				(
 					{
 						newCompositeNode(grammarAccess.getFieldAccess().getTypeTypeParserRuleCall_2_2_0());
 					}
-					lv_type_11_0=ruleType
+					lv_type_13_0=ruleType
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getFieldRule());
@@ -716,7 +740,7 @@ ruleField returns [EObject current=null]
 						set(
 							$current,
 							"type",
-							lv_type_11_0,
+							lv_type_13_0,
 							"ale.xtext.Ale.Type");
 						afterParserOrEnumRuleCall();
 					}
@@ -724,9 +748,9 @@ ruleField returns [EObject current=null]
 			)
 			(
 				(
-					lv_name_12_0=RULE_ID
+					lv_name_14_0=RULE_ID
 					{
-						newLeafNode(lv_name_12_0, grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_2_3_0());
+						newLeafNode(lv_name_14_0, grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_2_3_0());
 					}
 					{
 						if ($current==null) {
@@ -735,14 +759,14 @@ ruleField returns [EObject current=null]
 						setWithLastConsumed(
 							$current,
 							"name",
-							lv_name_12_0,
+							lv_name_14_0,
 							"org.eclipse.xtext.common.Terminals.ID");
 					}
 				)
 			)
-			otherlv_13=';'
+			otherlv_15=';'
 			{
-				newLeafNode(otherlv_13, grammarAccess.getFieldAccess().getSemicolonKeyword_2_4());
+				newLeafNode(otherlv_15, grammarAccess.getFieldAccess().getSemicolonKeyword_2_4());
 			}
 		)
 	)

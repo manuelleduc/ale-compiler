@@ -2802,6 +2802,7 @@ rule__Field__Group_1__4
 	}
 :
 	rule__Field__Group_1__4__Impl
+	rule__Field__Group_1__5
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -2813,9 +2814,89 @@ rule__Field__Group_1__4__Impl
 	}
 :
 (
-	{ before(grammarAccess.getFieldAccess().getSemicolonKeyword_1_4()); }
+	{ before(grammarAccess.getFieldAccess().getGroup_1_4()); }
+	(rule__Field__Group_1_4__0)?
+	{ after(grammarAccess.getFieldAccess().getGroup_1_4()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Field__Group_1__5
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__Field__Group_1__5__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Field__Group_1__5__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getFieldAccess().getSemicolonKeyword_1_5()); }
 	';'
-	{ after(grammarAccess.getFieldAccess().getSemicolonKeyword_1_4()); }
+	{ after(grammarAccess.getFieldAccess().getSemicolonKeyword_1_5()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+rule__Field__Group_1_4__0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__Field__Group_1_4__0__Impl
+	rule__Field__Group_1_4__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Field__Group_1_4__0__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getFieldAccess().getRevKeyword_1_4_0()); }
+	'rev'
+	{ after(grammarAccess.getFieldAccess().getRevKeyword_1_4_0()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Field__Group_1_4__1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__Field__Group_1_4__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Field__Group_1_4__1__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getFieldAccess().getReverseAssignment_1_4_1()); }
+	(rule__Field__ReverseAssignment_1_4_1)
+	{ after(grammarAccess.getFieldAccess().getReverseAssignment_1_4_1()); }
 )
 ;
 finally {
@@ -10396,6 +10477,21 @@ rule__Field__NameAssignment_1_3
 		{ before(grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_1_3_0()); }
 		RULE_ID
 		{ after(grammarAccess.getFieldAccess().getNameIDTerminalRuleCall_1_3_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Field__ReverseAssignment_1_4_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getFieldAccess().getReverseIDTerminalRuleCall_1_4_1_0()); }
+		RULE_ID
+		{ after(grammarAccess.getFieldAccess().getReverseIDTerminalRuleCall_1_4_1_0()); }
 	)
 ;
 finally {

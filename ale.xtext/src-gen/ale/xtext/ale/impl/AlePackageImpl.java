@@ -1093,6 +1093,16 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getRefField_Reverse()
+  {
+    return (EAttribute)refFieldEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getContainmentField()
   {
     return containmentFieldEClass;
@@ -2459,6 +2469,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     primitiveFieldEClass = createEClass(PRIMITIVE_FIELD);
 
     refFieldEClass = createEClass(REF_FIELD);
+    createEAttribute(refFieldEClass, REF_FIELD__REVERSE);
 
     containmentFieldEClass = createEClass(CONTAINMENT_FIELD);
 
@@ -2798,6 +2809,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEClass(primitiveFieldEClass, PrimitiveField.class, "PrimitiveField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(refFieldEClass, RefField.class, "RefField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getRefField_Reverse(), ecorePackage.getEString(), "reverse", null, 0, 1, RefField.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(containmentFieldEClass, ContainmentField.class, "ContainmentField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

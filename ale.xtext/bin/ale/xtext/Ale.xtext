@@ -30,7 +30,7 @@ NewClass returns AleClass:
 
 Field returns Field:
 	{PrimitiveField} type=Type name=ID ';' |
-	{RefField} 'ref' type=Type name=ID ';' |
+	{RefField} 'ref' type=Type name=ID ('rev' reverse=ID)? ';' |
 	{ContainmentField} 'cont' type=Type name=ID ';';
 
 Method:

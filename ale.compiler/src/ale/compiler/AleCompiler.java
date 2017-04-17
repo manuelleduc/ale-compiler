@@ -27,8 +27,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EGenericType;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.ETypedElement;
@@ -45,7 +43,6 @@ import com.google.inject.Injector;
 
 import ale.xtext.AleStandaloneSetup;
 import ale.xtext.ale.AleClass;
-import ale.xtext.ale.AleFactory;
 import ale.xtext.ale.ContainmentField;
 import ale.xtext.ale.Field;
 import ale.xtext.ale.LiteralType;
@@ -405,7 +402,6 @@ public class AleCompiler {
 		final String behaviourName = modelBehavior.getName();
 		final Map<ale.xtext.ale.AleClass, List<Field>> clazzList = new HashMap<>();
 
-		
 		// init the list of classes with all the extended classes
 		final List<ale.xtext.ale.AleClass> classExtensions = modelBehavior.getClasses();
 		classExtensions.forEach(extendedClass -> {
@@ -441,27 +437,37 @@ public class AleCompiler {
 			final EClass syntacticClazz = mapClassEClass.get(aleClass);
 			final List<EClass> allClasses = new GenerateAlgebra().getListAllClasses(rootPackage, dependencies);
 			aleClass.getSuperClass().forEach((final String sc) -> {
-				final Stream<String> filter = clazzList.keySet().stream().filter(x -> x instanceof OpenClass)
+				final Stream<String> filter = clazzList.keySet().stream()// .filter(x
+																			// ->
+																			// x
+																			// instanceof
+																			// OpenClass)
 						.map(x1 -> x1.getName()).filter((final String n) -> sc.equals(n));
 				final long count = filter.count();
+				System.out.println(count);
 				if (count > 0) {
 					// if the class have been redefined in ale
-					final EClass parent = allClasses.stream().filter(x -> x.getName().equals(sc + "_Aspect"))
-							.findFirst().get();
-					syntacticClazz.getESuperTypes().add(parent.eClass());
 
-				} 
-//				else {
-//					// final List<EClass> allClasses = new
-//					// GenerateAlgebra().getListAllClasses(rootPackage,
-//					// dependencies);
-//					final EClass eClass = allClasses.stream().filter(x -> x.getName().equals(sc)).findFirst().get();
-//					syntacticClazz.getESuperTypes().add(eClass);
-//				}
+					final EClass parent;
+					parent = allClasses.stream()
+							.filter(x -> x.getName().equals(sc + "_Aspect") || x.getName().equals(sc)).findFirst()
+							.get();
+					syntacticClazz.getESuperTypes().add(parent);
+
+				}
+				// else {
+				// // final List<EClass> allClasses = new
+				// // GenerateAlgebra().getListAllClasses(rootPackage,
+				// // dependencies);
+				// final EClass eClass = allClasses.stream().filter(x ->
+				// x.getName().equals(sc)).findFirst().get();
+				// syntacticClazz.getESuperTypes().add(eClass);
+				// }
 
 			});
 
-			final EClass syntacticClass = allClasses.stream().filter(x -> x.getName().equals(aleClass.getName())).findFirst().orElse(null);
+			final EClass syntacticClass = allClasses.stream().filter(x -> x.getName().equals(aleClass.getName()))
+					.findFirst().orElse(null);
 			if (syntacticClass != null && syntacticClass.getESuperTypes() != null) {
 				for (final EClass superParent : syntacticClass.getESuperTypes()) {
 					// if parents of the weave class are themselves
@@ -479,6 +485,8 @@ public class AleCompiler {
 			}
 		});
 
+		final Map<Field, EReference> solvedRefs = new HashMap<>();
+		
 		// then we complet them with the fields
 		clazzList.entrySet().stream().forEach(entry -> {
 			final EClass clazz = mapClassEClass.get(entry.getKey());
@@ -495,6 +503,8 @@ public class AleCompiler {
 					createEReference.setUpperBound(refField.getType() instanceof SequenceType ? -1 : 1);
 					createEReference.setEType(typedElem.getEType());
 					createEReference.setContainment(false);
+					
+					solvedRefs.put(variableDecl, createEReference);
 
 					clazz.getEReferences().add(createEReference);
 
@@ -527,6 +537,38 @@ public class AleCompiler {
 						ref.setEType(resolveType);
 						clazz.getEReferences().add(ref);
 
+					}
+				}
+
+			});
+
+		});
+
+		// Resolution of the opposite references
+		clazzList.entrySet().stream().forEach(entry -> {
+//			final EClass clazz = mapClassEClass.get(entry.getKey());
+			entry.getValue().stream().forEach(variableDecl -> {
+				if (variableDecl instanceof RefField) {
+					final RefField refField = (RefField) variableDecl;
+					if (refField.getReverse() != null) {
+						
+						EReference createEReference = solvedRefs.get(variableDecl);
+
+//						final ETypedElement typedElem = resolveType(variableDecl.getType(), resourceSet, behaviors,
+//								rootPackage, dependencies, clazzList);
+						EReference value = ((EClass) createEReference.getEType()).getEReferences().stream()
+								.filter(f -> f.getName().equals(refField.getReverse())).findFirst().orElse(null);
+//						if (value == null) {
+//							final List<EClass> allClasses = new GenerateAlgebra().getListAllClasses(rootPackage,
+//									dependencies);
+//							final EClass tmp = allClasses.stream()
+//									.filter(a -> a.getName().equals(typedElem.getName() + "_Aspect")).findFirst()
+//									.orElse(null);
+//							value = tmp.getEReferences().stream().filter(f -> f.getName().equals(refField.getReverse()))
+//									.findFirst().orElse(null);
+
+//						}
+						createEReference.setEOpposite(value);
 					}
 				}
 

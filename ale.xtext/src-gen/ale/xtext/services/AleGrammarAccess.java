@@ -353,7 +353,11 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeTypeParserRuleCall_1_2_0 = (RuleCall)cTypeAssignment_1_2.eContents().get(0);
 		private final Assignment cNameAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
 		private final RuleCall cNameIDTerminalRuleCall_1_3_0 = (RuleCall)cNameAssignment_1_3.eContents().get(0);
-		private final Keyword cSemicolonKeyword_1_4 = (Keyword)cGroup_1.eContents().get(4);
+		private final Group cGroup_1_4 = (Group)cGroup_1.eContents().get(4);
+		private final Keyword cRevKeyword_1_4_0 = (Keyword)cGroup_1_4.eContents().get(0);
+		private final Assignment cReverseAssignment_1_4_1 = (Assignment)cGroup_1_4.eContents().get(1);
+		private final RuleCall cReverseIDTerminalRuleCall_1_4_1_0 = (RuleCall)cReverseAssignment_1_4_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_1_5 = (Keyword)cGroup_1.eContents().get(5);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Action cContainmentFieldAction_2_0 = (Action)cGroup_2.eContents().get(0);
 		private final Keyword cContKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
@@ -364,12 +368,12 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSemicolonKeyword_2_4 = (Keyword)cGroup_2.eContents().get(4);
 		
 		//Field:
-		//	{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ';' | {ContainmentField} 'cont' type=Type
-		//	name=ID ';';
+		//	{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ('rev' reverse=ID)? ';' |
+		//	{ContainmentField} 'cont' type=Type name=ID ';';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ';' | {ContainmentField} 'cont' type=Type
-		//name=ID ';'
+		//{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ('rev' reverse=ID)? ';' | {ContainmentField}
+		//'cont' type=Type name=ID ';'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//{PrimitiveField} type=Type name=ID ';'
@@ -393,7 +397,7 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		//';'
 		public Keyword getSemicolonKeyword_0_3() { return cSemicolonKeyword_0_3; }
 		
-		//{RefField} 'ref' type=Type name=ID ';'
+		//{RefField} 'ref' type=Type name=ID ('rev' reverse=ID)? ';'
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//{RefField}
@@ -414,8 +418,20 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_1_3_0() { return cNameIDTerminalRuleCall_1_3_0; }
 		
+		//('rev' reverse=ID)?
+		public Group getGroup_1_4() { return cGroup_1_4; }
+		
+		//'rev'
+		public Keyword getRevKeyword_1_4_0() { return cRevKeyword_1_4_0; }
+		
+		//reverse=ID
+		public Assignment getReverseAssignment_1_4_1() { return cReverseAssignment_1_4_1; }
+		
+		//ID
+		public RuleCall getReverseIDTerminalRuleCall_1_4_1_0() { return cReverseIDTerminalRuleCall_1_4_1_0; }
+		
 		//';'
-		public Keyword getSemicolonKeyword_1_4() { return cSemicolonKeyword_1_4; }
+		public Keyword getSemicolonKeyword_1_5() { return cSemicolonKeyword_1_5; }
 		
 		//{ContainmentField} 'cont' type=Type name=ID ';'
 		public Group getGroup_2() { return cGroup_2; }
@@ -2585,8 +2601,8 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Field:
-	//	{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ';' | {ContainmentField} 'cont' type=Type
-	//	name=ID ';';
+	//	{PrimitiveField} type=Type name=ID ';' | {RefField} 'ref' type=Type name=ID ('rev' reverse=ID)? ';' |
+	//	{ContainmentField} 'cont' type=Type name=ID ';';
 	public FieldElements getFieldAccess() {
 		return pField;
 	}

@@ -1,5 +1,6 @@
 # TODO
 
+- ForkedEtControlToken n'héritent pas de Token !
 - résoudre le mystère des types nuls dans les fields 
 - Gérer les delegates et l'appel au super !
 - Générer les syntaxes et interfaces parents si non présentes !

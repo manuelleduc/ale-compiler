@@ -61,7 +61,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="OpenClass" eSuperTypes="#//AleClass"/>
   <eClassifiers xsi:type="ecore:EClass" name="NewClass" eSuperTypes="#//AleClass"/>
   <eClassifiers xsi:type="ecore:EClass" name="PrimitiveField" eSuperTypes="#//Field"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RefField" eSuperTypes="#//Field"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RefField" eSuperTypes="#//Field">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reverse" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContainmentField" eSuperTypes="#//Field"/>
   <eClassifiers xsi:type="ecore:EClass" name="ReturnStatement" eSuperTypes="#//Statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="returned" eType="#//Expression"

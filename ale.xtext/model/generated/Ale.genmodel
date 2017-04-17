@@ -56,7 +56,9 @@
     <genClasses ecoreClass="Ale.ecore#//OpenClass"/>
     <genClasses ecoreClass="Ale.ecore#//NewClass"/>
     <genClasses ecoreClass="Ale.ecore#//PrimitiveField"/>
-    <genClasses ecoreClass="Ale.ecore#//RefField"/>
+    <genClasses ecoreClass="Ale.ecore#//RefField">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//RefField/reverse"/>
+    </genClasses>
     <genClasses ecoreClass="Ale.ecore#//ContainmentField"/>
     <genClasses ecoreClass="Ale.ecore#//ReturnStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ReturnStatement/returned"/>

@@ -825,13 +825,22 @@ public interface AlePackage extends EPackage
   int REF_FIELD__NAME = FIELD__NAME;
 
   /**
+   * The feature id for the '<em><b>Reverse</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REF_FIELD__REVERSE = FIELD_FEATURE_COUNT + 0;
+
+  /**
    * The number of structural features of the '<em>Ref Field</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int REF_FIELD_FEATURE_COUNT = FIELD_FEATURE_COUNT + 0;
+  int REF_FIELD_FEATURE_COUNT = FIELD_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link ale.xtext.ale.impl.ContainmentFieldImpl <em>Containment Field</em>}' class.
@@ -2977,6 +2986,17 @@ public interface AlePackage extends EPackage
   EClass getRefField();
 
   /**
+   * Returns the meta object for the attribute '{@link ale.xtext.ale.RefField#getReverse <em>Reverse</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Reverse</em>'.
+   * @see ale.xtext.ale.RefField#getReverse()
+   * @see #getRefField()
+   * @generated
+   */
+  EAttribute getRefField_Reverse();
+
+  /**
    * Returns the meta object for class '{@link ale.xtext.ale.ContainmentField <em>Containment Field</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4729,6 +4749,14 @@ public interface AlePackage extends EPackage
      * @generated
      */
     EClass REF_FIELD = eINSTANCE.getRefField();
+
+    /**
+     * The meta object literal for the '<em><b>Reverse</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute REF_FIELD__REVERSE = eINSTANCE.getRefField_Reverse();
 
     /**
      * The meta object literal for the '{@link ale.xtext.ale.impl.ContainmentFieldImpl <em>Containment Field</em>}' class.
