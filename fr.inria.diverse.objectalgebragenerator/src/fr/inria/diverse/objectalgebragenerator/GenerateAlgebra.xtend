@@ -530,6 +530,10 @@ class GenerateAlgebra {
 		 * Here we have to generate one method per class
 		 */
 		val graph = buildGraph(ePackage, dependencies)
+		
+		val allMethods = graph.nodes.sortBy[e|e.elem.name].filter[e|e.elem.EPackage.equals(ePackage)].filter [ e |
+			!e.elem.abstract
+		]
 
 		'''
 			package «ePackage.name».algebra.impl;
@@ -541,7 +545,32 @@ class GenerateAlgebra {
 					default «clazz.operationInterfacePath(clazz.findAleClass(allAleClasses))» «clazz.name.toFirstLower»(final «clazz.javaFullPath» «clazz.name.toFirstLower») {
 						return new «clazz.EPackage.name».«clazz.findAleClass(allAleClasses).findNameOrDefault».algebra.impl.operation.«clazz.EPackage.name.toFirstUpper»«clazz.findAleClass(allAleClasses).findNameOrDefault.toFirstUpper»«clazz.name.toFirstUpper»Operation(«clazz.name.toFirstLower», this);
 					} 
+					«FOR parent: clazz.ancestors»
+					@Override
+					default «clazz.operationInterfacePath(clazz.findAleClass(allAleClasses))» «parent.name.toFirstLower»_«clazz.name.toFirstLower»(final «clazz.javaFullPath» «clazz.name.toFirstLower») {
+						return new «clazz.EPackage.name».«clazz.findAleClass(allAleClasses).findNameOrDefault».algebra.impl.operation.«clazz.EPackage.name.toFirstUpper»«clazz.findAleClass(allAleClasses).findNameOrDefault.toFirstUpper»«clazz.name.toFirstUpper»Operation(«clazz.name.toFirstLower», this);
+					} 
+					«ENDFOR»
 				«ENDFOR»
+				
+				
+«««				«FOR clazz : allMethods.map[elem]»
+««««««				«clazzNode.elem.genericType(false)» «clazzNode.elem.name.toFirstLower»(final «clazzNode.elem.javaFullPath» «clazzNode.elem.name.toFirstLower»);
+«««				@Override
+«««				default «clazz.operationInterfacePath(clazz.findAleClass(allAleClasses))» «clazz.name.toFirstLower»(final «clazz.javaFullPath» «clazz.name.toFirstLower») {
+«««					return new «clazz.EPackage.name».«clazz.findAleClass(allAleClasses).findNameOrDefault».algebra.impl.operation.«clazz.EPackage.name.toFirstUpper»«clazz.findAleClass(allAleClasses).findNameOrDefault.toFirstUpper»«clazz.name.toFirstUpper»Operation(«clazz.name.toFirstLower», this);
+«««				}
+«««				«FOR parent: clazz.ancestors»
+««««««					«parent.genericType(false)» «parent.name.toFirstLower»_«clazzNode.elem.name.toFirstLower»(final «clazzNode.elem.javaFullPath» «clazzNode.elem.name.toFirstLower»);
+«««				@Override
+«««				default «parent.operationInterfacePath(parent.findAleClass(allAleClasses))» «parent.name.toFirstLower»(final «clazz.javaFullPath» «parent.name.toFirstLower») {
+««««««					return new «parent.EPackage.name».«parent.findAleClass(allAleClasses).findNameOrDefault».algebra.impl.operation.«parent.EPackage.name.toFirstUpper»«parent.findAleClass(allAleClasses).findNameOrDefault.toFirstUpper»«parent.name.toFirstUpper»Operation(«parent.name.toFirstLower», this);
+«««//// new elem
+«««					return new «clazz.EPackage.name».«clazz.findAleClass(allAleClasses).findNameOrDefault».algebra.impl.operation.«clazz.EPackage.name.toFirstUpper»«clazz.findAleClass(allAleClasses).findNameOrDefault.toFirstUpper»«clazz.name.toFirstUpper»Operation(«clazz.name.toFirstLower», this);
+«««				}
+«««				«ENDFOR»
+«««				
+«««				«ENDFOR»
 			}
 		'''
 	}
