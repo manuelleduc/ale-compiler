@@ -211,7 +211,7 @@ class GenerateAlgebra {
 			
 			
 			«IF behaviorClass != null»
-			«FOR field:behaviorClass.flattenParentsFields(aleScope, epackage, dependencies, allAleClasses)»
+			«FOR field:behaviorClass.flattenParentsFields(aleScope, epackage, dependencies, allAleClasses, true)»
 			public «field.value.type.solveStaticType(epackage, dependencies)» get«field.value.name.toFirstUpper»() {
 				«IF !overloaded»
 				«IF field.key == behaviorClass»
@@ -239,7 +239,7 @@ class GenerateAlgebra {
 			}
 			«ENDIF»
 			«ENDFOR»
-			«FOR method: behaviorClass.flattenParentMethods(aleScope, epackage, dependencies, allAleClasses)»
+			«FOR method: behaviorClass.flattenParentMethods(aleScope, epackage, dependencies, allAleClasses, true)»
 			public «method.value.type.solveStaticType(epackage, dependencies)» «method.value.name»(«FOR p: method.value.params»«p.type.solveStaticType(epackage, dependencies)» «p.name»«ENDFOR») {
 	 			«IF !overloaded»
 	 			«method.value.block.printBlock(new StatementContext(epackage, dependencies, behaviorClass, aleScope, allAleClasses))»«ELSE» «IF method.value.type.solveStaticType(epackage, dependencies) != 'void'»return null;«ENDIF»
@@ -253,9 +253,11 @@ class GenerateAlgebra {
 	}
 	
 	
-	def List<Pair<AleClass,Field>> flattenParentsFields(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+	def List<Pair<AleClass,Field>> flattenParentsFields(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses, boolean includeSelf) {
 		val List<Pair<AleClass,Field>> ret = newArrayList()
-		ret.addAll(aleClazz.fields.map[f | (aleClazz -> f)])
+		if(includeSelf) {
+			ret.addAll(aleClazz.fields.map[f | (aleClazz -> f)])
+		}
 		val listAllParents = aleClazz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)
 		for(AleClass p:listAllParents) {
 			for(Field pp: p.fields) {
@@ -289,6 +291,18 @@ class GenerateAlgebra {
 	
 	def List<AleClass> getAllSuperClasses(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
 		val ret = newArrayList()
+		if(aleClazz != null && aleClazz.superClass != null) {
+			for(AleClass parentz: aleClazz.superClass.map[it.resolveCrossRef(aleScope)]) {
+				if(!ret.contains(parentz)) {
+					ret.add(parentz)
+					for(x: parentz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)) {
+						if(!ret.contains(x)) {
+							ret.add(x);
+						}
+					}
+				}
+			}
+		}
 		for(AleClass parentAC: aleClazz.getIndirectSuperClasses(ePackage, dependencies, allAleClasses).map[it.name.resolveCrossRef(aleScope)]) {
 			if(!ret.contains(parentAC)) {
 				ret.add(parentAC)
@@ -302,10 +316,12 @@ class GenerateAlgebra {
 		ret
 	}
 	
-	def List<Pair<AleClass,Method>> flattenParentMethods(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+	def List<Pair<AleClass,Method>> flattenParentMethods(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses, boolean includeSelf) {
 		val List<Pair<AleClass,Method>> ret = newArrayList()
-		for(Method sc: aleClazz.methods) {
-			ret.add(aleClazz -> sc)
+		if(includeSelf) {
+			for(Method sc: aleClazz.methods) {
+				ret.add(aleClazz -> sc)
+			}
 		}
 		val listAllParents = aleClazz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)
 		for(AleClass parent: listAllParents) {
@@ -347,29 +363,50 @@ class GenerateAlgebra {
 	def dispatch String printExpression(BooleanOrOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» || «exp.right.printExpression(ctx)»'''
 	def dispatch String printExpression(BooleanXorOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» ^ «exp.right.printExpression(ctx)»'''
 	def dispatch String printExpression(ChainedCall exp, ExpressionContext ctx) {
-		val defaultResult = '''«exp.left.printExpression(ctx)».«exp.right.printExpression(ctx)»''' 
+		val defaultResult = ['''«exp.left.printExpression(ctx)».«exp.right.printExpression(ctx)»'''.toString] 
 		if(exp.left instanceof SelfRef) {
 			if(exp.right instanceof OperationCallOperation) {
 				val opc = exp.right as OperationCallOperation
-				val method = ctx.selfAleClass.flattenParentMethods(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses).filter[it.value.name==opc.name && it.value.params.size == opc.parameters.size].head
+				val method = ctx.selfAleClass.flattenParentMethods(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, true).filter[it.value.name==opc.name && it.value.params.size == opc.parameters.size].head
 				if(method != null) {
 					if(method.key == ctx.selfAleClass) '''this.«exp.right.printExpression(ctx)»'''
 					else '''this.delegate«method.key.name.toFirstUpper».«exp.right.printExpression(ctx)»'''
 				} else {
 					// let's look at the fields
-					val field = ctx.selfAleClass.flattenParentsFields(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses).filter[('get'+it.value.name.toFirstUpper) == opc.name ||  ('set'+it.value.name.toFirstUpper) == opc.name].head
+					val field = ctx.selfAleClass.flattenParentsFields(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, true).filter[('get'+it.value.name.toFirstUpper) == opc.name ||  ('set'+it.value.name.toFirstUpper) == opc.name].head
 					if(field != null) {
 						if(field.key == ctx.selfAleClass) '''self.«exp.right.printExpression(ctx)»'''
 						else '''this.delegate«field.key.name.toFirstUpper».«exp.right.printExpression(ctx)»'''
 					} else {
-						defaultResult
+						defaultResult.apply(null)
 					}
 				}
 			} else {
-				defaultResult
+				defaultResult.apply(null)
+			}
+			
+		} else if(exp.left instanceof SuperRef) {
+			if(exp.right instanceof OperationCallOperation) {
+				val oco = exp.right as OperationCallOperation
+				val method = ctx.selfAleClass.flattenParentMethods(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, false)
+					.filter[it.value.name==oco.name && it.value.params.size == oco.parameters.size].head
+				if(method != null) {
+					'''this.delegate«method.key.name.toFirstUpper».«exp.right.printExpression(ctx)»'''
+				} else {
+					// let's look at the fields
+					val field = ctx.selfAleClass.flattenParentsFields(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, false)
+						.filter[('get'+it.value.name.toFirstUpper) == oco.name ||  ('set'+it.value.name.toFirstUpper) == oco.name].head
+					if(field != null) {
+						'''this.delegate«field.key.name.toFirstUpper».«exp.right.printExpression(ctx)»'''
+					} else {
+						defaultResult.apply(null)
+					}
+				}
+			} else {
+				defaultResult.apply(null)
 			}
 		} else {
-			defaultResult
+			defaultResult.apply(null)
 		}
 	}
 	def dispatch String printExpression(ChainedCallArrow exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)».«exp.right.printExpression(ctx)»'''

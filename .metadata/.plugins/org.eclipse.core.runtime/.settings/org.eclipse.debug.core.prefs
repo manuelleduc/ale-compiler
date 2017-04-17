@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
 org.eclipse.debug.core.PREF_BREAKPOINT_MANAGER_ENABLED_STATE=true
 org.eclipse.debug.core.USE_STEP_FILTERS=true
-prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<watchExpressions>\n<expression enabled\="true" text\="entry.elem.eContainer()"/>\n<expression enabled\="true" text\="m"/>\n<expression enabled\="true" text\="clazz.getName()"/>\n<expression enabled\="true" text\="allAleClasses.get(2).getFields().get(0).getType()"/>\n<expression enabled\="true" text\="allAleClasses.get(0).getFields().get(0).getType()"/>\n</watchExpressions>\n
+prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<watchExpressions>\n<expression enabled\="true" text\="entry.elem.eContainer()"/>\n<expression enabled\="true" text\="m"/>\n<expression enabled\="true" text\="clazz.getName()"/>\n<expression enabled\="true" text\="allAleClasses.get(2).getFields().get(0).getType()"/>\n<expression enabled\="true" text\="allAleClasses.get(0).getFields().get(0).getType()"/>\n<expression enabled\="true" text\="method"/>\n</watchExpressions>\n

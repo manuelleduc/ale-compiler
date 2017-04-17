@@ -1,7 +1,7 @@
 # TODO
 
-- ForkedEtControlToken n'héritent pas de Token !
-- résoudre le mystère des types nuls dans les fields 
+- mauvaise géneration des delegates, prioriser les aspects sur les syntaxes
+- sur InputValue, variable est introduit dynamiquement mais l'accesseur s'attend a un élément du type syntaxique
 - Gérer les delegates et l'appel au super !
 - Générer les syntaxes et interfaces parents si non présentes !
 - ajouter le controle de non regénération
