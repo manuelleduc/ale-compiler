@@ -650,9 +650,11 @@ class GenerateAlgebra {
 		'''«behavior.name».algebra.operation.«behavior.name.toFirstUpper»«clazz.name.toFirstUpper»Operation'''
 	}
 	
-	def Boolean isSuperType(EClass a, EClass b) {
+	def Boolean isSuperType(EClass a, EClass b) { // , List<EClass> subTree
 		if(a === b) return true;
-		b.ESuperTypes.exists[a.isSuperType(it)]
+		b.ESuperTypes
+			//.filter[subTree.contains(it)]
+			.exists[it == a || a.isSuperType(it)]
 	}
 
 	def String generateAlgebraInterface(EPackage ePackage, List<EPackage> otherPackages) {
@@ -673,13 +675,27 @@ class GenerateAlgebra {
 		
 		
 		val allClasses = this.getListAllClasses(ePackage, otherPackages)
-		val classPlusItsChildren = allClasses.map[it -> allClasses.filter[ac | it.isSuperType(ac) && it !== ac && !ac.abstract].sortWith[o1, o2 |
-			if(o1 === o2) 0
-			else if(o1.isSuperType(o2)) 1
-			else if(o2.isSuperType(o1)) -1
-			else 0
+		val classPlusItsChildren = allClasses.map[currentParent | currentParent -> {
+			val tmp = allClasses.filter[ac | currentParent.isSuperType(ac)].toList
+			tmp.sortWith[o1, o2 |
+				if(o1 === o2) 0
+				else if(o1.isSuperType(o2)) 1
+				else if(o2.isSuperType(o1)) -1
+				else 0
 			
-		]]
+			].filter[ac | currentParent !== ac && !ac.abstract]
+		}]
+		
+//		val classPlusItsChildren2 = allClasses.map[it -> allClasses.filter[ac | it.isSuperType(ac) && it !== ac && !ac.abstract].sortWith[o1, o2 |
+//			if(o1 === o2) 0
+//			else if(o1.isSuperType(o2)) 1
+//			else if(o2.isSuperType(o1)) -1
+//			else 0
+//			
+//		]]
+		
+		
+		
 
 		'''
 			package «ePackage.name».algebra;
