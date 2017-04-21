@@ -19,7 +19,7 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
 public class GenerateOperationInterface {
-  public void generate(final EClass clazz, final IProject project, final AleClass behavior, final EPackage ePackage, final List<EPackage> dependencies, final List<AleClass> allAleClasses) {
+  public void generate(final EClass clazz, final IProject project, final AleClass behavior, final EPackage ePackage, final List<EPackage> dependencies, final List<AleClass> allAleClasses, final List<AleClass> aleScope) {
     EPackage _ePackage = clazz.getEPackage();
     final String packageName = _ePackage.getName();
     String _xifexpression = null;
@@ -32,7 +32,7 @@ public class GenerateOperationInterface {
     }
     final String aleName = _xifexpression;
     GenerateAlgebra _generateAlgebra = new GenerateAlgebra();
-    final String fileContent = _generateAlgebra.generateOperation(clazz, behavior, ePackage, dependencies, allAleClasses);
+    final String fileContent = _generateAlgebra.generateOperation(clazz, behavior, ePackage, dependencies, allAleClasses, aleScope);
     IPath _location = project.getLocation();
     IPath _append = _location.append("src");
     IPath _append_1 = _append.append(packageName);

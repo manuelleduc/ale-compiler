@@ -65,8 +65,6 @@ import ale.xtext.ale.CasttoOperation
 import ale.xtext.ale.Method
 import ale.xtext.ale.Field
 import ale.xtext.ale.OpenClass
-import java.util.Comparator
-import org.eclipse.emf.ecore.util.EcoreUtil
 
 class StatementContext {
 	public val EPackage ePackage
@@ -138,12 +136,12 @@ class GenerateAlgebra {
 		}
 		
 		
-	private def AleClass resolveCrossRef(String aleClazz, List<AleClass> aleScope) {
+	private def AleClass resolveCrossRef(String aleClazz, List<AleClass> aleScope, EPackage ePackage) {
 		val elems = aleClazz.split("\\.")
 		if(elems.size > 1) {
 		aleScope.filter[aleS | aleS.name == elems.get(1) && (aleS.eContainer as Root).name == elems.get(0)].head
 		} else if(elems.size > 0) {
-		aleScope.filter[aleS | aleS.name == elems.get(0)].head	
+		aleScope.filter[aleS | aleS.name == elems.get(0) && (aleS.eContainer as Root).name == ePackage.name].head	
 		} else {
 			null
 		}
@@ -155,7 +153,7 @@ class GenerateAlgebra {
 		val packageName = clazz.EPackage.name
 		val aleName = if (behaviorClass != null) (behaviorClass.eContainer as Root).name else "$default"
 		
-		val className= '''«packageName.toFirstUpper»«aleName.toFirstUpper»«clazz.name.toFirstUpper»Operation'''
+		val className= '''«packageName.toFirstUpper»«aleName.toFirstUpper»«clazz.name.toFirstUpper»OperationImpl'''
 		
 		'''
 		package «packageName».«aleName».algebra.impl.operation;
@@ -197,25 +195,25 @@ class GenerateAlgebra {
 			}
 				
 			private final «clazz.javaFullPath» self;
-			«IF aleName != "$default"»private final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR» algebra;«ENDIF»
+			«IF aleName != "$default"»private final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(aleScope, epackage, dependencies))»«ENDFOR» algebra;«ENDIF»
 			«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c|c.getEClass(epackage, dependencies)]»
-			private final «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation delegate«sc.name.toFirstUpper»;
+			private final «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope, epackage).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope, epackage).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»OperationImpl delegate«sc.name.toFirstUpper»;
 			«ENDFOR»
 			«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
 			«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).filter[it instanceof OpenClass].map[c|c.getEClassAspect(epackage, dependencies)]»
-			private final «sc.EPackage.name».«(sc.findAleClass(allAleClasses).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.findAleClass(allAleClasses).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation delegate«sc.name.toFirstUpper»;
+			private final «sc.EPackage.name».«(sc.findAleClass(aleScope, epackage, dependencies).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.findAleClass(aleScope, epackage, dependencies).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»OperationImpl delegate«sc.name.toFirstUpper»;
 			«ENDFOR»
 			«ENDIF»
 			
-			public «className»(final «clazz.javaFullPath» self, «IF aleName == "$default"»Object«ELSE»final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(allAleClasses))»«ENDFOR»«ENDIF» algebra) {
+			public «className»(final «clazz.javaFullPath» self, «IF aleName == "$default"»Object«ELSE»final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(aleScope, epackage, dependencies))»«ENDFOR»«ENDIF» algebra) {
 				this.self = self;
 				«IF aleName != "$default"»this.algebra = algebra;«ENDIF»
 				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c|c.getEClass(epackage, dependencies)]»
-				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation(self, algebra);
+				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope, epackage).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope, epackage).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»OperationImpl(self, algebra);
 				«ENDFOR»
 				«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
 				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).filter[it instanceof OpenClass].map[c|c.getEClassAspect(epackage, dependencies)]»
-				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.findAleClass(allAleClasses).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.findAleClass(allAleClasses).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»Operation(self, algebra);
+				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.findAleClass(aleScope, epackage, dependencies).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.findAleClass(aleScope, epackage, dependencies).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»OperationImpl(self, algebra);
 				«ENDFOR»
 				«ENDIF»
 			}
@@ -254,7 +252,7 @@ class GenerateAlgebra {
 			«ENDFOR»
 			«FOR method: behaviorClass.flattenParentMethods(aleScope, epackage, dependencies, allAleClasses, true)»
 			public «method.value.type.solveStaticType(epackage, dependencies)» «method.value.name»(«FOR p: method.value.params»«p.type.solveStaticType(epackage, dependencies)» «p.name»«ENDFOR») {
- 				«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
+ 				«IF behaviorClass != null && clazz.mustBeImplemented(epackage, dependencies)»
 	 			«method.value.block.printBlock(new StatementContext(epackage, dependencies, behaviorClass, aleScope, allAleClasses))»
 	 			«ELSE» 
 	 			«IF method.value.type.solveStaticType(epackage, dependencies) != 'void'»return null;
@@ -266,6 +264,11 @@ class GenerateAlgebra {
 		}
 		'''
 
+	}
+	
+	def boolean mustBeImplemented( EClass eClazz, EPackage ePackage, List<EPackage> dependencies) {
+		val allClasses = getListAllClasses(ePackage, dependencies);
+		(!eClazz.name.endsWith("_Aspect") && !allClasses.exists[c | c.name == eClazz.name + "_Aspect"]) || eClazz.name.endsWith("_Aspect")
 	}
 	
 	
@@ -286,17 +289,21 @@ class GenerateAlgebra {
 	}
 	
 	
-	def List<AleClass> getIndirectSuperClasses(AleClass aleClazz, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+	def List<AleClass> getIndirectSuperClasses(AleClass aleClazz, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses, List<AleClass> aleScope) {
 		val ret = newArrayList()
 		val classes = this.getListAllClasses(ePackage, dependencies)
-		val aspectClasse = classes.filter[c | c != null && aleClazz != null && c.name == aleClazz.name+"_Aspect"].head
-		if(aspectClasse != null) {
-			for(EClass eClass: aspectClasse.ancestors) {
-				if(eClass.name.endsWith("_Aspect")) {
-					val clazz = eClass.findAleClass(allAleClasses)
-					if(!ret.contains(clazz)) {
-						ret.add(clazz);
-					}
+		val aspectClass = classes.filter[c | c != null && aleClazz != null && c.name == aleClazz.name+"_Aspect"].head
+		val parentClass = 
+		if(aspectClass == null) {
+			classes.filter[c | c != null && aleClazz != null && c.name == aleClazz.name].head
+		} else {
+			aspectClass
+		}
+		if(parentClass != null) {
+			for(EClass eClass: parentClass.ancestors) {
+				val clazz = eClass.findAleClass(aleScope, ePackage, dependencies)
+				if(!ret.contains(clazz)) {
+					ret.add(clazz);
 				}
 			}
 		
@@ -308,7 +315,7 @@ class GenerateAlgebra {
 	def List<AleClass> getAllSuperClasses(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
 		val ret = newArrayList()
 		if(aleClazz != null && aleClazz.superClass != null) {
-			for(AleClass parentz: aleClazz.superClass.map[it.resolveCrossRef(aleScope)]) {
+			for(AleClass parentz: aleClazz.superClass.map[it.resolveCrossRef(aleScope, ePackage)]) {
 				if(!ret.contains(parentz)) {
 					ret.add(parentz)
 					for(x: parentz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)) {
@@ -319,7 +326,7 @@ class GenerateAlgebra {
 				}
 			}
 		}
-		for(AleClass parentAC: aleClazz.getIndirectSuperClasses(ePackage, dependencies, allAleClasses).map[it.name.resolveCrossRef(aleScope)]) {
+		for(AleClass parentAC: aleClazz.getIndirectSuperClasses(ePackage, dependencies, allAleClasses, aleScope).map[it.name.resolveCrossRef(aleScope, ePackage)]) {
 			if(!ret.contains(parentAC)) {
 				ret.add(parentAC)
 				for(x : parentAC.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)) {
@@ -410,10 +417,10 @@ class GenerateAlgebra {
 		} else if(exp.left instanceof SuperRef) {
 			if(exp.right instanceof OperationCallOperation) {
 				val oco = exp.right as OperationCallOperation
-				val method = ctx.selfAleClass.flattenParentMethods(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, false)
-					.filter[it.value.name==oco.name && it.value.params.size == oco.parameters.size].head
+				val unfilteredMethods = ctx.selfAleClass.flattenParentMethods(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, false).toList
+				val method = unfilteredMethods.filter[it.value.name==oco.name && it.value.params.size == oco.parameters.size].head
 				if(method != null) {
-					'''this.delegate«method.key.name.toFirstUpper»«IF method.key instanceof OpenClass»_Aspect«ENDIF».«exp.right.printExpression(ctx)»'''
+					'''this.delegate«method.key.name.toFirstUpper»«IF method.key instanceof OpenClass && !(method.key as OpenClass).fields.empty»_Aspect«ENDIF».«exp.right.printExpression(ctx)»'''
 				} else {
 					// let's look at the fields
 					val field = ctx.selfAleClass.flattenParentsFields(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, false)
@@ -472,7 +479,7 @@ class GenerateAlgebra {
 	def dispatch String printExpression(OrderedSetDecl exp, ExpressionContext ctx) '''__TODO OrderSetDecl__'''
 	def dispatch String printExpression(RealLiteral exp, ExpressionContext ctx) '''«exp.value»'''
 	def dispatch String printExpression(OADenot exp, ExpressionContext ctx) '''algebra.$(«exp.exp.printExpression(ctx)»)'''
-	def dispatch String printExpression(SelfRef exp, ExpressionContext ctx) '''self''' // TODO: probably more smart than that!! aka delegation
+	def dispatch String printExpression(SelfRef exp, ExpressionContext ctx) '''self'''
 	def dispatch String printExpression(SequenceDecl exp, ExpressionContext ctx) '''__TODO SequenceDECL__'''
 	def dispatch String printExpression(StringLiteral exp, ExpressionContext ctx) '''"«exp.value»"'''
 	def dispatch String printExpression(SubOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» - «exp.right.printExpression(ctx)»'''
@@ -534,8 +541,15 @@ class GenerateAlgebra {
 		'''
 	}
 	
-	def findAleClass(EClass clazz, List<AleClass> allClasses) {
-		allClasses.findFirst[ac | ac.name == clazz.name || clazz.name.endsWith("_Aspect") && ac.name == clazz.name.substring(0, clazz.name.length-"_Aspect".length) ]
+	def findAleClass(EClass clazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies) {
+		
+		
+//		val lidependencies.map[name].add(ePackage.name)
+		val aspectLookup = aleScope.filter[c | c.name == clazz.name + "_Aspect"].head
+		if(aspectLookup != null) return aspectLookup
+		else return  aleScope.filter[c | c.name == clazz.name].head
+//		allClasses.findFirst[ac | ac.name == clazz.name || clazz.name.endsWith("_Aspect") && ac.name == clazz.name.substring(0, clazz.name.length-"_Aspect".length) ]
+//	aleScope.filter[]
 	}
 	
 	
@@ -547,7 +561,7 @@ class GenerateAlgebra {
 		}
 	}
 
-	def String processConcreteAlgebra(EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+	def String processConcreteAlgebra(EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses, List<AleClass> aleScope) {
 		/*
 		 * Here we have to generate one method per class
 		 */
@@ -557,16 +571,16 @@ class GenerateAlgebra {
 			package «ePackage.name».algebra.impl;
 			
 			public interface «ePackage.name.toFirstUpper»AlgebraImpl extends «ePackage.name».algebra.«ePackage.name.toFirstUpper»Algebra
-				«FOR clazz : graph.nodes.sortBy[x|x.elem	.name].map[elem] BEFORE '<' SEPARATOR ',' AFTER '>'»«clazz.operationInterfacePath(clazz.findAleClass(allAleClasses))»«ENDFOR» {
+				«FOR clazz : graph.nodes.sortBy[x|x.elem	.name].map[elem] BEFORE '<' SEPARATOR ',' AFTER '>'»«clazz.operationInterfacePath(clazz.findAleClass(aleScope, ePackage, dependencies))»«ENDFOR» {
 				«FOR clazz : graph.nodes.sortBy[elem.name].filter[c|!c.elem.abstract].map[elem]»
 					@Override
-					default «clazz.operationInterfacePath(clazz.findAleClass(allAleClasses))» «clazz.name.toFirstLower»(final «clazz.javaFullPath» «clazz.name.toFirstLower») {
-						return new «clazz.EPackage.name».«clazz.findAleClass(allAleClasses).findNameOrDefault».algebra.impl.operation.«clazz.EPackage.name.toFirstUpper»«clazz.findAleClass(allAleClasses).findNameOrDefault.toFirstUpper»«clazz.name.toFirstUpper»Operation(«clazz.name.toFirstLower», this);
+					default «clazz.operationInterfacePath(clazz.findAleClass(aleScope, ePackage, dependencies))» «clazz.name.toFirstLower»(final «clazz.javaFullPath» «clazz.name.toFirstLower») {
+						return new «clazz.EPackage.name».«clazz.findAleClass(aleScope, ePackage, dependencies).findNameOrDefault».algebra.impl.operation.«clazz.EPackage.name.toFirstUpper»«clazz.findAleClass(aleScope, ePackage, dependencies).findNameOrDefault.toFirstUpper»«clazz.name.toFirstUpper»OperationImpl(«clazz.name.toFirstLower», this);
 					} 
 					«FOR parent: clazz.ancestors»
 					@Override
-					default «clazz.operationInterfacePath(clazz.findAleClass(allAleClasses))» «parent.name.toFirstLower»_«clazz.name.toFirstLower»(final «clazz.javaFullPath» «clazz.name.toFirstLower») {
-						return new «clazz.EPackage.name».«clazz.findAleClass(allAleClasses).findNameOrDefault».algebra.impl.operation.«clazz.EPackage.name.toFirstUpper»«clazz.findAleClass(allAleClasses).findNameOrDefault.toFirstUpper»«clazz.name.toFirstUpper»Operation(«clazz.name.toFirstLower», this);
+					default «clazz.operationInterfacePath(clazz.findAleClass(aleScope, ePackage, dependencies))» «parent.name.toFirstLower»_«clazz.name.toFirstLower»(final «clazz.javaFullPath» «clazz.name.toFirstLower») {
+						return new «clazz.EPackage.name».«clazz.findAleClass(aleScope, ePackage, dependencies).findNameOrDefault».algebra.impl.operation.«clazz.EPackage.name.toFirstUpper»«clazz.findAleClass(aleScope, ePackage, dependencies).findNameOrDefault.toFirstUpper»«clazz.name.toFirstUpper»OperationImpl(«clazz.name.toFirstLower», this);
 					} 
 					«ENDFOR»
 				«ENDFOR»
@@ -597,7 +611,7 @@ class GenerateAlgebra {
 
 	def String genericType(EClass clazz, boolean extend) '''«clazz.EPackage.name.replaceAll("\\.","").toFirstUpper»__«clazz.name»T «IF clazz.ESuperTypes.size == 1 && extend» extends «clazz.ESuperTypes.head.genericType(false)»«ENDIF»'''
 
-	def String generateOperation(EClass clazz, AleClass openClass, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+	def String generateOperation(EClass clazz, AleClass openClass, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses, List<AleClass> aleScope) {
 
 		val packageName = clazz.EPackage.name
 		val aleName = if (openClass != null) (openClass.eContainer as Root).name else "$default"
@@ -606,7 +620,7 @@ class GenerateAlgebra {
 		 '''
 		package «packageName».«aleName».algebra.operation;
 		
-		public interface «clazzName» «FOR ext : clazz.ESuperTypes BEFORE 'extends ' SEPARATOR ', '»«ext.operationInterfacePath(ext.findAleClass(allAleClasses))»«ENDFOR» {
+		public interface «clazzName» «FOR ext : clazz.ESuperTypes BEFORE 'extends ' SEPARATOR ', '»«ext.operationInterfacePath(ext.findAleClass(aleScope, ePackage, dependencies))»«ENDFOR» {
 			«IF openClass != null»
 				«FOR field:openClass.fields»
 				«field.type.solveStaticType(ePackage, dependencies)» get«field.name.toFirstUpper»();

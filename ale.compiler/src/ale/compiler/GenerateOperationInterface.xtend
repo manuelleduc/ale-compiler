@@ -12,12 +12,12 @@ import ale.xtext.ale.Root
 
 class GenerateOperationInterface {
 
-	def generate(EClass clazz, IProject project, AleClass behavior, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+	def generate(EClass clazz, IProject project, AleClass behavior, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses, List<AleClass> aleScope) {
 
 
 		val packageName = clazz.EPackage.name
 		val aleName = if (behavior !=null) (behavior.eContainer as Root).name else "$default"
-		val fileContent = new GenerateAlgebra().generateOperation(clazz, behavior, ePackage, dependencies, allAleClasses)
+		val fileContent = new GenerateAlgebra().generateOperation(clazz, behavior, ePackage, dependencies, allAleClasses, aleScope)
 
 		val directoryAlgebra = project.getLocation().append("src").append(packageName).append(aleName).append("algebra").append(
 			"operation");

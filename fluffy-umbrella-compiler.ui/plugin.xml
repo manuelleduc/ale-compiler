@@ -9,7 +9,7 @@
             nameFilter="*.dsl"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="XAQL"
+               label="ALE"
                path="additions"
                id="fluffy-umbrella-compiler.ui.menu1">
             <separator

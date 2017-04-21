@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="-1" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="aleScope" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="true" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="-1"/>
-			<item value="delegate"/>
-			<item value="isSuperType"/>
-			<item value="«subClass.name.toFirstLower»"/>
-			<item value="sorted"/>
-			<item value="epackage"/>
-			<item value="processConcreteOperation"/>
-			<item value="behaviorClass"/>
+			<item value="aleScope"/>
+			<item value="EPackage epacka"/>
+			<item value="(EClass"/>
+			<item value=" super"/>
+			<item value="__TODO S"/>
+			<item value="__TODO SU"/>
+			<item value="behavior"/>
+			<item value="eINSTANCE.createEClass"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&apos;&apos;&apos;__TODO__&apos;&apos;&apos;"/>
@@ -34,6 +34,6 @@
 		<item value="1|Cantarell|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="486" key="DIALOG_HEIGHT"/>
 		<item value="1402" key="DIALOG_X_ORIGIN"/>
-		<item value="65" key="DIALOG_Y_ORIGIN"/>
+		<item value="387" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
