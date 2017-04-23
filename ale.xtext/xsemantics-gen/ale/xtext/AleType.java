@@ -12,6 +12,7 @@ import ale.xtext.ale.ClassTypeT;
 import ale.xtext.ale.DefMethod;
 import ale.xtext.ale.EqualityOperation;
 import ale.xtext.ale.Expression;
+import ale.xtext.ale.FLoatTypeT;
 import ale.xtext.ale.Field;
 import ale.xtext.ale.ForLoop;
 import ale.xtext.ale.Import;
@@ -29,7 +30,6 @@ import ale.xtext.ale.OperationCallOperation;
 import ale.xtext.ale.OverrideMethod;
 import ale.xtext.ale.Param;
 import ale.xtext.ale.RealLiteral;
-import ale.xtext.ale.RealTypeT;
 import ale.xtext.ale.ReturnStatement;
 import ale.xtext.ale.Root;
 import ale.xtext.ale.SelfRef;
@@ -684,7 +684,7 @@ public class AleType extends XsemanticsRuntimeSystem {
     	addAsSubtrace(_trace_, _subtrace_);
     	return _result_;
     } catch (Exception e_applyRuleRealLiteral) {
-    	typeThrowException(ruleName("RealLiteral") + stringRepForEnv(G) + " |- " + stringRep(bool) + " : " + "RealTypeT",
+    	typeThrowException(ruleName("RealLiteral") + stringRepForEnv(G) + " |- " + stringRep(bool) + " : " + "FLoatTypeT",
     		REALLITERAL,
     		e_applyRuleRealLiteral, bool, new ErrorInformation[] {new ErrorInformation(bool)});
     	return null;
@@ -696,9 +696,9 @@ public class AleType extends XsemanticsRuntimeSystem {
     return new Result<TypeSystem>(_applyRuleRealLiteral_1(G, bool));
   }
   
-  private RealTypeT _applyRuleRealLiteral_1(final RuleEnvironment G, final RealLiteral bool) throws RuleFailedException {
-    RealTypeT _createRealTypeT = AleFactory.eINSTANCE.createRealTypeT();
-    return _createRealTypeT;
+  private FLoatTypeT _applyRuleRealLiteral_1(final RuleEnvironment G, final RealLiteral bool) throws RuleFailedException {
+    FLoatTypeT _createFLoatTypeT = AleFactory.eINSTANCE.createFLoatTypeT();
+    return _createFLoatTypeT;
   }
   
   protected Result<TypeSystem> typeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final NullLiteral bool) throws RuleFailedException {
@@ -941,11 +941,7 @@ public class AleType extends XsemanticsRuntimeSystem {
     checkAssignableTo(result_1.getFirst(), TypeSystem.class);
     ccrt = (TypeSystem) result_1.getFirst();
     
-    /* fail error cclt + " //// " */
-    String _plus = (cclt + " //// ");
-    String error = _plus;
-    throwForExplicitFail(error, new ErrorInformation(null, null));
-    /* ccrt; */
+    cct = ccrt;
     return new Result<TypeSystem>(cct);
   }
   
@@ -1103,7 +1099,7 @@ public class AleType extends XsemanticsRuntimeSystem {
   
   protected Result<TypeSystem> applyRuleLiteralType(final RuleEnvironment G, final RuleApplicationTrace _trace_, final LiteralType litType) throws RuleFailedException {
     TypeSystem typeLit = null; // output parameter
-    /* { (litType.lit == 'Boolean') typeLit = AleFactory.eINSTANCE.createBooleanTypeT } or { (litType.lit == 'Real') typeLit = AleFactory.eINSTANCE.createRealTypeT } or { (litType.lit == 'Int') typeLit = AleFactory.eINSTANCE.createIntTypeT } or { (litType.lit == 'String') typeLit = AleFactory.eINSTANCE.createStringTypeT } */
+    /* { (litType.lit == 'Boolean') typeLit = AleFactory.eINSTANCE.createBooleanTypeT } or { (litType.lit == 'Real') typeLit = AleFactory.eINSTANCE.createFLoatTypeT } or { (litType.lit == 'Int') typeLit = AleFactory.eINSTANCE.createIntTypeT } or { (litType.lit == 'String') typeLit = AleFactory.eINSTANCE.createStringTypeT } */
     {
       RuleFailedException previousFailure = null;
       try {
@@ -1117,7 +1113,7 @@ public class AleType extends XsemanticsRuntimeSystem {
         typeLit = _createBooleanTypeT;
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
-        /* { (litType.lit == 'Real') typeLit = AleFactory.eINSTANCE.createRealTypeT } or { (litType.lit == 'Int') typeLit = AleFactory.eINSTANCE.createIntTypeT } or { (litType.lit == 'String') typeLit = AleFactory.eINSTANCE.createStringTypeT } */
+        /* { (litType.lit == 'Real') typeLit = AleFactory.eINSTANCE.createFLoatTypeT } or { (litType.lit == 'Int') typeLit = AleFactory.eINSTANCE.createIntTypeT } or { (litType.lit == 'String') typeLit = AleFactory.eINSTANCE.createStringTypeT } */
         {
           try {
             String _lit_1 = litType.getLit();
@@ -1126,8 +1122,8 @@ public class AleType extends XsemanticsRuntimeSystem {
             if (!_equals_1) {
               sneakyThrowRuleFailedException("litType.lit == \'Real\'");
             }
-            RealTypeT _createRealTypeT = AleFactory.eINSTANCE.createRealTypeT();
-            typeLit = _createRealTypeT;
+            FLoatTypeT _createFLoatTypeT = AleFactory.eINSTANCE.createFLoatTypeT();
+            typeLit = _createFLoatTypeT;
           } catch (Exception e_1) {
             previousFailure = extractRuleFailedException(e_1);
             /* { (litType.lit == 'Int') typeLit = AleFactory.eINSTANCE.createIntTypeT } or { (litType.lit == 'String') typeLit = AleFactory.eINSTANCE.createStringTypeT } */

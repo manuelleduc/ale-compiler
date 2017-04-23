@@ -47,6 +47,7 @@ import ale.xtext.ale.Type
 import ale.xtext.ale.VarAssign
 import ale.xtext.ale.VarRef
 import ale.xtext.ale.WhileStatement
+import ale.xtext.ale.DebugStatement
 import fr.inria.diverse.objectalgebragenerator.Graph.GraphNode
 import java.util.Collection
 import java.util.HashSet
@@ -65,20 +66,40 @@ import ale.xtext.ale.CasttoOperation
 import ale.xtext.ale.Method
 import ale.xtext.ale.Field
 import ale.xtext.ale.OpenClass
+import ale.xtext.ale.TypeSystem
+import java.sql.Types
+import ale.xtext.ale.ClassTypeT
+import ale.xtext.ale.AleFactory
+import ale.xtext.ale.AlePackage
+import ale.xtext.AleType
+import it.xsemantics.runtime.Result
+import it.xsemantics.runtime.RuleEnvironment
+import com.google.inject.Injector
+import com.google.inject.Guice
+import ale.xtext.AleRuntimeModule
+import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.emf.ecore.EcorePackage
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 
 class StatementContext {
 	public val EPackage ePackage
-	public val List<EPackage> dependencies;
+	public val List<EPackage> dependencies
 	public val AleClass selfAleClass
 	public val List<AleClass> aleScope
 	public val List<AleClass> allAleClasses
+	public val Map<Expression, String> exprNames
+	public val Map<String, TypeSystem> mapTypes
 	
-	new(EPackage ePackage, List<EPackage> dependencies, AleClass selfAleClass, List<AleClass> aleScope, List<AleClass> allAleClasses) {
+	new(EPackage ePackage, List<EPackage> dependencies, AleClass selfAleClass, List<AleClass> aleScope, List<AleClass> allAleClasses, Map<Expression,String> exprNames, Map<String, TypeSystem> mapTypes) {
 		this.ePackage = ePackage
 		this.dependencies = dependencies
 		this.selfAleClass = selfAleClass
 		this.aleScope = aleScope
 		this.allAleClasses = allAleClasses
+		this.exprNames = exprNames
+		this.mapTypes = mapTypes
 	}
 }
 
@@ -88,17 +109,29 @@ class ExpressionContext {
 	public val List<EPackage> dependencies
 	public val List<AleClass> aleScope
 	public val List<AleClass> allAleClasses
+	public val Map<Expression, String> exprNames
+	public val Map<String, TypeSystem> mapTypes
 	
-	new(EPackage ePackage, AleClass selfAleClass, List<AleClass> aleScope, List<EPackage> dependencies, List<AleClass> allAleClasses) {
+	
+	new(EPackage ePackage, AleClass selfAleClass, List<AleClass> aleScope, List<EPackage> dependencies, List<AleClass> allAleClasses, Map<Expression,String> exprNames, Map<String, TypeSystem> mapTypes) {
 		this.ePackage = ePackage
 		this.selfAleClass = selfAleClass
 		this.dependencies = dependencies
 		this.aleScope = aleScope
 		this.allAleClasses = allAleClasses
+		this.exprNames = exprNames;
+		this.mapTypes = mapTypes;
 	}
 }
 
 class GenerateAlgebra {
+	
+	AleType aleTypeSystem
+	new() {
+	    val Injector injector = Guice.createInjector(new AleRuntimeModule());
+		
+		this.aleTypeSystem = injector.getInstance(AleType)
+	}
 
 	public def List<EClass> getListAllClasses(EPackage ePackage, List<EPackage> dependencies) {
 		val graph = buildGraph(ePackage, dependencies)
@@ -136,12 +169,24 @@ class GenerateAlgebra {
 		}
 		
 		
-	private def AleClass resolveCrossRef(String aleClazz, List<AleClass> aleScope, EPackage ePackage) {
+	private def AleClass resolveCrossRef(String aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies) {
 		val elems = aleClazz.split("\\.")
 		if(elems.size > 1) {
 		aleScope.filter[aleS | aleS.name == elems.get(1) && (aleS.eContainer as Root).name == elems.get(0)].head
 		} else if(elems.size > 0) {
-		aleScope.filter[aleS | aleS.name == elems.get(0) && (aleS.eContainer as Root).name == ePackage.name].head	
+		aleScope.filter[aleS | aleS.name == elems.get(0) && ((aleS.eContainer as Root).name == ePackage.name || dependencies.map[name].contains(((aleS.eContainer as Root).name)))].head	
+		} else {
+			null
+		}
+	}
+		
+	private def AleClass resolveCrossRef(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies) {
+		val elems = aleClazz.name.split("\\.")
+		if(elems.size > 1) {
+		aleScope.filter[aleS | aleS.name == elems.get(1) && (aleS.eContainer as Root).name == elems.get(0)].head
+		} else if(elems.size > 0) {
+			val pkgName = (aleClazz.eContainer as Root).name
+			aleScope.filter[aleS | aleS.name == elems.get(0) && ((aleS.eContainer as Root).name == pkgName || dependencies.map[name].contains(pkgName))].head	
 		} else {
 			null
 		}
@@ -154,6 +199,12 @@ class GenerateAlgebra {
 		val aleName = if (behaviorClass != null) (behaviorClass.eContainer as Root).name else "$default"
 		
 		val className= '''«packageName.toFirstUpper»«aleName.toFirstUpper»«clazz.name.toFirstUpper»OperationImpl'''
+		
+		
+		val nonAspects = behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)]
+		val aspectsLst = behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).filter[it instanceof OpenClass].map[c|c.getEClassAspect(epackage, dependencies)].filter[it != null]
+		
+		val nonAspects2 = nonAspects.filter[na | !aspectsLst.map[name].exists[it == na.key.name+'_Aspect']]
 		
 		'''
 		package «packageName».«aleName».algebra.impl.operation;
@@ -196,24 +247,24 @@ class GenerateAlgebra {
 				
 			private final «clazz.javaFullPath» self;
 			«IF aleName != "$default"»private final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(aleScope, epackage, dependencies))»«ENDFOR» algebra;«ENDIF»
-			«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c|c.getEClass(epackage, dependencies)]»
-			private final «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope, epackage).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope, epackage).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»OperationImpl delegate«sc.name.toFirstUpper»;
+			«FOR sc: nonAspects2»
+			private final «sc.value.EPackage.name».«(sc.key.resolveCrossRef(aleScope, epackage, dependencies).eContainer as Root).name».algebra.impl.operation.«sc.value.EPackage.name.toFirstUpper»«(sc.key.resolveCrossRef(aleScope, epackage, dependencies).eContainer as Root).name.toFirstUpper»«sc.value.name.toFirstUpper»OperationImpl delegate«sc.value.name.toFirstUpper»;
 			«ENDFOR»
 			«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
-			«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).filter[it instanceof OpenClass].map[c|c.getEClassAspect(epackage, dependencies)]»
-			private final «sc.EPackage.name».«(sc.findAleClass(aleScope, epackage, dependencies).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.findAleClass(aleScope, epackage, dependencies).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»OperationImpl delegate«sc.name.toFirstUpper»;
+			«FOR sc: aspectsLst»
+			private final «sc.EPackage.name».«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault.toFirstUpper»«sc.name.toFirstUpper»OperationImpl delegate«sc.name.toFirstUpper.split("_Aspect").head»;
 			«ENDFOR»
 			«ENDIF»
 			
 			public «className»(final «clazz.javaFullPath» self, «IF aleName == "$default"»Object«ELSE»final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(aleScope, epackage, dependencies))»«ENDFOR»«ENDIF» algebra) {
 				this.self = self;
 				«IF aleName != "$default"»this.algebra = algebra;«ENDIF»
-				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c|c.getEClass(epackage, dependencies)]»
-				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.name.resolveCrossRef(aleScope, epackage).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.name.resolveCrossRef(aleScope, epackage).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»OperationImpl(self, algebra);
+				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)]»
+				this.delegate«sc.value.name.toFirstUpper» = new «sc.value.EPackage.name».«(sc.key.resolveCrossRef(aleScope, epackage, dependencies).eContainer as Root).name».algebra.impl.operation.«sc.value.EPackage.name.toFirstUpper»«(sc.key.resolveCrossRef(aleScope, epackage, dependencies).eContainer as Root).name.toFirstUpper»«sc.value.name.toFirstUpper»OperationImpl(self, algebra);
 				«ENDFOR»
 				«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
-				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).filter[it instanceof OpenClass].map[c|c.getEClassAspect(epackage, dependencies)]»
-				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«(sc.findAleClass(aleScope, epackage, dependencies).eContainer as Root).name».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«(sc.findAleClass(aleScope, epackage, dependencies).eContainer as Root).name.toFirstUpper»«sc.name.toFirstUpper»OperationImpl(self, algebra);
+				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).filter[it instanceof OpenClass].map[c|c.getEClassAspect(epackage, dependencies)].filter[it != null]»
+				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault.toFirstUpper»«sc.name.toFirstUpper»OperationImpl(self, algebra);
 				«ENDFOR»
 				«ENDIF»
 			}
@@ -233,7 +284,11 @@ class GenerateAlgebra {
 				return this.self.get«field.value.name.toFirstUpper»();
 				«ENDIF»
 				«ELSE»
+				«IF behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)].contains[EClass c | c.name == behaviorClass + '_Aspect']»
+				return this.delegate«field.key.name.toFirstUpper»_Aspect.get«field.value.name.toFirstUpper»();
+				«ELSE»
 				return this.delegate«field.key.name.toFirstUpper».get«field.value.name.toFirstUpper»();
+				«ENDIF»
 				«ENDIF»
 				«ELSE»return null;
 				«ENDIF»
@@ -244,7 +299,11 @@ class GenerateAlgebra {
 				«IF field.key == behaviorClass» 
 				this.self.set«field.value.name.toFirstUpper»(«field.value.name»);
 				«ELSE»
+				«IF behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)].contains[EClass c | c.name == behaviorClass + '_Aspect']»
+				this.delegate«field.key.name.toFirstUpper»_Aspect.set«field.value.name.toFirstUpper»(«field.value.name»);
+				«ELSE»
 				this.delegate«field.key.name.toFirstUpper».set«field.value.name.toFirstUpper»(«field.value.name»);
+				«ENDIF»
 				«ENDIF»
 				«ENDIF»
 			}
@@ -253,7 +312,7 @@ class GenerateAlgebra {
 			«FOR method: behaviorClass.flattenParentMethods(aleScope, epackage, dependencies, allAleClasses, true)»
 			public «method.value.type.solveStaticType(epackage, dependencies)» «method.value.name»(«FOR p: method.value.params»«p.type.solveStaticType(epackage, dependencies)» «p.name»«ENDFOR») {
  				«IF behaviorClass != null && clazz.mustBeImplemented(epackage, dependencies)»
-	 			«method.value.block.printBlock(new StatementContext(epackage, dependencies, behaviorClass, aleScope, allAleClasses))»
+	 			«method.value.block.printBlock(new StatementContext(epackage, dependencies, behaviorClass, aleScope, allAleClasses, newHashMap(), newHashMap()))»
 	 			«ELSE» 
 	 			«IF method.value.type.solveStaticType(epackage, dependencies) != 'void'»return null;
 	 			«ENDIF»
@@ -315,7 +374,7 @@ class GenerateAlgebra {
 	def List<AleClass> getAllSuperClasses(AleClass aleClazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies, List<AleClass> allAleClasses) {
 		val ret = newArrayList()
 		if(aleClazz != null && aleClazz.superClass != null) {
-			for(AleClass parentz: aleClazz.superClass.map[it.resolveCrossRef(aleScope, ePackage)]) {
+			for(AleClass parentz: aleClazz.superClass.map[it.resolveCrossRef(aleScope, ePackage, dependencies)]) {
 				if(!ret.contains(parentz)) {
 					ret.add(parentz)
 					for(x: parentz.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)) {
@@ -326,8 +385,8 @@ class GenerateAlgebra {
 				}
 			}
 		}
-		for(AleClass parentAC: aleClazz.getIndirectSuperClasses(ePackage, dependencies, allAleClasses, aleScope).map[it.name.resolveCrossRef(aleScope, ePackage)]) {
-			if(!ret.contains(parentAC)) {
+		for(AleClass parentAC: aleClazz.getIndirectSuperClasses(ePackage, dependencies, allAleClasses, aleScope).filter[it != null].map[it.resolveCrossRef(aleScope, ePackage, dependencies)]) {
+			if(!ret.contains(parentAC) && parentAC != aleClazz) {
 				ret.add(parentAC)
 				for(x : parentAC.getAllSuperClasses(aleScope, ePackage, dependencies, allAleClasses)) {
 					if(!ret.contains(x)) {
@@ -359,6 +418,8 @@ class GenerateAlgebra {
 	
 	def EClass getEClass(AleClass aleClass, EPackage epackage, List<EPackage> dependencies) {
 		val classes = this.getListAllClasses(epackage, dependencies)
+//		val aspects = classes.filter[c | c.name == aleClass.name + "_Aspect"].head
+//		if(aspects != null) return aspects
 		val res = classes.filter[c | c.name == aleClass.name].head
 		return res;
 	}
@@ -420,7 +481,8 @@ class GenerateAlgebra {
 				val unfilteredMethods = ctx.selfAleClass.flattenParentMethods(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, false).toList
 				val method = unfilteredMethods.filter[it.value.name==oco.name && it.value.params.size == oco.parameters.size].head
 				if(method != null) {
-					'''this.delegate«method.key.name.toFirstUpper»«IF method.key instanceof OpenClass && !(method.key as OpenClass).fields.empty»_Aspect«ENDIF».«exp.right.printExpression(ctx)»'''
+//					'''this.delegate«method.key.name.toFirstUpper»«IF method.key instanceof OpenClass && !(method.key as OpenClass).fields.empty»_Aspect«ENDIF».«exp.right.printExpression(ctx)»'''
+					'''this.delegate«method.key.name.toFirstUpper»«IF method.key instanceof OpenClass»_Aspect«ENDIF».«exp.right.printExpression(ctx)»'''
 				} else {
 					// let's look at the fields
 					val field = ctx.selfAleClass.flattenParentsFields(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, false)
@@ -435,7 +497,24 @@ class GenerateAlgebra {
 				defaultResult.apply(null)
 			}
 		} else {
-			defaultResult.apply(null)
+			if(exp.right instanceof OperationCallOperation && !(exp.left instanceof OADenot)) {
+				
+				val it.xsemantics.runtime.RuleApplicationTrace typeTrace = new it.xsemantics.runtime.RuleApplicationTrace
+				val RuleEnvironment re = null
+				val Result<TypeSystem> type = aleTypeSystem.type(re, typeTrace, exp.left)
+				println('#######################################"')
+				println(exp)
+				println(type.ruleFailedException)
+//				println(type.ruleFailedException.stackTrace.map[it.])
+				println('#######################################"')
+				if(type.value != null) {
+					'''this.algebra.$(«exp.left.printExpression(ctx)»).«exp.right.printExpression(ctx)»'''
+				} else {
+					defaultResult.apply(null)
+				}
+			} else {
+				defaultResult.apply(null)
+			}
 		}
 	}
 	def dispatch String printExpression(ChainedCallArrow exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)».«exp.right.printExpression(ctx)»'''
@@ -481,7 +560,13 @@ class GenerateAlgebra {
 	def dispatch String printExpression(OADenot exp, ExpressionContext ctx) '''algebra.$(«exp.exp.printExpression(ctx)»)'''
 	def dispatch String printExpression(SelfRef exp, ExpressionContext ctx) '''self'''
 	def dispatch String printExpression(SequenceDecl exp, ExpressionContext ctx) '''__TODO SequenceDECL__'''
-	def dispatch String printExpression(StringLiteral exp, ExpressionContext ctx) '''"«exp.value»"'''
+	def dispatch String printExpression(StringLiteral exp, ExpressionContext ctx) {
+		val it.xsemantics.runtime.RuleApplicationTrace typeTrace = new it.xsemantics.runtime.RuleApplicationTrace
+		val RuleEnvironment re = null
+		val Result<TypeSystem> type = aleTypeSystem.type(re, typeTrace, exp)
+		println(type)
+		'''"«exp.value»"'''
+	}
 	def dispatch String printExpression(SubOperation exp, ExpressionContext ctx) '''«exp.left.printExpression(ctx)» - «exp.right.printExpression(ctx)»'''
 	def dispatch String printExpression(SuperRef exp, ExpressionContext ctx) {
 		// TODO: scan parents (so we have to know the context) and call the delegate to the first found class with the lookef for method 
@@ -499,18 +584,18 @@ class GenerateAlgebra {
 		
 	}
 	
-	def dispatch String printStatement(Expression expression, StatementContext ctx) '''«expression.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))»;'''
+	def dispatch String printStatement(Expression expression, StatementContext ctx) '''«expression.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses, ctx.exprNames, ctx.mapTypes))»;'''
 	
 	def dispatch String printStatement(ForLoop forLoop, StatementContext ctx) {
 		'''
-		for(«forLoop.type.solveStaticType(ctx.ePackage, ctx.dependencies)» «forLoop.name»: «forLoop.collection.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))») {
+		for(«forLoop.type.solveStaticType(ctx.ePackage, ctx.dependencies)» «forLoop.name»: «forLoop.collection.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses, ctx.exprNames, ctx.mapTypes))») {
 			«forLoop.block.printBlock(ctx)»
 		}
 		'''
 	}
 	
 	def dispatch String printStatement(IfStatement ifStatement, StatementContext ctx) {
-		'''if(«ifStatement.condition.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))») {
+		'''if(«ifStatement.condition.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses, ctx.exprNames, ctx.mapTypes))») {
 			«ifStatement.thenBranch.printBlock(ctx)»
 		} «IF ifStatement.elseBranch != null» else {
 			«ifStatement.elseBranch.printBlock(ctx)»
@@ -523,29 +608,40 @@ class GenerateAlgebra {
 	}
 	
 	def dispatch String printStatement(ReturnStatement returnStatement, StatementContext ctx) {
-		'''return «returnStatement.returned.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))»;'''
+		'''return «returnStatement.returned.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses, ctx.exprNames, ctx.mapTypes))»;'''
 	}
 	
-	def dispatch String printStatement(VarDeclaration varAssign, StatementContext ctx) 
-		'''«varAssign.type.solveStaticType(ctx.ePackage, ctx.dependencies)» «varAssign.name» = «varAssign.value.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))»;'''
+	def dispatch String printStatement(VarDeclaration varAssign, StatementContext ctx) {
+//		ctx.exprNames.put(varAssign, varAssign.name)
+//		ctx.mapTypes.put(varAssign.name, AleFactory.eINSTANCE.createClassTypeT => [ it.clazz=varAssign.type.solveTypeSystem(ctx.ePackage, ctx.dependencies) ]) 
+		'''«varAssign.type.solveStaticType(ctx.ePackage, ctx.dependencies)» «varAssign.name» = «varAssign.value.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses, ctx.exprNames, ctx.mapTypes))»;'''
+	}
 		
 	def dispatch String printStatement(VarAssign varAssign, StatementContext ctx) 
-		'''«varAssign.name» = «varAssign.value.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))»;'''
+		'''«varAssign.name» = «varAssign.value.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses, ctx.exprNames, ctx.mapTypes))»;'''
 	
 	
 	def dispatch String printStatement(WhileStatement whileStatement, StatementContext ctx) {
 		'''
-		while(«whileStatement.condition.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses))») {
+		while(«whileStatement.condition.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses, ctx.exprNames, ctx.mapTypes))») {
 			«whileStatement.whileBlock.printBlock(ctx)»
 		}
 		'''
 	}
 	
+	def dispatch String printStatement(DebugStatement debugStmt, StatementContext ctx) {
+		'''
+		System.out.println(«debugStmt.expr.printExpression(new ExpressionContext(ctx.ePackage, ctx.selfAleClass, ctx.aleScope, ctx.dependencies, ctx.allAleClasses, ctx.exprNames, ctx.mapTypes))»);
+		'''
+	}
+	
+	
+	
 	def findAleClass(EClass clazz, List<AleClass> aleScope, EPackage ePackage, List<EPackage> dependencies) {
 		
 		
 //		val lidependencies.map[name].add(ePackage.name)
-		val aspectLookup = aleScope.filter[c | c.name == clazz.name + "_Aspect"].head
+		val aspectLookup = aleScope.filter[c | c.name + "_Aspect" == clazz.name].head
 		if(aspectLookup != null) return aspectLookup
 		else return  aleScope.filter[c | c.name == clazz.name].head
 //		allClasses.findFirst[ac | ac.name == clazz.name || clazz.name.endsWith("_Aspect") && ac.name == clazz.name.substring(0, clazz.name.length-"_Aspect".length) ]
@@ -571,7 +667,7 @@ class GenerateAlgebra {
 			package «ePackage.name».algebra.impl;
 			
 			public interface «ePackage.name.toFirstUpper»AlgebraImpl extends «ePackage.name».algebra.«ePackage.name.toFirstUpper»Algebra
-				«FOR clazz : graph.nodes.sortBy[x|x.elem	.name].map[elem] BEFORE '<' SEPARATOR ',' AFTER '>'»«clazz.operationInterfacePath(clazz.findAleClass(aleScope, ePackage, dependencies))»«ENDFOR» {
+				«FOR clazz : graph.nodes.sortBy[x|x.elem.name].map[elem] BEFORE '<' SEPARATOR ',' AFTER '>'»«clazz.operationInterfacePath(clazz.findAleClass(aleScope, ePackage, dependencies))»«ENDFOR» {
 				«FOR clazz : graph.nodes.sortBy[elem.name].filter[c|!c.elem.abstract].map[elem]»
 					@Override
 					default «clazz.operationInterfacePath(clazz.findAleClass(aleScope, ePackage, dependencies))» «clazz.name.toFirstLower»(final «clazz.javaFullPath» «clazz.name.toFirstLower») {
@@ -648,6 +744,25 @@ class GenerateAlgebra {
 			return foundClazz?.javaFullPath.toString 
 		}
 	}
+	
+//	private def TypeSystem solveTypeSystem(Type type, EPackage ePackage, List<EPackage> dependencies) {
+//		if(type == null) return null
+//		if (type instanceof LiteralType) {
+//			if(type.lit == 'String') return AleFactory.eINSTANCE.createStringTypeT
+//			if(type.lit == 'FLoat') return AleFactory.eINSTANCE.createFloatTypeT
+//			if(type.lit == 'Integer') return AleFactory.eINSTANCE.createIntegerTypeT
+//			
+//		}
+////		if(type instanceof OrderedSetType) return '''org.eclipse.emf.common.util.EList<«type.subType.solveStaticType(ePackage, dependencies)»>'''
+////		if(type instanceof SequenceType) return '''org.eclipse.emf.common.util.EList<«type.subType.solveStaticType(ePackage, dependencies)»>'''
+////		if(type instanceof OutOfScopeType) {
+////			val  allClasses = buildGraph(ePackage, dependencies).nodes.map[elem];
+//////			val foundClazz1 = allClasses.filter[c | c.name == type.externalClass + '_Aspect'].head
+////			val foundClazz = /*if(foundClazz1 != null) foundClazz1 else*/ allClasses.filter[c | c.name == type.externalClass].head
+////			// TODO: resolve the type by scanning classes of the syntax
+////			return foundClazz?.javaFullPath.toString 
+////		}
+//	}
 
 	def static String toJavaType(ETypedElement opp) {
 		if (opp.EGenericType != null) {
@@ -760,6 +875,15 @@ class GenerateAlgebra {
 			}
 		'''
 	}
+	
+	private def EPackage load(String uri, ResourceSet rs) {
+		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI))
+			EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
+
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
+
+		return rs.getPackageRegistry().getEPackage(uri);
+	}
 
 	private def buildConcretTypes(Map<String, List<GraphNode<EClass>>> allTypes) {
 		allTypes.mapValues[x|x.filter[y|!y.elem.abstract]].filter[p1, p2|!p2.empty]
@@ -770,8 +894,11 @@ class GenerateAlgebra {
 
 		val allDirectPackageByReference = nodes.getAllDirectPackagesByReference(ePackage)
 		
+		val allDirectPackageByAnnotation = ePackage.EAnnotations.filter[annot | annot.source == "aleParent"].map[annot | annot.details.get("uri")].map[uri | load(uri, new ResourceSetImpl)]
+		
 		allDirectPackagesByInheritance.addAll(allDirectPackageByReference)
-		allDirectPackagesByInheritance.sortBy[name]
+		allDirectPackagesByInheritance.addAll(allDirectPackageByAnnotation)
+		allDirectPackagesByInheritance.toSet.toList.sortBy[name]
 	}
 
 	private def Set<EPackage> getAllDirectPackagesByReference(Iterable<GraphNode<EClass>> nodes, EPackage ePackage) {
@@ -844,6 +971,13 @@ class GenerateAlgebra {
 		]
 		notYetVisited.forEach [ e |
 			visitPackages(visitedpackage, e, graph1)
+		]
+		
+		val allDirectPackageByAnnotation = ePackage.EAnnotations.filter[annot | annot.source == "aleParent"].map[annot | annot.details.get("uri")].map[uri | load(uri, new ResourceSetImpl)]
+		allDirectPackageByAnnotation.forEach[p |
+			if(!visitedpackage.contains(p)) {
+				visitPackages(visitedpackage, p, graph1);
+			}
 		]
 	}
 

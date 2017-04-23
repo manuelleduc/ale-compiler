@@ -86,6 +86,7 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.PRIMITIVE_FIELD: return createPrimitiveField();
       case AlePackage.REF_FIELD: return createRefField();
       case AlePackage.CONTAINMENT_FIELD: return createContainmentField();
+      case AlePackage.DEBUG_STATEMENT: return createDebugStatement();
       case AlePackage.RETURN_STATEMENT: return createReturnStatement();
       case AlePackage.LET_STATEMENT: return createLetStatement();
       case AlePackage.IF_STATEMENT: return createIfStatement();
@@ -132,7 +133,7 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
       case AlePackage.SEQUENCE_TYPE: return createSequenceType();
       case AlePackage.ORDERED_SET_TYPE: return createOrderedSetType();
       case AlePackage.BOOLEAN_TYPE_T: return createBooleanTypeT();
-      case AlePackage.REAL_TYPE_T: return createRealTypeT();
+      case AlePackage.FLOAT_TYPE_T: return createFLoatTypeT();
       case AlePackage.INT_TYPE_T: return createIntTypeT();
       case AlePackage.STRING_TYPE_T: return createStringTypeT();
       case AlePackage.NULL_TYPE_T: return createNullTypeT();
@@ -372,6 +373,17 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
   {
     ContainmentFieldImpl containmentField = new ContainmentFieldImpl();
     return containmentField;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public DebugStatement createDebugStatement()
+  {
+    DebugStatementImpl debugStatement = new DebugStatementImpl();
+    return debugStatement;
   }
 
   /**
@@ -885,10 +897,10 @@ public class AleFactoryImpl extends EFactoryImpl implements AleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RealTypeT createRealTypeT()
+  public FLoatTypeT createFLoatTypeT()
   {
-    RealTypeTImpl realTypeT = new RealTypeTImpl();
-    return realTypeT;
+    FLoatTypeTImpl fLoatTypeT = new FLoatTypeTImpl();
+    return fLoatTypeT;
   }
 
   /**

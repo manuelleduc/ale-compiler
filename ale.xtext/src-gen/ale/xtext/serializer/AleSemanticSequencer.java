@@ -22,9 +22,11 @@ import ale.xtext.ale.CompareLOperation;
 import ale.xtext.ale.CompareNEOperation;
 import ale.xtext.ale.ConstructorOperation;
 import ale.xtext.ale.ContainmentField;
+import ale.xtext.ale.DebugStatement;
 import ale.xtext.ale.DefMethod;
 import ale.xtext.ale.DivOperation;
 import ale.xtext.ale.EqualityOperation;
+import ale.xtext.ale.FLoatTypeT;
 import ale.xtext.ale.ForLoop;
 import ale.xtext.ale.IfStatement;
 import ale.xtext.ale.ImpliesOperation;
@@ -53,7 +55,6 @@ import ale.xtext.ale.Param;
 import ale.xtext.ale.ParamCall;
 import ale.xtext.ale.PrimitiveField;
 import ale.xtext.ale.RealLiteral;
-import ale.xtext.ale.RealTypeT;
 import ale.xtext.ale.RefField;
 import ale.xtext.ale.ReturnStatement;
 import ale.xtext.ale.Root;
@@ -150,6 +151,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case AlePackage.CONTAINMENT_FIELD:
 				sequence_Field(context, (ContainmentField) semanticObject); 
 				return; 
+			case AlePackage.DEBUG_STATEMENT:
+				sequence_DebugStatement(context, (DebugStatement) semanticObject); 
+				return; 
 			case AlePackage.DEF_METHOD:
 				sequence_DefMethod(context, (DefMethod) semanticObject); 
 				return; 
@@ -158,6 +162,9 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				return; 
 			case AlePackage.EQUALITY_OPERATION:
 				sequence_EqualityOperation(context, (EqualityOperation) semanticObject); 
+				return; 
+			case AlePackage.FLOAT_TYPE_T:
+				sequence_TypeSystem(context, (FLoatTypeT) semanticObject); 
 				return; 
 			case AlePackage.FOR_LOOP:
 				sequence_ForLoop(context, (ForLoop) semanticObject); 
@@ -242,9 +249,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				return; 
 			case AlePackage.REAL_LITERAL:
 				sequence_AtomicLiteral(context, (RealLiteral) semanticObject); 
-				return; 
-			case AlePackage.REAL_TYPE_T:
-				sequence_TypeSystem(context, (RealTypeT) semanticObject); 
 				return; 
 			case AlePackage.REF_FIELD:
 				sequence_Field(context, (RefField) semanticObject); 
@@ -1521,6 +1525,25 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Statement returns DebugStatement
+	 *     DebugStatement returns DebugStatement
+	 *
+	 * Constraint:
+	 *     expr=Expression
+	 */
+	protected void sequence_DebugStatement(ISerializationContext context, DebugStatement semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AlePackage.Literals.DEBUG_STATEMENT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AlePackage.Literals.DEBUG_STATEMENT__EXPR));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getDebugStatementAccess().getExprExpressionParserRuleCall_3_0(), semanticObject.getExpr());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Method returns DefMethod
 	 *     DefMethod returns DefMethod
 	 *
@@ -2197,7 +2220,7 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     Root returns Root
 	 *
 	 * Constraint:
-	 *     (name=Qualified imports+=Import* classes+=AleClass*)
+	 *     (name=Qualified (superAle+=Qualified superAle+=Qualified*)? imports+=Import* classes+=AleClass*)
 	 */
 	protected void sequence_Root(ISerializationContext context, Root semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2236,6 +2259,18 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     TypeSystem returns FLoatTypeT
+	 *
+	 * Constraint:
+	 *     {FLoatTypeT}
+	 */
+	protected void sequence_TypeSystem(ISerializationContext context, FLoatTypeT semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     TypeSystem returns IntTypeT
 	 *
 	 * Constraint:
@@ -2254,18 +2289,6 @@ public class AleSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     {NullTypeT}
 	 */
 	protected void sequence_TypeSystem(ISerializationContext context, NullTypeT semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeSystem returns RealTypeT
-	 *
-	 * Constraint:
-	 *     {RealTypeT}
-	 */
-	protected void sequence_TypeSystem(ISerializationContext context, RealTypeT semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

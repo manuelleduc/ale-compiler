@@ -3,6 +3,8 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ale" nsURI="http://www.xtext.ale/Ale" nsPrefix="ale">
   <eClassifiers xsi:type="ecore:EClass" name="Root">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="superAle" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
         eType="#//Import" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1"
@@ -65,6 +67,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reverse" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContainmentField" eSuperTypes="#//Field"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DebugStatement" eSuperTypes="#//Statement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReturnStatement" eSuperTypes="#//Statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="returned" eType="#//Expression"
         containment="true"/>
@@ -284,7 +290,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BooleanTypeT" eSuperTypes="#//TypeSystem"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RealTypeT" eSuperTypes="#//TypeSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FLoatTypeT" eSuperTypes="#//TypeSystem"/>
   <eClassifiers xsi:type="ecore:EClass" name="IntTypeT" eSuperTypes="#//TypeSystem"/>
   <eClassifiers xsi:type="ecore:EClass" name="StringTypeT" eSuperTypes="#//TypeSystem"/>
   <eClassifiers xsi:type="ecore:EClass" name="NullTypeT" eSuperTypes="#//TypeSystem"/>

@@ -24,10 +24,12 @@ import ale.xtext.ale.CompareLOperation;
 import ale.xtext.ale.CompareNEOperation;
 import ale.xtext.ale.ConstructorOperation;
 import ale.xtext.ale.ContainmentField;
+import ale.xtext.ale.DebugStatement;
 import ale.xtext.ale.DefMethod;
 import ale.xtext.ale.DivOperation;
 import ale.xtext.ale.EqualityOperation;
 import ale.xtext.ale.Expression;
+import ale.xtext.ale.FLoatTypeT;
 import ale.xtext.ale.Field;
 import ale.xtext.ale.ForLoop;
 import ale.xtext.ale.IfStatement;
@@ -58,7 +60,6 @@ import ale.xtext.ale.Param;
 import ale.xtext.ale.ParamCall;
 import ale.xtext.ale.PrimitiveField;
 import ale.xtext.ale.RealLiteral;
-import ale.xtext.ale.RealTypeT;
 import ale.xtext.ale.RefField;
 import ale.xtext.ale.ReturnStatement;
 import ale.xtext.ale.Root;
@@ -240,6 +241,13 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * @generated
    */
   private EClass containmentFieldEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass debugStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -568,7 +576,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass realTypeTEClass = null;
+  private EClass fLoatTypeTEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -693,9 +701,19 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getRoot_SuperAle()
+  {
+    return (EAttribute)rootEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EReference getRoot_Imports()
   {
-    return (EReference)rootEClass.getEStructuralFeatures().get(1);
+    return (EReference)rootEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -705,7 +723,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    */
   public EReference getRoot_Classes()
   {
-    return (EReference)rootEClass.getEStructuralFeatures().get(2);
+    return (EReference)rootEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1106,6 +1124,26 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
   public EClass getContainmentField()
   {
     return containmentFieldEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getDebugStatement()
+  {
+    return debugStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getDebugStatement_Expr()
+  {
+    return (EReference)debugStatementEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2303,9 +2341,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getRealTypeT()
+  public EClass getFLoatTypeT()
   {
-    return realTypeTEClass;
+    return fLoatTypeTEClass;
   }
 
   /**
@@ -2410,6 +2448,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     // Create classes and their features
     rootEClass = createEClass(ROOT);
     createEAttribute(rootEClass, ROOT__NAME);
+    createEAttribute(rootEClass, ROOT__SUPER_ALE);
     createEReference(rootEClass, ROOT__IMPORTS);
     createEReference(rootEClass, ROOT__CLASSES);
 
@@ -2472,6 +2511,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     createEAttribute(refFieldEClass, REF_FIELD__REVERSE);
 
     containmentFieldEClass = createEClass(CONTAINMENT_FIELD);
+
+    debugStatementEClass = createEClass(DEBUG_STATEMENT);
+    createEReference(debugStatementEClass, DEBUG_STATEMENT__EXPR);
 
     returnStatementEClass = createEClass(RETURN_STATEMENT);
     createEReference(returnStatementEClass, RETURN_STATEMENT__RETURNED);
@@ -2638,7 +2680,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
 
     booleanTypeTEClass = createEClass(BOOLEAN_TYPE_T);
 
-    realTypeTEClass = createEClass(REAL_TYPE_T);
+    fLoatTypeTEClass = createEClass(FLOAT_TYPE_T);
 
     intTypeTEClass = createEClass(INT_TYPE_T);
 
@@ -2694,6 +2736,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     primitiveFieldEClass.getESuperTypes().add(this.getField());
     refFieldEClass.getESuperTypes().add(this.getField());
     containmentFieldEClass.getESuperTypes().add(this.getField());
+    debugStatementEClass.getESuperTypes().add(this.getStatement());
     returnStatementEClass.getESuperTypes().add(this.getStatement());
     letStatementEClass.getESuperTypes().add(this.getStatement());
     ifStatementEClass.getESuperTypes().add(this.getStatement());
@@ -2740,7 +2783,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     sequenceTypeEClass.getESuperTypes().add(this.getType());
     orderedSetTypeEClass.getESuperTypes().add(this.getType());
     booleanTypeTEClass.getESuperTypes().add(this.getTypeSystem());
-    realTypeTEClass.getESuperTypes().add(this.getTypeSystem());
+    fLoatTypeTEClass.getESuperTypes().add(this.getTypeSystem());
     intTypeTEClass.getESuperTypes().add(this.getTypeSystem());
     stringTypeTEClass.getESuperTypes().add(this.getTypeSystem());
     nullTypeTEClass.getESuperTypes().add(this.getTypeSystem());
@@ -2750,6 +2793,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     // Initialize classes and features; add operations and parameters
     initEClass(rootEClass, Root.class, "Root", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRoot_Name(), ecorePackage.getEString(), "name", null, 0, 1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getRoot_SuperAle(), ecorePackage.getEString(), "superAle", null, 0, -1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRoot_Imports(), this.getImport(), null, "imports", null, 0, -1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRoot_Classes(), this.getAleClass(), null, "classes", null, 0, -1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2812,6 +2856,9 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
     initEAttribute(getRefField_Reverse(), ecorePackage.getEString(), "reverse", null, 0, 1, RefField.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(containmentFieldEClass, ContainmentField.class, "ContainmentField", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(debugStatementEClass, DebugStatement.class, "DebugStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getDebugStatement_Expr(), this.getExpression(), null, "expr", null, 0, 1, DebugStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(returnStatementEClass, ReturnStatement.class, "ReturnStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getReturnStatement_Returned(), this.getExpression(), null, "returned", null, 0, 1, ReturnStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2978,7 +3025,7 @@ public class AlePackageImpl extends EPackageImpl implements AlePackage
 
     initEClass(booleanTypeTEClass, BooleanTypeT.class, "BooleanTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(realTypeTEClass, RealTypeT.class, "RealTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(fLoatTypeTEClass, FLoatTypeT.class, "FLoatTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(intTypeTEClass, IntTypeT.class, "IntTypeT", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

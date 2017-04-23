@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="ale.xtext.ale.Field"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="fr.mleduc.mt.compiler.DSLCompiler"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
@@ -40,12 +39,9 @@
 <fullyQualifiedTypeName name="java.util.stream.Collector"/>
 <fullyQualifiedTypeName name="org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware"/>
 <fullyQualifiedTypeName name="org.eclipse.emf.common.util.EList"/>
-<fullyQualifiedTypeName name="java.util.stream.Collectors"/>
-<fullyQualifiedTypeName name="org.eclipse.emf.ecore.EPackage"/>
 <fullyQualifiedTypeName name="org.eclipse.emf.ecore.resource.impl.ResourceImpl"/>
 <fullyQualifiedTypeName name="org.eclipse.emf.common.util.URI"/>
 <fullyQualifiedTypeName name="ale.xtext.ale.RefField"/>
-<fullyQualifiedTypeName name="org.eclipse.emf.ecore.EcoreFactory"/>
 <fullyQualifiedTypeName name="ale.xtext.ale.SequenceType"/>
 <fullyQualifiedTypeName name="ale.xtext.ale.ContainmentField"/>
 <fullyQualifiedTypeName name="javax.swing.RootPaneContainer"/>
@@ -56,8 +52,12 @@
 <fullyQualifiedTypeName name="java.util.function.Consumer"/>
 <fullyQualifiedTypeName name="fr.inria.diverse.objectalgebragenerator.GenerateAlgebra"/>
 <fullyQualifiedTypeName name="ale.xtext.ale.OpenClass"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="org.eclipse.emf.ecore.EReference"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="ale.xtext.ale.NewClass"/>
+<fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+<fullyQualifiedTypeName name="org.eclipse.emf.ecore.EcoreFactory"/>
+<fullyQualifiedTypeName name="org.eclipse.emf.ecore.EAnnotation"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="org.eclipse.emf.ecore.EPackage"/>
 </qualifiedTypeNameHistroy>

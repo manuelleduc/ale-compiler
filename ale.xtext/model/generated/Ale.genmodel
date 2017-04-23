@@ -8,6 +8,7 @@
       fileExtensions="ale" ecorePackage="Ale.ecore#/">
     <genClasses ecoreClass="Ale.ecore#//Root">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//Root/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//Root/superAle"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//Root/imports"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//Root/classes"/>
     </genClasses>
@@ -60,6 +61,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ale.ecore#//RefField/reverse"/>
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//ContainmentField"/>
+    <genClasses ecoreClass="Ale.ecore#//DebugStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//DebugStatement/expr"/>
+    </genClasses>
     <genClasses ecoreClass="Ale.ecore#//ReturnStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//ReturnStatement/returned"/>
     </genClasses>
@@ -221,7 +225,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ale.ecore#//OrderedSetType/subType"/>
     </genClasses>
     <genClasses ecoreClass="Ale.ecore#//BooleanTypeT"/>
-    <genClasses ecoreClass="Ale.ecore#//RealTypeT"/>
+    <genClasses ecoreClass="Ale.ecore#//FLoatTypeT"/>
     <genClasses ecoreClass="Ale.ecore#//IntTypeT"/>
     <genClasses ecoreClass="Ale.ecore#//StringTypeT"/>
     <genClasses ecoreClass="Ale.ecore#//NullTypeT"/>

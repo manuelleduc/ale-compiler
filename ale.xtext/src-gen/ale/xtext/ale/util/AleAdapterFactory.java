@@ -181,6 +181,11 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createContainmentFieldAdapter();
       }
       @Override
+      public Adapter caseDebugStatement(DebugStatement object)
+      {
+        return createDebugStatementAdapter();
+      }
+      @Override
       public Adapter caseReturnStatement(ReturnStatement object)
       {
         return createReturnStatementAdapter();
@@ -411,9 +416,9 @@ public class AleAdapterFactory extends AdapterFactoryImpl
         return createBooleanTypeTAdapter();
       }
       @Override
-      public Adapter caseRealTypeT(RealTypeT object)
+      public Adapter caseFLoatTypeT(FLoatTypeT object)
       {
-        return createRealTypeTAdapter();
+        return createFLoatTypeTAdapter();
       }
       @Override
       public Adapter caseIntTypeT(IntTypeT object)
@@ -773,6 +778,21 @@ public class AleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createContainmentFieldAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.DebugStatement <em>Debug Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see ale.xtext.ale.DebugStatement
+   * @generated
+   */
+  public Adapter createDebugStatementAdapter()
   {
     return null;
   }
@@ -1468,16 +1488,16 @@ public class AleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link ale.xtext.ale.RealTypeT <em>Real Type T</em>}'.
+   * Creates a new adapter for an object of class '{@link ale.xtext.ale.FLoatTypeT <em>FLoat Type T</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see ale.xtext.ale.RealTypeT
+   * @see ale.xtext.ale.FLoatTypeT
    * @generated
    */
-  public Adapter createRealTypeTAdapter()
+  public Adapter createFLoatTypeTAdapter()
   {
     return null;
   }

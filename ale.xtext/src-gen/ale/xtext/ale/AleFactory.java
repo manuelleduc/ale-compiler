@@ -213,6 +213,15 @@ public interface AleFactory extends EFactory
   ContainmentField createContainmentField();
 
   /**
+   * Returns a new object of class '<em>Debug Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Debug Statement</em>'.
+   * @generated
+   */
+  DebugStatement createDebugStatement();
+
+  /**
    * Returns a new object of class '<em>Return Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -627,13 +636,13 @@ public interface AleFactory extends EFactory
   BooleanTypeT createBooleanTypeT();
 
   /**
-   * Returns a new object of class '<em>Real Type T</em>'.
+   * Returns a new object of class '<em>FLoat Type T</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Real Type T</em>'.
+   * @return a new object of class '<em>FLoat Type T</em>'.
    * @generated
    */
-  RealTypeT createRealTypeT();
+  FLoatTypeT createFLoatTypeT();
 
   /**
    * Returns a new object of class '<em>Int Type T</em>'.

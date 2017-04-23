@@ -3,7 +3,7 @@ grammar ale.xtext.Ale with org.eclipse.xtext.common.Terminals
 generate ale "http://www.xtext.ale/Ale"
 
 Root returns Root:
-	'behavior' name=Qualified ('extends' superAle+=Qualified (',' superAle+=Qualified))?';'
+	'behavior' name=Qualified ('extends' superAle+=Qualified (',' superAle+=Qualified)*)?';'
 	imports+=Import*
 	classes+=AleClass*;
 
@@ -49,7 +49,14 @@ Statement returns Statement:
 	WhileStatement |
 	LetStatement ';' |
 	ReturnStatement ';' |
-	Expression ';';
+	Expression ';' |
+	DebugStatement ';';
+	
+	
+DebugStatement returns Statement:
+	{DebugStatement} 'debug' '(' expr=Expression ')';
+
+	
 	
 ReturnStatement returns Statement:
 	{ReturnStatement} 'return' returned=Expression
@@ -179,7 +186,7 @@ TypeSystem:
 	{BooleanTypeT} 'Boolean' | 
 //	{ByteType} 'Byte' | 
 //	{CharTYpe}'Char' | 
-	{RealTypeT} 'Real' | 
+	{FLoatTypeT} 'Float' | 
 //	{FloatType} 'Float' | 
 	{IntTypeT}'Int' | 
 //	{LongType} 'Long' | 

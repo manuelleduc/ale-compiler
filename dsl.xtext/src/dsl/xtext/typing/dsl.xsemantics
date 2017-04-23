@@ -97,7 +97,7 @@ axiom IntLiteral
 	G |- IntLiteral bool: AleFactory::eINSTANCE.createIntTypeT
 	
 axiom RealLiteral
-	G |- RealLiteral bool: AleFactory::eINSTANCE.createRealTypeT
+	G |- RealLiteral bool: AleFactory::eINSTANCE.createFLoatTypeT
 	
 axiom NullLiteralt
 	G |- NullLiteral bool: AleFactory::eINSTANCE.createNullTypeT
@@ -209,7 +209,7 @@ from {
 	or
 	{
 		(litType.lit == 'Real')
-		typeLit = AleFactory.eINSTANCE.createRealTypeT
+		typeLit = AleFactory.eINSTANCE.createFLoatTypeT
 	}
 	or
 	{

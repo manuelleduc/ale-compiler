@@ -54,6 +54,8 @@ public class AleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getLiteralTypeAccess().getLitAlternatives_0(), "rule__LiteralType__LitAlternatives_0");
 					put(grammarAccess.getTypeSystemAccess().getAlternatives(), "rule__TypeSystem__Alternatives");
 					put(grammarAccess.getRootAccess().getGroup(), "rule__Root__Group__0");
+					put(grammarAccess.getRootAccess().getGroup_2(), "rule__Root__Group_2__0");
+					put(grammarAccess.getRootAccess().getGroup_2_2(), "rule__Root__Group_2_2__0");
 					put(grammarAccess.getImportAccess().getGroup(), "rule__Import__Group__0");
 					put(grammarAccess.getTagAccess().getGroup(), "rule__Tag__Group__0");
 					put(grammarAccess.getOpenClassAccess().getGroup(), "rule__OpenClass__Group__0");
@@ -80,6 +82,8 @@ public class AleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getStatementAccess().getGroup_4(), "rule__Statement__Group_4__0");
 					put(grammarAccess.getStatementAccess().getGroup_5(), "rule__Statement__Group_5__0");
 					put(grammarAccess.getStatementAccess().getGroup_6(), "rule__Statement__Group_6__0");
+					put(grammarAccess.getStatementAccess().getGroup_7(), "rule__Statement__Group_7__0");
+					put(grammarAccess.getDebugStatementAccess().getGroup(), "rule__DebugStatement__Group__0");
 					put(grammarAccess.getReturnStatementAccess().getGroup(), "rule__ReturnStatement__Group__0");
 					put(grammarAccess.getLetStatementAccess().getGroup(), "rule__LetStatement__Group__0");
 					put(grammarAccess.getLetStatementAccess().getGroup_3(), "rule__LetStatement__Group_3__0");
@@ -169,8 +173,10 @@ public class AleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTypeSystemAccess().getGroup_5(), "rule__TypeSystem__Group_5__0");
 					put(grammarAccess.getTypeSystemAccess().getGroup_6(), "rule__TypeSystem__Group_6__0");
 					put(grammarAccess.getRootAccess().getNameAssignment_1(), "rule__Root__NameAssignment_1");
-					put(grammarAccess.getRootAccess().getImportsAssignment_3(), "rule__Root__ImportsAssignment_3");
-					put(grammarAccess.getRootAccess().getClassesAssignment_4(), "rule__Root__ClassesAssignment_4");
+					put(grammarAccess.getRootAccess().getSuperAleAssignment_2_1(), "rule__Root__SuperAleAssignment_2_1");
+					put(grammarAccess.getRootAccess().getSuperAleAssignment_2_2_1(), "rule__Root__SuperAleAssignment_2_2_1");
+					put(grammarAccess.getRootAccess().getImportsAssignment_4(), "rule__Root__ImportsAssignment_4");
+					put(grammarAccess.getRootAccess().getClassesAssignment_5(), "rule__Root__ClassesAssignment_5");
 					put(grammarAccess.getImportAccess().getRefAssignment_1(), "rule__Import__RefAssignment_1");
 					put(grammarAccess.getImportAccess().getNameAssignment_3(), "rule__Import__NameAssignment_3");
 					put(grammarAccess.getOpenClassAccess().getNameAssignment_3(), "rule__OpenClass__NameAssignment_3");
@@ -202,6 +208,7 @@ public class AleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getOverrideMethodAccess().getParamsAssignment_4_1_0(), "rule__OverrideMethod__ParamsAssignment_4_1_0");
 					put(grammarAccess.getOverrideMethodAccess().getParamsAssignment_4_1_1_1(), "rule__OverrideMethod__ParamsAssignment_4_1_1_1");
 					put(grammarAccess.getOverrideMethodAccess().getBlockAssignment_5(), "rule__OverrideMethod__BlockAssignment_5");
+					put(grammarAccess.getDebugStatementAccess().getExprAssignment_3(), "rule__DebugStatement__ExprAssignment_3");
 					put(grammarAccess.getReturnStatementAccess().getReturnedAssignment_2(), "rule__ReturnStatement__ReturnedAssignment_2");
 					put(grammarAccess.getLetStatementAccess().getBindingsAssignment_2(), "rule__LetStatement__BindingsAssignment_2");
 					put(grammarAccess.getLetStatementAccess().getBindingsAssignment_3_1(), "rule__LetStatement__BindingsAssignment_3_1");

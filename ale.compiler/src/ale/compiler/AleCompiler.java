@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +25,7 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModelFactory;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenBaseGeneratorAdapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
@@ -133,12 +136,16 @@ public class AleCompiler {
 	}
 
 	private EPackage load(final Syntax stx, final ResourceSet rs) {
+		return load(stx.getValue().replaceAll("\"", ""), rs);
+	}
+
+	private EPackage load(final String uri, final ResourceSet rs) {
 		if (!EPackage.Registry.INSTANCE.containsKey(EcorePackage.eNS_URI))
 			EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
 
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
 
-		return rs.getPackageRegistry().getEPackage(stx.getValue().replaceAll("\"", ""));
+		return rs.getPackageRegistry().getEPackage(uri);
 	}
 
 	public void compile(final IProject project) throws IOException, CoreException {
@@ -160,18 +167,25 @@ public class AleCompiler {
 
 		final EPackage rootPackage = initRootPackage();
 
-		final List<EPackage> tmp = model.getSyntaxes().stream().map((final Syntax stx) -> load(stx, resSet))
-				.collect(Collectors.toList());
+		final List<EPackage> aleSyntacticDeps = collectSyntacticDependenciesInAle(resSet, model);
 
-		this.syntaxes = new ArrayList<>(new GenerateAlgebra().getListAllClasses(rootPackage, tmp).stream()
-				.map(e -> e.getEPackage()).collect(Collectors.toSet()));
+		final List<EPackage> ecoreSyntacticDeps = collectSyntacticDependencies(resSet, aleSyntacticDeps);
+		
+		for(EPackage x : ecoreSyntacticDeps) {
+			if(!aleSyntacticDeps.contains(x)) aleSyntacticDeps.add(x);
+		}
+		this.syntaxes = aleSyntacticDeps;
 
 		final List<Root> roots = behaviors.stream().map(b -> convertBehaviorToRoot(resourceSet, b))
 				.collect(Collectors.toList());
 
 		this.aleScope = new ArrayList<AleClass>();
+		roots.stream().forEach(r -> r.getClasses().forEach(c -> this.aleScope.add(c)));
+		// for(roots.str)
+		final Set<String> imported = roots.stream().flatMap(r -> r.getSuperAle().stream()).map(x -> x + ".ale")
+				.collect(Collectors.toSet());
 		for (final IResource m : project.members()) {
-			if ("ale".equals(m.getFileExtension())) {
+			if ("ale".equals(m.getFileExtension()) && imported.contains(m.getName())) {
 				final String string = m.getLocationURI().toString();
 				final URI createURI = URI.createURI(string);
 				final Root root = (Root) resourceSet.getResource(createURI, true).getContents().get(0);
@@ -201,9 +215,30 @@ public class AleCompiler {
 
 	}
 
+	private List<EPackage> collectSyntacticDependenciesInAle(final ResourceSetImpl resSet, final DSL model) {
+		return model.getSyntaxes().stream().map((final Syntax stx) -> load(stx, resSet))
+				.collect(Collectors.toList());
+	}
+
+	private List<EPackage> collectSyntacticDependencies(final ResourceSetImpl resSet, final List<EPackage> tmp) {
+		final List<EPackage> tmp2 = new ArrayList<>();
+		for (final EPackage ePack : tmp) {
+			if (ePack != null && ePack.getEAnnotations() != null) {
+				for (final EAnnotation eAnnot : ePack.getEAnnotations()) {
+					if (eAnnot.getSource().equals("aleParent")) {
+						final EPackage pack = load(eAnnot.getDetails().get("uri"), resSet);
+						tmp2.add(pack);
+					}
+				}
+			}
+		}
+		return tmp2;
+	}
+
 	private void generateOperationInterface(final IProject project, final EPackage rootPackage,
 			final List<AleClass> allAleClasses, final EClass clazz, final ale.xtext.ale.AleClass openClass) {
-		new GenerateOperationInterface().generate(clazz, project, openClass, rootPackage, this.syntaxes, allAleClasses, this.aleScope);
+		new GenerateOperationInterface().generate(clazz, project, openClass, rootPackage, this.syntaxes, allAleClasses,
+				this.aleScope);
 		if (openClass != null) {
 			final GenerateAlgebra generateAlgebra = new GenerateAlgebra();
 			for (final String superAC : openClass.getSuperClass()) {
@@ -332,6 +367,11 @@ public class AleCompiler {
 	private void generateConcreteOperationRec(final EClass elem, final IProject project, final EPackage ePackage,
 			final ale.xtext.ale.AleClass openClass, final List<EPackage> deppendencies,
 			final List<AleClass> allAleClasses, final List<AleClass> aleScope) {
+		
+//		final List<EPackage> aleSyntacticDeps = collectSyntacticDependenciesInAle(new ResourceSetImpl(), model);
+
+//		final List<EPackage> ecoreSyntacticDeps = collectSyntacticDependencies(new ResourceSetImpl(), aleSyntacticDeps);
+		
 		final boolean overloaded = openClass != null && openClass.getFields().size() > 0
 				&& !((EPackage) elem.eContainer()).getName().equals(((Root) openClass.eContainer()).getName());
 		final String fileContent = new GenerateAlgebra().processConcreteOperation(elem, ePackage, deppendencies,
@@ -363,8 +403,9 @@ public class AleCompiler {
 	}
 
 	private void generateConcreteAlgebra(final EPackage ePackage, final List<EPackage> dependencies,
-			final IProject project, final List<AleClass> allAleClasses, List<AleClass> aleScope) {
-		final String fileContent = new GenerateAlgebra().processConcreteAlgebra(ePackage, dependencies, allAleClasses, aleScope);
+			final IProject project, final List<AleClass> allAleClasses, final List<AleClass> aleScope) {
+		final String fileContent = new GenerateAlgebra().processConcreteAlgebra(ePackage, dependencies, allAleClasses,
+				aleScope);
 		final IPath directoryAlgebra = project.getLocation().append("src").append(ePackage.getName()).append("algebra")
 				.append("impl");
 		directoryAlgebra.toFile().mkdirs();
@@ -403,6 +444,13 @@ public class AleCompiler {
 		final String behaviourName = modelBehavior.getName();
 		final Map<ale.xtext.ale.AleClass, List<Field>> clazzList = new HashMap<>();
 
+		for (final EPackage parent : dependencies) {
+			final EAnnotation createEAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
+			createEAnnotation.setSource("aleParent");
+			createEAnnotation.getDetails().put("uri", parent.getNsURI());
+			rootPackage.getEAnnotations().add(createEAnnotation);
+		}
+
 		// init the list of classes with all the extended classes
 		final List<ale.xtext.ale.AleClass> classExtensions = modelBehavior.getClasses();
 		classExtensions.forEach(extendedClass -> {
@@ -419,14 +467,31 @@ public class AleCompiler {
 			final ale.xtext.ale.AleClass fromClazz = entry.getKey();
 			final EClass clazz = EcoreFactory.eINSTANCE.createEClass();
 
-			if (fromClazz instanceof OpenClass && !fromClazz.getFields().isEmpty()) {
+			final EClass eClazz = this.getClassFromName(fromClazz.getName());
+			long countFieldsInParents;
+			if(eClazz != null) {
+			EList<EClass> eSuperTypes = eClazz.getESuperTypes();
+			Stream<Long> map = eSuperTypes.stream().map((EClass action) -> {
+				List<Entry<AleClass,List<Field>>> filter = clazzList.entrySet().stream().filter(ec -> {
+					return ec.getKey().getName().equals(action.getName());
+				}).collect(Collectors.toList());
+				return filter.stream().map(x -> !x.getKey().getFields().isEmpty() ).count();
+			});
+			
+			countFieldsInParents = map.filter(x -> x > 0).count();
+			} else {
+				countFieldsInParents = 0;
+			}
+			
+			
+			if (fromClazz instanceof OpenClass && (!fromClazz.getFields().isEmpty() || countFieldsInParents > 0)) {
 				// a _Aspect clazz is created is an open class needs to define
 				// more fields
 				clazz.setName(fromClazz.getName() + "_Aspect");
-				final EClass superClazz = this.getClassFromName(fromClazz.getName());
+				
 
-				if (superClazz != null) {
-					clazz.getESuperTypes().add(superClazz);
+				if (eClazz != null) {
+					clazz.getESuperTypes().add(eClazz);
 				}
 
 				mapClassEClass.put(fromClazz, clazz);
@@ -434,10 +499,10 @@ public class AleCompiler {
 			} else if (fromClazz instanceof NewClass) {
 				// case of the create
 				clazz.setName(fromClazz.getName());
-				final EClass superClazz = this.getClassFromName(fromClazz.getName());
+//				final EClass superClazz = this.getClassFromName(fromClazz.getName());
 
-				if (superClazz != null) {
-					clazz.getESuperTypes().add(superClazz);
+				if (eClazz != null) {
+					clazz.getESuperTypes().add(eClazz);
 				}
 
 				mapClassEClass.put(fromClazz, clazz);
@@ -450,12 +515,14 @@ public class AleCompiler {
 			final EClass syntacticClazz = mapClassEClass.get(aleClass);
 			final List<EClass> allClasses = new GenerateAlgebra().getListAllClasses(rootPackage, dependencies);
 			aleClass.getSuperClass().forEach((final String sc) -> {
-				final Stream<String> filter = clazzList.keySet().stream()// .filter(x
+				String[] split = sc.split("\\.");
+				String splt = split[split.length-1];
+				final Stream<String> filter = allClasses.stream()// .filter(x
 																			// ->
 																			// x
 																			// instanceof
 																			// OpenClass)
-						.map(x1 -> x1.getName()).filter((final String n) -> sc.equals(n));
+						.map(x1 -> x1.getName()).filter((final String n) -> splt.equals(n));
 				final long count = filter.count();
 				System.out.println(count);
 				if (count > 0) {
@@ -463,9 +530,11 @@ public class AleCompiler {
 
 					final EClass parent;
 					parent = allClasses.stream()
-							.filter(x -> x.getName().equals(sc + "_Aspect") || x.getName().equals(sc)).findFirst()
+							.filter(x -> x.getName().equals(splt + "_Aspect") || x.getName().equals(splt)).findFirst()
 							.get();
-					syntacticClazz.getESuperTypes().add(parent);
+					if (syntacticClazz != null) {
+						syntacticClazz.getESuperTypes().add(parent);
+					}
 
 				}
 
@@ -482,7 +551,7 @@ public class AleCompiler {
 						final EClass superParentEClass = allClasses.stream()
 								.filter(x -> x.getName().equals(superParent.getName() + "_Aspect")).findFirst()
 								.orElse(null);
-						if (superParentEClass != null) {
+						if (superParentEClass != null && syntacticClazz != null) {
 							syntacticClazz.getESuperTypes().add(superParentEClass);
 						}
 					}
@@ -703,14 +772,15 @@ public class AleCompiler {
 	}
 
 	private void generateAlgebraInterface(final EPackage ePackage, final List<EPackage> otherPackages,
-			final IProject project, boolean isRootPackage) {
+			final IProject project, final boolean isRootPackage) {
 
 		final String name = ePackage.getName();
 		final IPath directoryAlgebra = project.getLocation().append("src").append(name).append("algebra");
 		directoryAlgebra.toFile().mkdirs();
 		final IPath fileJavaAlgebra = directoryAlgebra.append(toFirstUpper(name) + "Algebra").addFileExtension("java");
-		
-		// generates code only if directly specified in the specification or if needed and does not exists
+
+		// generates code only if directly specified in the specification or if
+		// needed and does not exists
 		if (isRootPackage || !isRootPackage && !fileJavaAlgebra.toFile().exists()) {
 			final String fileContent = new GenerateAlgebra().generateAlgebraInterface(ePackage, otherPackages);
 

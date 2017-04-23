@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="1053" key="org.eclipse.jdt.internal.debug.ui.actions.PopupInspectAction$2DIALOG_HEIGHT"/>
+	<item value="1050" key="org.eclipse.jdt.internal.debug.ui.actions.PopupInspectAction$2DIALOG_HEIGHT"/>
 	<item value="300" key="org.eclipse.debug.ui.InspectPopupDialogDIALOG_WIDTH"/>
 	<item value="1324" key="org.eclipse.jdt.internal.debug.ui.actions.PopupInspectAction$2DIALOG_WIDTH"/>
 	<item value="250" key="org.eclipse.debug.ui.InspectPopupDialogDIALOG_HEIGHT"/>

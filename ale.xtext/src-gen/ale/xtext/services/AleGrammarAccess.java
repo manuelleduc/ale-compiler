@@ -30,19 +30,28 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cBehaviorKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameQualifiedParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cSemicolonKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Assignment cImportsAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cImportsImportParserRuleCall_3_0 = (RuleCall)cImportsAssignment_3.eContents().get(0);
-		private final Assignment cClassesAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cClassesAleClassParserRuleCall_4_0 = (RuleCall)cClassesAssignment_4.eContents().get(0);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cExtendsKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final Assignment cSuperAleAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cSuperAleQualifiedParserRuleCall_2_1_0 = (RuleCall)cSuperAleAssignment_2_1.eContents().get(0);
+		private final Group cGroup_2_2 = (Group)cGroup_2.eContents().get(2);
+		private final Keyword cCommaKeyword_2_2_0 = (Keyword)cGroup_2_2.eContents().get(0);
+		private final Assignment cSuperAleAssignment_2_2_1 = (Assignment)cGroup_2_2.eContents().get(1);
+		private final RuleCall cSuperAleQualifiedParserRuleCall_2_2_1_0 = (RuleCall)cSuperAleAssignment_2_2_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cImportsAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cImportsImportParserRuleCall_4_0 = (RuleCall)cImportsAssignment_4.eContents().get(0);
+		private final Assignment cClassesAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cClassesAleClassParserRuleCall_5_0 = (RuleCall)cClassesAssignment_5.eContents().get(0);
 		
 		//Root:
-		//	'behavior' name=Qualified ';'
+		//	'behavior' name=Qualified ('extends' superAle+=Qualified (',' superAle+=Qualified)*)? ';'
 		//	imports+=Import*
 		//	classes+=AleClass*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'behavior' name=Qualified ';' imports+=Import* classes+=AleClass*
+		//'behavior' name=Qualified ('extends' superAle+=Qualified (',' superAle+=Qualified)*)? ';' imports+=Import*
+		//classes+=AleClass*
 		public Group getGroup() { return cGroup; }
 		
 		//'behavior'
@@ -54,20 +63,44 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		//Qualified
 		public RuleCall getNameQualifiedParserRuleCall_1_0() { return cNameQualifiedParserRuleCall_1_0; }
 		
+		//('extends' superAle+=Qualified (',' superAle+=Qualified)*)?
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//'extends'
+		public Keyword getExtendsKeyword_2_0() { return cExtendsKeyword_2_0; }
+		
+		//superAle+=Qualified
+		public Assignment getSuperAleAssignment_2_1() { return cSuperAleAssignment_2_1; }
+		
+		//Qualified
+		public RuleCall getSuperAleQualifiedParserRuleCall_2_1_0() { return cSuperAleQualifiedParserRuleCall_2_1_0; }
+		
+		//(',' superAle+=Qualified)*
+		public Group getGroup_2_2() { return cGroup_2_2; }
+		
+		//','
+		public Keyword getCommaKeyword_2_2_0() { return cCommaKeyword_2_2_0; }
+		
+		//superAle+=Qualified
+		public Assignment getSuperAleAssignment_2_2_1() { return cSuperAleAssignment_2_2_1; }
+		
+		//Qualified
+		public RuleCall getSuperAleQualifiedParserRuleCall_2_2_1_0() { return cSuperAleQualifiedParserRuleCall_2_2_1_0; }
+		
 		//';'
-		public Keyword getSemicolonKeyword_2() { return cSemicolonKeyword_2; }
+		public Keyword getSemicolonKeyword_3() { return cSemicolonKeyword_3; }
 		
 		//imports+=Import*
-		public Assignment getImportsAssignment_3() { return cImportsAssignment_3; }
+		public Assignment getImportsAssignment_4() { return cImportsAssignment_4; }
 		
 		//Import
-		public RuleCall getImportsImportParserRuleCall_3_0() { return cImportsImportParserRuleCall_3_0; }
+		public RuleCall getImportsImportParserRuleCall_4_0() { return cImportsImportParserRuleCall_4_0; }
 		
 		//classes+=AleClass*
-		public Assignment getClassesAssignment_4() { return cClassesAssignment_4; }
+		public Assignment getClassesAssignment_5() { return cClassesAssignment_5; }
 		
 		//AleClass
-		public RuleCall getClassesAleClassParserRuleCall_4_0() { return cClassesAleClassParserRuleCall_4_0; }
+		public RuleCall getClassesAleClassParserRuleCall_5_0() { return cClassesAleClassParserRuleCall_5_0; }
 	}
 	public class ImportElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ale.xtext.Ale.Import");
@@ -676,12 +709,17 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_6 = (Group)cAlternatives.eContents().get(6);
 		private final RuleCall cExpressionParserRuleCall_6_0 = (RuleCall)cGroup_6.eContents().get(0);
 		private final Keyword cSemicolonKeyword_6_1 = (Keyword)cGroup_6.eContents().get(1);
+		private final Group cGroup_7 = (Group)cAlternatives.eContents().get(7);
+		private final RuleCall cDebugStatementParserRuleCall_7_0 = (RuleCall)cGroup_7.eContents().get(0);
+		private final Keyword cSemicolonKeyword_7_1 = (Keyword)cGroup_7.eContents().get(1);
 		
 		//Statement:
-		//	VarAssign ';' | ForLoop | IfStatement | WhileStatement | LetStatement ';' | ReturnStatement ';' | Expression ';';
+		//	VarAssign ';' | ForLoop | IfStatement | WhileStatement | LetStatement ';' | ReturnStatement ';' | Expression ';' |
+		//	DebugStatement ';';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//VarAssign ';' | ForLoop | IfStatement | WhileStatement | LetStatement ';' | ReturnStatement ';' | Expression ';'
+		//VarAssign ';' | ForLoop | IfStatement | WhileStatement | LetStatement ';' | ReturnStatement ';' | Expression ';' |
+		//DebugStatement ';'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//VarAssign ';'
@@ -728,6 +766,50 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//';'
 		public Keyword getSemicolonKeyword_6_1() { return cSemicolonKeyword_6_1; }
+		
+		//DebugStatement ';'
+		public Group getGroup_7() { return cGroup_7; }
+		
+		//DebugStatement
+		public RuleCall getDebugStatementParserRuleCall_7_0() { return cDebugStatementParserRuleCall_7_0; }
+		
+		//';'
+		public Keyword getSemicolonKeyword_7_1() { return cSemicolonKeyword_7_1; }
+	}
+	public class DebugStatementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ale.xtext.Ale.DebugStatement");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cDebugStatementAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cDebugKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cExprAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cExprExpressionParserRuleCall_3_0 = (RuleCall)cExprAssignment_3.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		
+		//DebugStatement Statement:
+		//	{DebugStatement} 'debug' '(' expr=Expression ')'
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{DebugStatement} 'debug' '(' expr=Expression ')'
+		public Group getGroup() { return cGroup; }
+		
+		//{DebugStatement}
+		public Action getDebugStatementAction_0() { return cDebugStatementAction_0; }
+		
+		//'debug'
+		public Keyword getDebugKeyword_1() { return cDebugKeyword_1; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_2() { return cLeftParenthesisKeyword_2; }
+		
+		//expr=Expression
+		public Assignment getExprAssignment_3() { return cExprAssignment_3; }
+		
+		//Expression
+		public RuleCall getExprExpressionParserRuleCall_3_0() { return cExprExpressionParserRuleCall_3_0; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_4() { return cRightParenthesisKeyword_4; }
 	}
 	public class ReturnStatementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ale.xtext.Ale.ReturnStatement");
@@ -2304,8 +2386,8 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cBooleanTypeTAction_0_0 = (Action)cGroup_0.eContents().get(0);
 		private final Keyword cBooleanKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final Action cRealTypeTAction_1_0 = (Action)cGroup_1.eContents().get(0);
-		private final Keyword cRealKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Action cFLoatTypeTAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cFloatKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Action cIntTypeTAction_2_0 = (Action)cGroup_2.eContents().get(0);
 		private final Keyword cIntKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
@@ -2329,11 +2411,11 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//// Type system
 		//TypeSystem:
-		//	{BooleanTypeT} 'Boolean' | {RealTypeT} 'Real' | {IntTypeT} 'Int' | {StringTypeT} 'String' | {NullTypeT} 'nulltype' |
+		//	{BooleanTypeT} 'Boolean' | {FLoatTypeT} 'Float' | {IntTypeT} 'Int' | {StringTypeT} 'String' | {NullTypeT} 'nulltype' |
 		//	{SequenceTypeT} 'Sequence' subType=TypeSystem | {ClassTypeT} 'class' clazz=[AleClass];
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{BooleanTypeT} 'Boolean' | {RealTypeT} 'Real' | {IntTypeT} 'Int' | {StringTypeT} 'String' | {NullTypeT} 'nulltype' |
+		//{BooleanTypeT} 'Boolean' | {FLoatTypeT} 'Float' | {IntTypeT} 'Int' | {StringTypeT} 'String' | {NullTypeT} 'nulltype' |
 		//{SequenceTypeT} 'Sequence' subType=TypeSystem | {ClassTypeT} 'class' clazz=[AleClass]
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -2346,14 +2428,14 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		//'Boolean'
 		public Keyword getBooleanKeyword_0_1() { return cBooleanKeyword_0_1; }
 		
-		//{RealTypeT} 'Real'
+		//{FLoatTypeT} 'Float'
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//{RealTypeT}
-		public Action getRealTypeTAction_1_0() { return cRealTypeTAction_1_0; }
+		//{FLoatTypeT}
+		public Action getFLoatTypeTAction_1_0() { return cFLoatTypeTAction_1_0; }
 		
-		//'Real'
-		public Keyword getRealKeyword_1_1() { return cRealKeyword_1_1; }
+		//'Float'
+		public Keyword getFloatKeyword_1_1() { return cFloatKeyword_1_1; }
 		
 		//{IntTypeT} 'Int'
 		public Group getGroup_2() { return cGroup_2; }
@@ -2428,6 +2510,7 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 	private final DefMethodElements pDefMethod;
 	private final OverrideMethodElements pOverrideMethod;
 	private final StatementElements pStatement;
+	private final DebugStatementElements pDebugStatement;
 	private final ReturnStatementElements pReturnStatement;
 	private final LetStatementElements pLetStatement;
 	private final IfStatementElements pIfStatement;
@@ -2476,6 +2559,7 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 		this.pDefMethod = new DefMethodElements();
 		this.pOverrideMethod = new OverrideMethodElements();
 		this.pStatement = new StatementElements();
+		this.pDebugStatement = new DebugStatementElements();
 		this.pReturnStatement = new ReturnStatementElements();
 		this.pLetStatement = new LetStatementElements();
 		this.pIfStatement = new IfStatementElements();
@@ -2533,7 +2617,7 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//Root:
-	//	'behavior' name=Qualified ';'
+	//	'behavior' name=Qualified ('extends' superAle+=Qualified (',' superAle+=Qualified)*)? ';'
 	//	imports+=Import*
 	//	classes+=AleClass*;
 	public RootElements getRootAccess() {
@@ -2642,13 +2726,24 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Statement:
-	//	VarAssign ';' | ForLoop | IfStatement | WhileStatement | LetStatement ';' | ReturnStatement ';' | Expression ';';
+	//	VarAssign ';' | ForLoop | IfStatement | WhileStatement | LetStatement ';' | ReturnStatement ';' | Expression ';' |
+	//	DebugStatement ';';
 	public StatementElements getStatementAccess() {
 		return pStatement;
 	}
 	
 	public ParserRule getStatementRule() {
 		return getStatementAccess().getRule();
+	}
+	
+	//DebugStatement Statement:
+	//	{DebugStatement} 'debug' '(' expr=Expression ')'
+	public DebugStatementElements getDebugStatementAccess() {
+		return pDebugStatement;
+	}
+	
+	public ParserRule getDebugStatementRule() {
+		return getDebugStatementAccess().getRule();
 	}
 	
 	//ReturnStatement Statement:
@@ -2921,7 +3016,7 @@ public class AleGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//// Type system
 	//TypeSystem:
-	//	{BooleanTypeT} 'Boolean' | {RealTypeT} 'Real' | {IntTypeT} 'Int' | {StringTypeT} 'String' | {NullTypeT} 'nulltype' |
+	//	{BooleanTypeT} 'Boolean' | {FLoatTypeT} 'Float' | {IntTypeT} 'Int' | {StringTypeT} 'String' | {NullTypeT} 'nulltype' |
 	//	{SequenceTypeT} 'Sequence' subType=TypeSystem | {ClassTypeT} 'class' clazz=[AleClass];
 	public TypeSystemElements getTypeSystemAccess() {
 		return pTypeSystem;

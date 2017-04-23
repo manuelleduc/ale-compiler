@@ -4,25 +4,25 @@
 package ale.xtext.ale.impl;
 
 import ale.xtext.ale.AlePackage;
-import ale.xtext.ale.RealTypeT;
+import ale.xtext.ale.FLoatTypeT;
 
 import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Real Type T</b></em>'.
+ * An implementation of the model object '<em><b>FLoat Type T</b></em>'.
  * <!-- end-user-doc -->
  *
  * @generated
  */
-public class RealTypeTImpl extends TypeSystemImpl implements RealTypeT
+public class FLoatTypeTImpl extends TypeSystemImpl implements FLoatTypeT
 {
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected RealTypeTImpl()
+  protected FLoatTypeTImpl()
   {
     super();
   }
@@ -35,7 +35,7 @@ public class RealTypeTImpl extends TypeSystemImpl implements RealTypeT
   @Override
   protected EClass eStaticClass()
   {
-    return AlePackage.Literals.REAL_TYPE_T;
+    return AlePackage.Literals.FLOAT_TYPE_T;
   }
 
-} //RealTypeTImpl
+} //FLoatTypeTImpl

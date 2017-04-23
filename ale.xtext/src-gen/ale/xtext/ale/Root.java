@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link ale.xtext.ale.Root#getName <em>Name</em>}</li>
+ *   <li>{@link ale.xtext.ale.Root#getSuperAle <em>Super Ale</em>}</li>
  *   <li>{@link ale.xtext.ale.Root#getImports <em>Imports</em>}</li>
  *   <li>{@link ale.xtext.ale.Root#getClasses <em>Classes</em>}</li>
  * </ul>
@@ -52,6 +53,22 @@ public interface Root extends EObject
    * @generated
    */
   void setName(String value);
+
+  /**
+   * Returns the value of the '<em><b>Super Ale</b></em>' attribute list.
+   * The list contents are of type {@link java.lang.String}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Super Ale</em>' attribute list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Super Ale</em>' attribute list.
+   * @see ale.xtext.ale.AlePackage#getRoot_SuperAle()
+   * @model unique="false"
+   * @generated
+   */
+  EList<String> getSuperAle();
 
   /**
    * Returns the value of the '<em><b>Imports</b></em>' containment reference list.

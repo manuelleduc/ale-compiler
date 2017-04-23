@@ -236,6 +236,15 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AlePackage.DEBUG_STATEMENT:
+      {
+        DebugStatement debugStatement = (DebugStatement)theEObject;
+        T result = caseDebugStatement(debugStatement);
+        if (result == null) result = caseStatement(debugStatement);
+        if (result == null) result = caseSymbol(debugStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AlePackage.RETURN_STATEMENT:
       {
         ReturnStatement returnStatement = (ReturnStatement)theEObject;
@@ -681,11 +690,11 @@ public class AleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AlePackage.REAL_TYPE_T:
+      case AlePackage.FLOAT_TYPE_T:
       {
-        RealTypeT realTypeT = (RealTypeT)theEObject;
-        T result = caseRealTypeT(realTypeT);
-        if (result == null) result = caseTypeSystem(realTypeT);
+        FLoatTypeT fLoatTypeT = (FLoatTypeT)theEObject;
+        T result = caseFLoatTypeT(fLoatTypeT);
+        if (result == null) result = caseTypeSystem(fLoatTypeT);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1065,6 +1074,22 @@ public class AleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseContainmentField(ContainmentField object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Debug Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Debug Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseDebugStatement(DebugStatement object)
   {
     return null;
   }
@@ -1806,17 +1831,17 @@ public class AleSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Real Type T</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>FLoat Type T</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Real Type T</em>'.
+   * @return the result of interpreting the object as an instance of '<em>FLoat Type T</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseRealTypeT(RealTypeT object)
+  public T caseFLoatTypeT(FLoatTypeT object)
   {
     return null;
   }
