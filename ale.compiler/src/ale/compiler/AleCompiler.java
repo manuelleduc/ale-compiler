@@ -181,7 +181,6 @@ public class AleCompiler {
 
 		this.aleScope = new ArrayList<AleClass>();
 		roots.stream().forEach(r -> r.getClasses().forEach(c -> this.aleScope.add(c)));
-		// for(roots.str)
 		final Set<String> imported = roots.stream().flatMap(r -> r.getSuperAle().stream()).map(x -> x + ".ale")
 				.collect(Collectors.toSet());
 		for (final IResource m : project.members()) {
@@ -454,10 +453,8 @@ public class AleCompiler {
 		// init the list of classes with all the extended classes
 		final List<ale.xtext.ale.AleClass> classExtensions = modelBehavior.getClasses();
 		classExtensions.forEach(extendedClass -> {
-			// if (!extendedClass.getFields().isEmpty()) {
 			final List<Field> attributes = extendedClass.getFields();
 			clazzList.put(extendedClass, attributes);
-			// }
 		});
 
 		final Map<ale.xtext.ale.AleClass, EClass> mapClassEClass = new HashMap<>();
@@ -468,23 +465,8 @@ public class AleCompiler {
 			final EClass clazz = EcoreFactory.eINSTANCE.createEClass();
 
 			final EClass eClazz = this.getClassFromName(fromClazz.getName());
-			long countFieldsInParents;
-			if(eClazz != null) {
-			EList<EClass> eSuperTypes = eClazz.getESuperTypes();
-			Stream<Long> map = eSuperTypes.stream().map((EClass action) -> {
-				List<Entry<AleClass,List<Field>>> filter = clazzList.entrySet().stream().filter(ec -> {
-					return ec.getKey().getName().equals(action.getName());
-				}).collect(Collectors.toList());
-				return filter.stream().map(x -> !x.getKey().getFields().isEmpty() ).count();
-			});
-			
-			countFieldsInParents = map.filter(x -> x > 0).count();
-			} else {
-				countFieldsInParents = 0;
-			}
-			
-			
-			if (fromClazz instanceof OpenClass && (!fromClazz.getFields().isEmpty() || countFieldsInParents > 0)) {
+			boolean hasNewFields = hasNewFieldsInHierarchy(clazzList, fromClazz, eClazz);
+			if (fromClazz instanceof OpenClass && hasNewFields) {
 				// a _Aspect clazz is created is an open class needs to define
 				// more fields
 				clazz.setName(fromClazz.getName() + "_Aspect");
@@ -499,7 +481,6 @@ public class AleCompiler {
 			} else if (fromClazz instanceof NewClass) {
 				// case of the create
 				clazz.setName(fromClazz.getName());
-//				final EClass superClazz = this.getClassFromName(fromClazz.getName());
 
 				if (eClazz != null) {
 					clazz.getESuperTypes().add(eClazz);
@@ -517,11 +498,7 @@ public class AleCompiler {
 			aleClass.getSuperClass().forEach((final String sc) -> {
 				String[] split = sc.split("\\.");
 				String splt = split[split.length-1];
-				final Stream<String> filter = allClasses.stream()// .filter(x
-																			// ->
-																			// x
-																			// instanceof
-																			// OpenClass)
+				final Stream<String> filter = allClasses.stream()
 						.map(x1 -> x1.getName()).filter((final String n) -> splt.equals(n));
 				final long count = filter.count();
 				System.out.println(count);
@@ -649,6 +626,28 @@ public class AleCompiler {
 
 	}
 
+	private boolean hasNewFieldsInHierarchy(final Map<ale.xtext.ale.AleClass, List<Field>> clazzList,
+			final ale.xtext.ale.AleClass fromClazz, final EClass eClazz) {
+		long countFieldsInParents;
+		if(eClazz != null) {
+		EList<EClass> eSuperTypes = eClazz.getESuperTypes();
+		Stream<Long> map = eSuperTypes.stream().map((EClass action) -> {
+			List<Entry<AleClass,List<Field>>> filter = clazzList.entrySet().stream().filter(ec -> {
+				return ec.getKey().getName().equals(action.getName());
+			}).collect(Collectors.toList());
+			return filter.stream().map(x -> !x.getKey().getFields().isEmpty() ).count();
+		});
+		
+		countFieldsInParents = map.filter(x -> x > 0).count();
+		} else {
+			countFieldsInParents = 0;
+		}
+		
+		
+		boolean b = !fromClazz.getFields().isEmpty() || countFieldsInParents > 0;
+		return b;
+	}
+
 	private ETypedElement resolveType(final Type type, final XtextResourceSet resourceSet,
 			final EList<Behavior> behaviors, final EPackage ePackage, final List<EPackage> dependencies,
 			final Map<AleClass, List<Field>> clazzList) {
@@ -685,28 +684,10 @@ public class AleCompiler {
 		if (type instanceof OrderedSetType)
 			return null;
 		if (type instanceof SequenceType) {
-			// final EAttribute ret = EcoreFactory.eINSTANCE.createEAttribute();
-			// ret.setName("tmp");
-			// EDataType eeList = EcorePackage.eINSTANCE.getEEList();
-			// ret.setEType(eeList);
-
 			final SequenceType seqType = (SequenceType) type;
-
-			// final List<EGenericType> collect = new ArrayList<>();
-			// final EGenericType etypeArgument =
-			// EcoreFactory.eINSTANCE.createEGenericType();
 			final EClassifier eType = this
 					.resolveType(seqType.getSubType(), resourceSet, behaviors, ePackage, dependencies, clazzList)
 					.getEType();
-			// etypeArgument.setEClassifier(eType);
-			// collect.add(etypeArgument);
-			// final EDataType eeList = EcorePackage.eINSTANCE.getEEList();
-			// ret.setEType(eeList);
-			// ret.getEGenericType().setEClassifier(eeList);
-			// ret.getEGenericType().getETypeArguments().addAll(collect);
-			// ret.setTransient(true);
-			// ret.setUpperBound(-1);
-			// return eType;
 			final EAttribute ret2 = EcoreFactory.eINSTANCE.createEAttribute();
 			ret2.setEType(eType);
 			return ret2;
@@ -724,15 +705,6 @@ public class AleCompiler {
 			} else {
 
 				final String externalClass = ((OutOfScopeType) type).getExternalClass();
-				// final ale.xtext.ale.Class res = lookupClass(resourceSet,
-				// behaviors, externalClass);
-				// if (res != null) {
-				// final EAttribute ret =
-				// EcoreFactory.eINSTANCE.createEAttribute();
-				// ret.setEType(res.eClass());
-				// return ret;
-				//
-				// } else {
 				final GenerateAlgebra generateAlgebra = new GenerateAlgebra();
 				final List<EClass> allClasses = generateAlgebra.getListAllClasses(ePackage, dependencies);
 				final Optional<EClass> firstStep = allClasses.stream().filter(c -> c.getName().equals(externalClass))
@@ -746,16 +718,7 @@ public class AleCompiler {
 				ret.setEType(eclassType);
 				return ret;
 			}
-			// }
 		}
-		/*
-		 * 
-		 * '''org.eclipse.emf.common.util.EList<«type.subType.solveStaticType»>'
-		 * '' if(type instanceof SequenceType) return
-		 * '''org.eclipse.emf.common.util.EList<«type.subType.solveStaticType»>'
-		 * '' if(type instanceof OutOfScopeType) return type.externalClass //
-		 * TODO: resolve the type by scanning classes of the syntax
-		 */
 		return null;
 	}
 

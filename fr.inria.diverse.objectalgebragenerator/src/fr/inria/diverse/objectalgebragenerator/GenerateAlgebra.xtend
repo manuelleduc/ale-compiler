@@ -250,23 +250,23 @@ class GenerateAlgebra {
 			«FOR sc: nonAspects2»
 			private final «sc.value.EPackage.name».«(sc.key.resolveCrossRef(aleScope, epackage, dependencies).eContainer as Root).name».algebra.impl.operation.«sc.value.EPackage.name.toFirstUpper»«(sc.key.resolveCrossRef(aleScope, epackage, dependencies).eContainer as Root).name.toFirstUpper»«sc.value.name.toFirstUpper»OperationImpl delegate«sc.value.name.toFirstUpper»;
 			«ENDFOR»
-			«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
+«««			«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
 			«FOR sc: aspectsLst»
 			private final «sc.EPackage.name».«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault.toFirstUpper»«sc.name.toFirstUpper»OperationImpl delegate«sc.name.toFirstUpper.split("_Aspect").head»;
 			«ENDFOR»
-			«ENDIF»
+«««			«ENDIF»
 			
 			public «className»(final «clazz.javaFullPath» self, «IF aleName == "$default"»Object«ELSE»final «epackage.name».algebra.«epackage.name.toFirstUpper»Algebra«FOR clazzS : graph.nodes.sortBy[x|x.elem.name] BEFORE '<' SEPARATOR ', ' AFTER '>'»? extends «clazzS.elem.operationInterfacePath(clazzS.elem.findAleClass(aleScope, epackage, dependencies))»«ENDFOR»«ENDIF» algebra) {
 				this.self = self;
 				«IF aleName != "$default"»this.algebra = algebra;«ENDIF»
-				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)]»
+				«FOR sc: nonAspects2»
 				this.delegate«sc.value.name.toFirstUpper» = new «sc.value.EPackage.name».«(sc.key.resolveCrossRef(aleScope, epackage, dependencies).eContainer as Root).name».algebra.impl.operation.«sc.value.EPackage.name.toFirstUpper»«(sc.key.resolveCrossRef(aleScope, epackage, dependencies).eContainer as Root).name.toFirstUpper»«sc.value.name.toFirstUpper»OperationImpl(self, algebra);
 				«ENDFOR»
-				«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
-				«FOR sc: behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).filter[it instanceof OpenClass].map[c|c.getEClassAspect(epackage, dependencies)].filter[it != null]»
-				this.delegate«sc.name.toFirstUpper» = new «sc.EPackage.name».«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault.toFirstUpper»«sc.name.toFirstUpper»OperationImpl(self, algebra);
+«««				«IF behaviorClass != null && clazz.EPackage.name == (behaviorClass.eContainer as Root).name»
+				«FOR sc: aspectsLst»
+				this.delegate«sc.name.toFirstUpper.split("_Aspect").head» = new «sc.EPackage.name».«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault».algebra.impl.operation.«sc.EPackage.name.toFirstUpper»«sc.findAleClass(aleScope, epackage, dependencies).findNameOrDefault.toFirstUpper»«sc.name.toFirstUpper»OperationImpl(self, algebra);
 				«ENDFOR»
-				«ENDIF»
+«««				«ENDIF»
 			}
 			
 			
@@ -284,11 +284,11 @@ class GenerateAlgebra {
 				return this.self.get«field.value.name.toFirstUpper»();
 				«ENDIF»
 				«ELSE»
-				«IF behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)].contains[EClass c | c.name == behaviorClass + '_Aspect']»
-				return this.delegate«field.key.name.toFirstUpper»_Aspect.get«field.value.name.toFirstUpper»();
-				«ELSE»
+«««				«IF behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)].contains[EClass c | c.name == behaviorClass + '_Aspect']»
 				return this.delegate«field.key.name.toFirstUpper».get«field.value.name.toFirstUpper»();
-				«ENDIF»
+«««				«ELSE»
+«««				return this.delegate«field.key.name.toFirstUpper».get«field.value.name.toFirstUpper»();
+«««				«ENDIF»
 				«ENDIF»
 				«ELSE»return null;
 				«ENDIF»
@@ -299,11 +299,11 @@ class GenerateAlgebra {
 				«IF field.key == behaviorClass» 
 				this.self.set«field.value.name.toFirstUpper»(«field.value.name»);
 				«ELSE»
-				«IF behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)].contains[EClass c | c.name == behaviorClass + '_Aspect']»
-				this.delegate«field.key.name.toFirstUpper»_Aspect.set«field.value.name.toFirstUpper»(«field.value.name»);
-				«ELSE»
+«««				«IF behaviorClass.getAllSuperClasses(aleScope, epackage, dependencies, allAleClasses).map[c| c -> c.getEClass(epackage, dependencies)].contains[EClass c | c.name == behaviorClass + '_Aspect']»
+«««				this.delegate«field.key.name.toFirstUpper».set«field.value.name.toFirstUpper»(«field.value.name»);
+«««				«ELSE»
 				this.delegate«field.key.name.toFirstUpper».set«field.value.name.toFirstUpper»(«field.value.name»);
-				«ENDIF»
+«««				«ENDIF»
 				«ENDIF»
 				«ENDIF»
 			}
@@ -482,7 +482,8 @@ class GenerateAlgebra {
 				val method = unfilteredMethods.filter[it.value.name==oco.name && it.value.params.size == oco.parameters.size].head
 				if(method != null) {
 //					'''this.delegate«method.key.name.toFirstUpper»«IF method.key instanceof OpenClass && !(method.key as OpenClass).fields.empty»_Aspect«ENDIF».«exp.right.printExpression(ctx)»'''
-					'''this.delegate«method.key.name.toFirstUpper»«IF method.key instanceof OpenClass»_Aspect«ENDIF».«exp.right.printExpression(ctx)»'''
+//					'''this.delegate«method.key.name.toFirstUpper»«IF method.key instanceof OpenClass»_Aspect«ENDIF».«exp.right.printExpression(ctx)»'''
+					'''this.delegate«method.key.name.toFirstUpper.split("_Aspect").head».«exp.right.printExpression(ctx)»'''
 				} else {
 					// let's look at the fields
 					val field = ctx.selfAleClass.flattenParentsFields(ctx.aleScope, ctx.ePackage, ctx.dependencies, ctx.allAleClasses, false)
@@ -738,31 +739,12 @@ class GenerateAlgebra {
 		if(type instanceof SequenceType) return '''org.eclipse.emf.common.util.EList<«type.subType.solveStaticType(ePackage, dependencies)»>'''
 		if(type instanceof OutOfScopeType) {
 			val  allClasses = buildGraph(ePackage, dependencies).nodes.map[elem];
-//			val foundClazz1 = allClasses.filter[c | c.name == type.externalClass + '_Aspect'].head
 			val foundClazz = /*if(foundClazz1 != null) foundClazz1 else*/ allClasses.filter[c | c.name == type.externalClass].head
 			// TODO: resolve the type by scanning classes of the syntax
 			return foundClazz?.javaFullPath.toString 
 		}
 	}
 	
-//	private def TypeSystem solveTypeSystem(Type type, EPackage ePackage, List<EPackage> dependencies) {
-//		if(type == null) return null
-//		if (type instanceof LiteralType) {
-//			if(type.lit == 'String') return AleFactory.eINSTANCE.createStringTypeT
-//			if(type.lit == 'FLoat') return AleFactory.eINSTANCE.createFloatTypeT
-//			if(type.lit == 'Integer') return AleFactory.eINSTANCE.createIntegerTypeT
-//			
-//		}
-////		if(type instanceof OrderedSetType) return '''org.eclipse.emf.common.util.EList<«type.subType.solveStaticType(ePackage, dependencies)»>'''
-////		if(type instanceof SequenceType) return '''org.eclipse.emf.common.util.EList<«type.subType.solveStaticType(ePackage, dependencies)»>'''
-////		if(type instanceof OutOfScopeType) {
-////			val  allClasses = buildGraph(ePackage, dependencies).nodes.map[elem];
-//////			val foundClazz1 = allClasses.filter[c | c.name == type.externalClass + '_Aspect'].head
-////			val foundClazz = /*if(foundClazz1 != null) foundClazz1 else*/ allClasses.filter[c | c.name == type.externalClass].head
-////			// TODO: resolve the type by scanning classes of the syntax
-////			return foundClazz?.javaFullPath.toString 
-////		}
-//	}
 
 	def static String toJavaType(ETypedElement opp) {
 		if (opp.EGenericType != null) {
@@ -779,10 +761,9 @@ class GenerateAlgebra {
 		'''«behavior.name».algebra.operation.«behavior.name.toFirstUpper»«clazz.name.toFirstUpper»Operation'''
 	}
 	
-	def Boolean isSuperType(EClass a, EClass b) { // , List<EClass> subTree
+	def Boolean isSuperType(EClass a, EClass b) { 
 		if(a === b) return true;
 		b.ESuperTypes
-			//.filter[subTree.contains(it)]
 			.exists[it == a || a.isSuperType(it)]
 	}
 

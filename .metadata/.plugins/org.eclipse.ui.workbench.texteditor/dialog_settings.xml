@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="mapClassEClass" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="classPlus" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="true" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="mapClassEClass"/>
-			<item value="DebugStatement"/>
-			<item value="Debug"/>
-			<item value="WhileStatement"/>
-			<item value="print"/>
-			<item value="getESuperTypes"/>
-			<item value="aleClass."/>
-			<item value="sc:"/>
+			<item value="classPlus"/>
+			<item value="classPlusItsChildren"/>
+			<item value="directlyRelat"/>
+			<item value="dslURI"/>
+			<item value="ResourceS"/>
+			<item value="&quot;ecore&quot;"/>
+			<item value=";C"/>
+			<item value="SuperRef"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&apos;&apos;&apos;__TODO__&apos;&apos;&apos;"/>
@@ -33,7 +33,7 @@
 		<item value="306" key="DIALOG_WIDTH"/>
 		<item value="1|Cantarell|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="486" key="DIALOG_HEIGHT"/>
-		<item value="1374" key="DIALOG_X_ORIGIN"/>
-		<item value="387" key="DIALOG_Y_ORIGIN"/>
+		<item value="705" key="DIALOG_X_ORIGIN"/>
+		<item value="564" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
